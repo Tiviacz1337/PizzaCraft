@@ -57,7 +57,7 @@ public class CornPlant extends BlockCrops
 		{
 			if(this.isMaxAge(state))
 			{
-				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.corn, o)));
+				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.CORN, o)));
 				worldIn.setBlockState(pos, this.getDefaultState().withProperty(getAgeProperty(), 0));
 				return true;
 			}				
@@ -68,13 +68,13 @@ public class CornPlant extends BlockCrops
 	@Override
 	protected Item getSeed()
 	{
-		return ModItems.seed_corn;
+		return ModItems.SEED_CORN;
 	}
 	
 	@Override
 	protected Item getCrop()
 	{
-		return ModItems.corn;
+		return ModItems.CORN;
 	}
 	
 	@Override
@@ -90,12 +90,12 @@ public class CornPlant extends BlockCrops
 		{
 			if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.seed_corn, o));
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.SEED_CORN, o));
 				worldIn.setBlockToAir(pos);
 			}
 			else
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.corn, o));
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.CORN, o));
 				worldIn.setBlockToAir(pos);
 			}
 		} 
@@ -169,11 +169,11 @@ public class CornPlant extends BlockCrops
 		int a = ((Integer)state.getValue(this.getAgeProperty()));
 		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 		{
-			return new ItemStack(ModItems.seed_corn);
+			return new ItemStack(ModItems.SEED_CORN);
 		}
 		else
 		{
-			return new ItemStack(ModItems.corn);
+			return new ItemStack(ModItems.CORN);
 		}
 	}
 	
@@ -186,11 +186,11 @@ public class CornPlant extends BlockCrops
 		int a = ((Integer)state.getValue(this.getAgeProperty()));
 		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 		{
-			return new ItemStack(ModItems.seed_corn, o).getItem();
+			return new ItemStack(ModItems.SEED_CORN, o).getItem();
 		}
 		else
 		{
-			return new ItemStack(ModItems.corn, o).getItem();
+			return new ItemStack(ModItems.CORN, o).getItem();
 		}
     }
 	

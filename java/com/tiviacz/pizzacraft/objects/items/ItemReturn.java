@@ -13,7 +13,7 @@ public class ItemReturn extends Item implements IHasModel
 	{
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(PizzaCraft.PizzaCraftTab);
+		setCreativeTab(PizzaCraft.PIZZACRAFTTAB);
 		this.setMaxStackSize(1);
 		
 		ModItems.ITEMS.add(this);

@@ -64,25 +64,25 @@ public class BlockPizzaOvenBurning extends BlockBase implements ITileEntityProvi
     		{
     			if(i == 0)
         		{
-        			worldIn.setBlockState(pos, ModBlocks.pizza_oven.getDefaultState().withProperty(BlockPizzaOven.WOOD, 0));
+        			worldIn.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.WOOD, 0));
         			playerIn.setHeldItem(hand, new ItemStack(Items.BUCKET));
         		}
         		
         		else if(i == 1)
         		{
-        			worldIn.setBlockState(pos, ModBlocks.pizza_oven.getDefaultState().withProperty(BlockPizzaOven.WOOD, 1));
+        			worldIn.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.WOOD, 1));
         			playerIn.setHeldItem(hand, new ItemStack(Items.BUCKET));
         		}
         		
         		else if(i == 2)
         		{
-        			worldIn.setBlockState(pos, ModBlocks.pizza_oven.getDefaultState().withProperty(BlockPizzaOven.WOOD, 2));
+        			worldIn.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.WOOD, 2));
         			playerIn.setHeldItem(hand, new ItemStack(Items.BUCKET));
         		}
     			
         		else if(i == 3)
         		{
-        			worldIn.setBlockState(pos, ModBlocks.pizza_oven.getDefaultState().withProperty(BlockPizzaOven.WOOD, 4));
+        			worldIn.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.WOOD, 4));
         			playerIn.setHeldItem(hand, new ItemStack(Items.BUCKET));
         		}
     		}
@@ -92,69 +92,69 @@ public class BlockPizzaOvenBurning extends BlockBase implements ITileEntityProvi
         {	     	
         	if(IBlockstate == Blocks.AIR.getDefaultState())
 			{
-				if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.raw_pizza_0))
+				if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.RAW_PIZZA_0))
 				{
-					worldIn.setBlockState(pos.up(), ModBlocks.raw_pizza_0.getDefaultState());
+					worldIn.setBlockState(pos.up(), ModBlocks.RAW_PIZZA_0.getDefaultState());
 					heldItem.shrink(1);
 				}
 				
-				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.raw_pizza_1))
+				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.RAW_PIZZA_1))
 				{
-					worldIn.setBlockState(pos.up(), ModBlocks.raw_pizza_1.getDefaultState());
+					worldIn.setBlockState(pos.up(), ModBlocks.RAW_PIZZA_1.getDefaultState());
 					heldItem.shrink(1);
 				}
 
-				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.raw_pizza_2))
+				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.RAW_PIZZA_2))
 				{
-					worldIn.setBlockState(pos.up(), ModBlocks.raw_pizza_2.getDefaultState());
+					worldIn.setBlockState(pos.up(), ModBlocks.RAW_PIZZA_2.getDefaultState());
 					heldItem.shrink(1);
 				}
 				
-				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.raw_pizza_3))
+				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.RAW_PIZZA_3))
 				{
-					worldIn.setBlockState(pos.up(), ModBlocks.raw_pizza_3.getDefaultState());
+					worldIn.setBlockState(pos.up(), ModBlocks.RAW_PIZZA_3.getDefaultState());
 					heldItem.shrink(1);
 				}
 				
-				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.raw_pizza_4))
+				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.RAW_PIZZA_4))
 				{
-					worldIn.setBlockState(pos.up(), ModBlocks.raw_pizza_4.getDefaultState());
+					worldIn.setBlockState(pos.up(), ModBlocks.RAW_PIZZA_4.getDefaultState());
 					heldItem.shrink(1);
 				}
 				
-				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.raw_pizza_5))
+				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.RAW_PIZZA_5))
 				{
-					worldIn.setBlockState(pos.up(), ModBlocks.raw_pizza_5.getDefaultState());
+					worldIn.setBlockState(pos.up(), ModBlocks.RAW_PIZZA_5.getDefaultState());
 					heldItem.shrink(1);
 				}
 				
-				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.raw_pizza_6))
+				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.RAW_PIZZA_6))
 				{
-					worldIn.setBlockState(pos.up(), ModBlocks.raw_pizza_6.getDefaultState());
+					worldIn.setBlockState(pos.up(), ModBlocks.RAW_PIZZA_6.getDefaultState());
 					heldItem.shrink(1);
 				}
 				
-				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.raw_pizza_7))
+				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.RAW_PIZZA_7))
 				{
-					worldIn.setBlockState(pos.up(), ModBlocks.raw_pizza_7.getDefaultState());
+					worldIn.setBlockState(pos.up(), ModBlocks.RAW_PIZZA_7.getDefaultState());
 					heldItem.shrink(1);
 				}
 				
-				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.raw_pizza_8))
+				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.RAW_PIZZA_8))
 				{
-					worldIn.setBlockState(pos.up(), ModBlocks.raw_pizza_8.getDefaultState());
+					worldIn.setBlockState(pos.up(), ModBlocks.RAW_PIZZA_8.getDefaultState());
 					heldItem.shrink(1);
 				}
 				
-				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.raw_pizza_9))
+				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.RAW_PIZZA_9))
 				{
-					worldIn.setBlockState(pos.up(), ModBlocks.raw_pizza_9.getDefaultState());
+					worldIn.setBlockState(pos.up(), ModBlocks.RAW_PIZZA_9.getDefaultState());
 					heldItem.shrink(1);
 				}
 				
-				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.raw_pizza_10))
+				else if(heldItem.getItem() == Item.getItemFromBlock(ModBlocks.RAW_PIZZA_10))
 				{
-					worldIn.setBlockState(pos.up(), ModBlocks.raw_pizza_10.getDefaultState());
+					worldIn.setBlockState(pos.up(), ModBlocks.RAW_PIZZA_10.getDefaultState());
 					heldItem.shrink(1);
 				}
 			}

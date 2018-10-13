@@ -78,9 +78,9 @@ public class BlockPizzaBurnt extends BlockBase
         {	
     		int i = ((Integer)state.getValue(BITES)).intValue();
         	ItemStack HeldItem = playerIn.getHeldItem(EnumHand.MAIN_HAND);        	
-        	ItemStack Peel = new ItemStack(ModItems.peel);
+        	ItemStack Peel = new ItemStack(ModItems.PEEL);
         	
-        	if(HeldItem.getItem() == ModItems.peel && i == 0 && (!playerIn.capabilities.isCreativeMode || playerIn.capabilities.isCreativeMode))
+        	if(HeldItem.getItem() == ModItems.PEEL && i == 0 && (!playerIn.capabilities.isCreativeMode || playerIn.capabilities.isCreativeMode))
         	{
         		InventoryHelper.spawnItemStack(worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ(), new ItemStack(this));
 
@@ -103,7 +103,7 @@ public class BlockPizzaBurnt extends BlockBase
     {	
     	ItemStack HeldItem = player.getHeldItem(EnumHand.MAIN_HAND);
     	
-        if(HeldItem.getItem() == ModItems.peel)
+        if(HeldItem.getItem() == ModItems.PEEL)
         {
         	return false;
         }
@@ -116,7 +116,7 @@ public class BlockPizzaBurnt extends BlockBase
 
             if (i < 5) //The amount of bites after pizza disappears
             {	
-            	if(HeldItem.getItem() == ModItems.peel)
+            	if(HeldItem.getItem() == ModItems.PEEL)
             	{
             		return false;
             	}

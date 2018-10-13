@@ -56,7 +56,7 @@ public class TomatoPlant extends BlockCrops
 		{
 			if(this.isMaxAge(state))
 			{
-				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.tomato, o)));
+				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.TOMATO, o)));
 				worldIn.setBlockState(pos, this.getDefaultState().withProperty(getAgeProperty(), 4));
 				return true;
 			}				
@@ -67,13 +67,13 @@ public class TomatoPlant extends BlockCrops
 	@Override
 	protected Item getSeed()
 	{
-		return ModItems.seed_tomato;
+		return ModItems.SEED_TOMATO;
 	}
 	
 	@Override
 	protected Item getCrop()
 	{
-		return ModItems.tomato;
+		return ModItems.TOMATO;
 	}
 	
 	@Override
@@ -89,12 +89,12 @@ public class TomatoPlant extends BlockCrops
 		{
 			if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.seed_tomato, o));
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.SEED_TOMATO, o));
 				worldIn.setBlockToAir(pos);
 			}
 			else
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.tomato, o));
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.TOMATO, o));
 				worldIn.setBlockToAir(pos);
 			}
 		} 
@@ -168,11 +168,11 @@ public class TomatoPlant extends BlockCrops
 		int a = ((Integer)state.getValue(this.getAgeProperty()));
 		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 		{
-			return new ItemStack(ModItems.seed_tomato);
+			return new ItemStack(ModItems.SEED_TOMATO);
 		}
 		else
 		{
-			return new ItemStack(ModItems.tomato);
+			return new ItemStack(ModItems.TOMATO);
 		}
 	}
 	
@@ -185,11 +185,11 @@ public class TomatoPlant extends BlockCrops
 		int a = ((Integer)state.getValue(this.getAgeProperty()));
 		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 		{
-			return new ItemStack(ModItems.seed_tomato, o).getItem();
+			return new ItemStack(ModItems.SEED_TOMATO, o).getItem();
 		}
 		else
 		{
-			return new ItemStack(ModItems.tomato, o).getItem();
+			return new ItemStack(ModItems.TOMATO, o).getItem();
 		}
     }
 	

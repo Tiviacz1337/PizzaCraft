@@ -56,7 +56,7 @@ public class PepperPlant extends BlockCrops
 		{
 			if(this.isMaxAge(state))
 			{
-				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.pepper, o)));
+				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.PEPPER, o)));
 				worldIn.setBlockState(pos, this.getDefaultState().withProperty(getAgeProperty(), 4));
 				return true;
 			}				
@@ -67,13 +67,13 @@ public class PepperPlant extends BlockCrops
 	@Override
 	protected Item getSeed()
 	{
-		return ModItems.seed_pepper;
+		return ModItems.SEED_PEPPER;
 	}
 	
 	@Override
 	protected Item getCrop()
 	{
-		return ModItems.pepper;
+		return ModItems.PEPPER;
 	}
 	
 	@Override
@@ -89,12 +89,12 @@ public class PepperPlant extends BlockCrops
 		{
 			if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.seed_pepper, o));
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.SEED_PEPPER, o));
 				worldIn.setBlockToAir(pos);
 			}
 			else
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.pepper, o));
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.PEPPER, o));
 				worldIn.setBlockToAir(pos);
 			}
 		} 
@@ -168,11 +168,11 @@ public class PepperPlant extends BlockCrops
 		int a = ((Integer)state.getValue(this.getAgeProperty()));
 		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 		{
-			return new ItemStack(ModItems.seed_pepper);
+			return new ItemStack(ModItems.SEED_PEPPER);
 		}
 		else
 		{
-			return new ItemStack(ModItems.pepper);
+			return new ItemStack(ModItems.PEPPER);
 		}
 	}
 	
@@ -185,11 +185,11 @@ public class PepperPlant extends BlockCrops
 		int a = ((Integer)state.getValue(this.getAgeProperty()));
 		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 		{
-			return new ItemStack(ModItems.seed_pepper, o).getItem();
+			return new ItemStack(ModItems.SEED_PEPPER, o).getItem();
 		}
 		else
 		{
-			return new ItemStack(ModItems.pepper, o).getItem();
+			return new ItemStack(ModItems.PEPPER, o).getItem();
 		}
     }
 	

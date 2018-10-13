@@ -63,9 +63,9 @@ public class BlockRawPizza extends BlockBase implements ITileEntityProvider
     	if(!worldIn.isRemote)
         {	
         	ItemStack HeldItem = playerIn.getHeldItem(EnumHand.MAIN_HAND);        	
-        	ItemStack Peel = new ItemStack(ModItems.peel);
+        	ItemStack Peel = new ItemStack(ModItems.PEEL);
         	
-        	if(HeldItem.getItem() == ModItems.peel && (!playerIn.capabilities.isCreativeMode || playerIn.capabilities.isCreativeMode))
+        	if(HeldItem.getItem() == ModItems.PEEL && (!playerIn.capabilities.isCreativeMode || playerIn.capabilities.isCreativeMode))
         	{
         		InventoryHelper.spawnItemStack(worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ(), new ItemStack(this));
 

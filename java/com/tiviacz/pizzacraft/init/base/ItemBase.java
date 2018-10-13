@@ -12,7 +12,7 @@ public class ItemBase extends Item implements IHasModel
 	{
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(PizzaCraft.PizzaCraftTab);
+		setCreativeTab(PizzaCraft.PIZZACRAFTTAB);
 		
 		ModItems.ITEMS.add(this);
 	}

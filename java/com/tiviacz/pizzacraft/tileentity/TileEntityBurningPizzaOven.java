@@ -19,30 +19,30 @@ public class TileEntityBurningPizzaOven extends TileEntity implements ITickable
 	public void update() 
 	{
 		
-		if(world.getBlockState(pos) == ModBlocks.burning_pizza_oven.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 2))
+		if(world.getBlockState(pos) == ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 2))
 		{
 			ticks++;	
 			if(ticks == ConfigHandler.burningTimeOven)
 			{
-				world.setBlockState(pos, ModBlocks.burning_pizza_oven.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 1));
+				world.setBlockState(pos, ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 1));
 			}
 		}
 		
-		if(world.getBlockState(pos) == ModBlocks.burning_pizza_oven.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 1))
+		if(world.getBlockState(pos) == ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 1))
 		{
 			ticks++;	
 			if(ticks == ConfigHandler.burningTimeOven)
 			{
-				world.setBlockState(pos, ModBlocks.burning_pizza_oven.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 0));
+				world.setBlockState(pos, ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 0));
 			}
 		}
 		
-		if(world.getBlockState(pos) == ModBlocks.burning_pizza_oven.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 0))
+		if(world.getBlockState(pos) == ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 0))
 		{
 			ticks++;	
 			if(ticks == ConfigHandler.burningTimeOven)
 			{
-				world.setBlockState(pos, ModBlocks.pizza_oven.getDefaultState().withProperty(BlockPizzaOven.WOOD, 0));
+				world.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.WOOD, 0));
 			}
 		}
 	}

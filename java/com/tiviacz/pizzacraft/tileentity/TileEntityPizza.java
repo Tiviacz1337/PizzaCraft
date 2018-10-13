@@ -16,16 +16,16 @@ public class TileEntityPizza extends TileEntity implements ITickable
 	{
 		Block oven = world.getBlockState(pos.down()).getBlock();
 		
-		if(oven == ModBlocks.burning_pizza_oven)
+		if(oven == ModBlocks.BURNING_PIZZA_OVEN)
 		{
 			ticks++;
 			
 			if(ticks == 610)
 			{
-				world.setBlockState(pos, ModBlocks.pizza_burnt.getDefaultState());
+				world.setBlockState(pos, ModBlocks.PIZZA_BURNT.getDefaultState());
 			}
 			
-			if(oven == ModBlocks.pizza_oven)
+			if(oven == ModBlocks.PIZZA_OVEN)
 			{
 				ticks = 0;
 			}

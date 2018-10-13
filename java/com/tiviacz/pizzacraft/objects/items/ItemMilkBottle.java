@@ -28,8 +28,7 @@ public class ItemMilkBottle extends Item implements IHasModel
 	{
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(PizzaCraft.PizzaCraftTab);
-		this.setMaxStackSize(1);
+		setCreativeTab(PizzaCraft.PIZZACRAFTTAB);
 		
 		ModItems.ITEMS.add(this);
 	}
@@ -44,26 +43,28 @@ public class ItemMilkBottle extends Item implements IHasModel
 	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving)
     {
         if(!worldIn.isRemote)
-        if(entityLiving instanceof EntityPlayerMP)
         {
-            EntityPlayerMP entityplayermp = (EntityPlayerMP)entityLiving;
-            CriteriaTriggers.CONSUME_ITEM.trigger(entityplayermp, stack);
+	        if(entityLiving instanceof EntityPlayerMP)
+	        {
+	            EntityPlayerMP entityplayermp = (EntityPlayerMP)entityLiving;
+	            CriteriaTriggers.CONSUME_ITEM.trigger(entityplayermp, stack);
+	        }
+	
+	        if(entityLiving instanceof EntityPlayer && !((EntityPlayer)entityLiving).capabilities.isCreativeMode)
+	        {
+	            stack.shrink(1);
+	        }
+	
+	        entityLiving.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 610, 1, true, true));
+	        entityLiving.addPotionEffect(new PotionEffect(MobEffects.SPEED, 610, 1, true, true));
+	        entityLiving.removePotionEffect(MobEffects.BLINDNESS);
+	        entityLiving.removePotionEffect(MobEffects.HUNGER);
+	        entityLiving.removePotionEffect(MobEffects.NAUSEA);
+	        entityLiving.removePotionEffect(MobEffects.POISON);
+	        entityLiving.removePotionEffect(MobEffects.SLOWNESS);
+	        entityLiving.removePotionEffect(MobEffects.WEAKNESS);
+	        entityLiving.removePotionEffect(MobEffects.WITHER);
         }
-
-        if(entityLiving instanceof EntityPlayer && !((EntityPlayer)entityLiving).capabilities.isCreativeMode)
-        {
-            stack.shrink(1);
-        }
-
-        	entityLiving.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 2880, 1, true, true));
-        	entityLiving.addPotionEffect(new PotionEffect(MobEffects.SPEED, 2880, 1, true, true));
-        	entityLiving.removePotionEffect(MobEffects.BLINDNESS);
-        	entityLiving.removePotionEffect(MobEffects.HUNGER);
-        	entityLiving.removePotionEffect(MobEffects.NAUSEA);
-        	entityLiving.removePotionEffect(MobEffects.POISON);
-        	entityLiving.removePotionEffect(MobEffects.SLOWNESS);
-        	entityLiving.removePotionEffect(MobEffects.WEAKNESS);
-        	entityLiving.removePotionEffect(MobEffects.WITHER);
         return stack.isEmpty() ? new ItemStack(Items.GLASS_BOTTLE) : stack;
     }
 	

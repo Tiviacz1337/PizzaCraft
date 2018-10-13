@@ -55,7 +55,7 @@ public class BroccoliPlant extends BlockCrops
 		{
 			if(this.isMaxAge(state))
 			{
-				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.broccoli, 1)));
+				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.BROCCOLI, 1)));
 				worldIn.setBlockState(pos, this.getDefaultState().withProperty(getAgeProperty(), 3));
 				return true;
 			}				
@@ -66,13 +66,13 @@ public class BroccoliPlant extends BlockCrops
 	@Override
 	protected Item getSeed()
 	{
-		return ModItems.seed_broccoli;
+		return ModItems.SEED_BROCCOLI;
 	}
 	
 	@Override
 	protected Item getCrop()
 	{
-		return ModItems.broccoli;
+		return ModItems.BROCCOLI;
 	}
 	
 	@Override
@@ -85,12 +85,12 @@ public class BroccoliPlant extends BlockCrops
 		{
 			if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.seed_broccoli, 1));
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.SEED_BROCCOLI, 1));
 				worldIn.setBlockToAir(pos);
 			}
 			else
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.broccoli, 1));
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.BROCCOLI, 1));
 				worldIn.setBlockToAir(pos);
 			}
 		} 
@@ -164,11 +164,11 @@ public class BroccoliPlant extends BlockCrops
 		int a = ((Integer)state.getValue(this.getAgeProperty()));
 		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 		{
-			return new ItemStack(ModItems.seed_broccoli);
+			return new ItemStack(ModItems.SEED_BROCCOLI);
 		}
 		else
 		{
-			return new ItemStack(ModItems.broccoli);
+			return new ItemStack(ModItems.BROCCOLI);
 		}
 	}
 	
@@ -178,11 +178,11 @@ public class BroccoliPlant extends BlockCrops
 		int a = ((Integer)state.getValue(this.getAgeProperty()));
 		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 		{
-			return ModItems.seed_broccoli;
+			return ModItems.SEED_BROCCOLI;
 		}
 		else
 		{
-			return ModItems.broccoli;
+			return ModItems.BROCCOLI;
 		}
 	}
 	

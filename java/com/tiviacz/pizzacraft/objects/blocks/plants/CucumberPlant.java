@@ -56,7 +56,7 @@ public class CucumberPlant extends BlockCrops
 		{
 			if(this.isMaxAge(state))
 			{
-				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.cucumber, o)));
+				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.CUCUMBER, o)));
 				worldIn.setBlockState(pos, this.getDefaultState().withProperty(getAgeProperty(), 4));
 				return true;
 			}				
@@ -67,13 +67,13 @@ public class CucumberPlant extends BlockCrops
 	@Override
 	protected Item getSeed()
 	{
-		return ModItems.seed_cucumber;
+		return ModItems.SEED_CUCUMBER;
 	}
 	
 	@Override
 	protected Item getCrop()
 	{
-		return ModItems.cucumber;
+		return ModItems.CUCUMBER;
 	}
 	
 	@Override
@@ -89,12 +89,12 @@ public class CucumberPlant extends BlockCrops
 		{
 			if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.seed_cucumber, o));
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.SEED_CUCUMBER, o));
 				worldIn.setBlockToAir(pos);
 			}
 			else
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.cucumber, o));
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.CUCUMBER, o));
 				worldIn.setBlockToAir(pos);
 			}
 		} 
@@ -168,11 +168,11 @@ public class CucumberPlant extends BlockCrops
 		int a = ((Integer)state.getValue(this.getAgeProperty()));
 		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 		{
-			return new ItemStack(ModItems.seed_cucumber);
+			return new ItemStack(ModItems.SEED_CUCUMBER);
 		}
 		else
 		{
-			return new ItemStack(ModItems.cucumber);
+			return new ItemStack(ModItems.CUCUMBER);
 		}
 	}
 	
@@ -185,11 +185,11 @@ public class CucumberPlant extends BlockCrops
 		int a = ((Integer)state.getValue(this.getAgeProperty()));
 		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 		{
-			return new ItemStack(ModItems.seed_cucumber, o).getItem();
+			return new ItemStack(ModItems.SEED_CUCUMBER, o).getItem();
 		}
 		else
 		{
-			return new ItemStack(ModItems.cucumber, o).getItem();
+			return new ItemStack(ModItems.CUCUMBER, o).getItem();
 		}
     }
 	

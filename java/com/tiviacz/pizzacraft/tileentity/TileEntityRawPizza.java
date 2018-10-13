@@ -17,115 +17,115 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 	{
 		Block oven = world.getBlockState(pos.down()).getBlock();
 		
-		if(oven == ModBlocks.burning_pizza_oven)
+		if(oven == ModBlocks.BURNING_PIZZA_OVEN)
 		{
-			if(world.getBlockState(pos).getBlock() == ModBlocks.raw_pizza_0)
+			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_0)
 			{
 				ticks++; 
 				
 				if(ticks == ConfigHandler.cookingTimeMargherita)
 				{
-					world.setBlockState(pos, ModBlocks.pizza_0.getDefaultState());			
+					world.setBlockState(pos, ModBlocks.PIZZA_0.getDefaultState());			
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.raw_pizza_1)
+			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_1)
 			{
 				ticks++; 
 				
 				if(ticks == ConfigHandler.cookingTimeFunghi)
 				{
-					world.setBlockState(pos, ModBlocks.pizza_1.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_1.getDefaultState());
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.raw_pizza_2)
+			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_2)
 			{
 				ticks++; 
 				
 				if(ticks == ConfigHandler.cookingTimeProsciutto)
 				{
-					world.setBlockState(pos, ModBlocks.pizza_2.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_2.getDefaultState());
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.raw_pizza_3)
+			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_3)
 			{
 				ticks++; 
 				
 				if(ticks == ConfigHandler.cookingTimeMeat)
 				{
-					world.setBlockState(pos, ModBlocks.pizza_3.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_3.getDefaultState());
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.raw_pizza_4)
+			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_4)
 			{
 				ticks++; 
 				
 				if(ticks == ConfigHandler.cookingTimeClassic)
 				{
-					world.setBlockState(pos, ModBlocks.pizza_4.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_4.getDefaultState());
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.raw_pizza_5)
+			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_5)
 			{
 				ticks++; 
 				
 				if(ticks == ConfigHandler.cookingTimeCapriciosa)
 				{
-					world.setBlockState(pos, ModBlocks.pizza_5.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_5.getDefaultState());
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.raw_pizza_6)
+			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_6)
 			{
 				ticks++; 
 				
 				if(ticks == ConfigHandler.cookingTimeHawaiian)
 				{
-					world.setBlockState(pos, ModBlocks.pizza_6.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_6.getDefaultState());
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.raw_pizza_7)
+			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_7)
 			{
 				ticks++; 
 				
 				if(ticks == ConfigHandler.cookingTimeToscana)
 				{
-					world.setBlockState(pos, ModBlocks.pizza_7.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_7.getDefaultState());
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.raw_pizza_8)
+			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_8)
 			{
 				ticks++; 
 				
 				if(ticks == ConfigHandler.cookingTimeRustica)
 				{
-					world.setBlockState(pos, ModBlocks.pizza_8.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_8.getDefaultState());
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.raw_pizza_9)
+			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_9)
 			{
 				ticks++; 
 				
 				if(ticks == ConfigHandler.cookingTimeVegetarian)
 				{
-					world.setBlockState(pos, ModBlocks.pizza_9.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_9.getDefaultState());
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.raw_pizza_10)
+			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_10)
 			{
 				ticks++; 
 				
 				if(ticks == ConfigHandler.cookingTimePompea)
 				{
-					world.setBlockState(pos, ModBlocks.pizza_10.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_10.getDefaultState());
 				}
 			}
 		}

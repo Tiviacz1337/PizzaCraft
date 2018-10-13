@@ -82,62 +82,62 @@ public class BlockPizzaBoard extends BlockBase
         {
         	ItemStack HeldItem = playerIn.getHeldItem(EnumHand.MAIN_HAND);
         	
-        	if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.pizza_0))
+        	if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_0))
             {     
                 playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
-                worldIn.setBlockState(pos, ModBlocks.pizza_board_w0.getDefaultState());      
+                worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_0.getDefaultState());      
             }
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.pizza_1))
+        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_1))
         	{
         		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
-                worldIn.setBlockState(pos, ModBlocks.pizza_board_w1.getDefaultState());
+                worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_1.getDefaultState());
         	}
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.pizza_2))
+        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_2))
         	{
         		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
-                worldIn.setBlockState(pos, ModBlocks.pizza_board_w2.getDefaultState());
+                worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_2.getDefaultState());
         	}
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.pizza_3))
+        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_3))
         	{
         		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
-                worldIn.setBlockState(pos, ModBlocks.pizza_board_w3.getDefaultState());
+                worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_3.getDefaultState());
         	}
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.pizza_4))
+        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_4))
         	{
         		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
-                worldIn.setBlockState(pos, ModBlocks.pizza_board_w4.getDefaultState());
+                worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_4.getDefaultState());
         	}
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.pizza_5))
+        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_5))
         	{
         		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
-        		worldIn.setBlockState(pos, ModBlocks.pizza_board_w5.getDefaultState());
+        		worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_5.getDefaultState());
         	}
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.pizza_6))
+        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_6))
         	{
         		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
-        		worldIn.setBlockState(pos, ModBlocks.pizza_board_w6.getDefaultState());
+        		worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_6.getDefaultState());
         	}
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.pizza_7))
+        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_7))
         	{
         		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
-        		worldIn.setBlockState(pos, ModBlocks.pizza_board_w7.getDefaultState());
+        		worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_7.getDefaultState());
         	}
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.pizza_8))
+        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_8))
         	{
         		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
-        		worldIn.setBlockState(pos, ModBlocks.pizza_board_w8.getDefaultState());
-        	}
-        	
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.pizza_9))
-        	{
-        		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
-        		worldIn.setBlockState(pos, ModBlocks.pizza_board_w9.getDefaultState());
+        		worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_8.getDefaultState());
         	}
         	
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.pizza_10))
+        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_9))
         	{
         		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
-        		worldIn.setBlockState(pos, ModBlocks.pizza_board_w10.getDefaultState());
+        		worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_9.getDefaultState());
+        	}
+        	
+        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_10))
+        	{
+        		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
+        		worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_10.getDefaultState());
         	}
         	else 
         	{        

@@ -54,7 +54,7 @@ public class OnionPlant extends BlockCrops
 		{
 			if(this.isMaxAge(state))
 			{
-				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.onion, 1)));
+				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.ONION, 1)));
 				worldIn.setBlockState(pos, this.getDefaultState().withProperty(getAgeProperty(), 0));
 				return true;
 			}				
@@ -65,13 +65,13 @@ public class OnionPlant extends BlockCrops
 	@Override
 	protected Item getSeed()
 	{
-		return ModItems.seed_onion;
+		return ModItems.SEED_ONION;
 	}
 	
 	@Override
 	protected Item getCrop()
 	{
-		return ModItems.onion;
+		return ModItems.ONION;
 	}
 	
 	@Override
@@ -84,12 +84,12 @@ public class OnionPlant extends BlockCrops
 		{
 			if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.seed_onion, 1));
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.SEED_ONION, 1));
 				worldIn.setBlockToAir(pos);
 			}
 			else
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.onion, 1));
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.ONION, 1));
 				worldIn.setBlockToAir(pos);
 			}
 		} 
@@ -163,11 +163,11 @@ public class OnionPlant extends BlockCrops
 		int a = ((Integer)state.getValue(this.getAgeProperty()));
 		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 		{
-			return new ItemStack(ModItems.seed_onion);
+			return new ItemStack(ModItems.SEED_ONION);
 		}
 		else
 		{
-			return new ItemStack(ModItems.onion);
+			return new ItemStack(ModItems.ONION);
 		}
 	}
 	
@@ -176,11 +176,11 @@ public class OnionPlant extends BlockCrops
 		int a = ((Integer)state.getValue(this.getAgeProperty()));
 		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 		{
-			return new ItemStack(ModItems.seed_onion).getItem();
+			return new ItemStack(ModItems.SEED_ONION).getItem();
 		}
 		else
 		{
-			return new ItemStack(ModItems.onion).getItem();
+			return new ItemStack(ModItems.ONION).getItem();
 		}
     }
 	

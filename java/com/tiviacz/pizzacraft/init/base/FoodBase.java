@@ -17,13 +17,13 @@ import net.minecraft.world.World;
 public class FoodBase extends ItemFood implements IHasModel
 {
 
-	public FoodBase(String name, int amount, boolean isWolfFood) 
+	public FoodBase(String name, int amount, int saturation, boolean isWolfFood) 
 	{
 		
-		super(amount, isWolfFood);
+		super(amount, saturation, isWolfFood);
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(PizzaCraft.PizzaCraftTab);
+		setCreativeTab(PizzaCraft.PIZZACRAFTTAB);
 		
 		ModItems.ITEMS.add(this);
 	}

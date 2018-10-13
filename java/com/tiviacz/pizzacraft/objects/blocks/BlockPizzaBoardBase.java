@@ -115,7 +115,7 @@ public class BlockPizzaBoardBase extends BlockBase
             }
             else
             {
-                worldIn.setBlockState(pos, ModBlocks.pizza_board.getDefaultState());
+                worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD.getDefaultState());
             }
 
             return true;
@@ -141,7 +141,7 @@ public class BlockPizzaBoardBase extends BlockBase
             
             else
             {	
-            	ModBlocks.pizza_board.dropBlockAsItem(worldIn, pos, state, 1);
+            	ModBlocks.PIZZA_BOARD.dropBlockAsItem(worldIn, pos, state, 1);
             	worldIn.setBlockToAir(pos);
             }
         }
@@ -166,7 +166,7 @@ public class BlockPizzaBoardBase extends BlockBase
     	}
     	else
     	{
-    		return Item.getItemFromBlock(ModBlocks.pizza_board);
+    		return Item.getItemFromBlock(ModBlocks.PIZZA_BOARD);
     	}
 
     }

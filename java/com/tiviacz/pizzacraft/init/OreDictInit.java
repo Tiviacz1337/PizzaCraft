@@ -10,30 +10,31 @@ public class OreDictInit
 	
 	public static void registerOres()
 	{
-		OreDictionary.registerOre("toolBakeware", ModItems.bakeware);
-		OreDictionary.registerOre("toolMortarandpestle", ModItems.mortar_and_pestle);
+		OreDictionary.registerOre("toolBakeware", ModItems.BAKEWARE);
+		OreDictionary.registerOre("toolMortarandpestle", ModItems.MORTAR_AND_PESTLE);
+		OreDictionary.registerOre("toolKnife", ModItems.KNIFE);
 		
-		OreDictionary.registerOre("foodDough", ModItems.pizza_dough);
-		OreDictionary.registerOre("foodCheese", ModItems.cheese);
-		OreDictionary.registerOre("foodFlour", ModItems.flour);
+		OreDictionary.registerOre("foodDough", ModItems.PIZZA_DOUGH);
+		OreDictionary.registerOre("foodCheese", ModItems.CHEESE);
+		OreDictionary.registerOre("foodFlour", ModItems.FLOUR);
 		
 		OreDictionary.registerOre("listAllmushroom", Item.getItemById(39));
 		OreDictionary.registerOre("listAllmushroom", Item.getItemById(40));
 		
-		OreDictionary.registerOre("cropOlive", ModItems.olive);
-		OreDictionary.registerOre("seedOnion", ModItems.seed_onion);
-		OreDictionary.registerOre("cropOnion", ModItems.onion);		
-		OreDictionary.registerOre("seedBellpepper", ModItems.seed_pepper);
-		OreDictionary.registerOre("cropBellpepper", ModItems.pepper);	
-		OreDictionary.registerOre("seedPineapple", ModItems.seed_pineapple);
-		OreDictionary.registerOre("cropPineapple", ModItems.pineapple);	
-		OreDictionary.registerOre("seedTomato", ModItems.seed_tomato);
-		OreDictionary.registerOre("cropTomato", ModItems.tomato);
-		OreDictionary.registerOre("seedCucumber", ModItems.seed_cucumber);
-		OreDictionary.registerOre("cropCucumber", ModItems.cucumber);
-		OreDictionary.registerOre("seedCorn", ModItems.seed_corn);
-		OreDictionary.registerOre("cropCorn", ModItems.corn);
-		OreDictionary.registerOre("seedBroccoli", ModItems.seed_broccoli);
-		OreDictionary.registerOre("cropBroccoli", ModItems.broccoli);
+		OreDictionary.registerOre("cropOlive", ModItems.OLIVE);
+		OreDictionary.registerOre("seedOnion", ModItems.SEED_ONION);
+		OreDictionary.registerOre("cropOnion", ModItems.ONION);		
+		OreDictionary.registerOre("seedBellpepper", ModItems.SEED_PEPPER);
+		OreDictionary.registerOre("cropBellpepper", ModItems.PEPPER);	
+		OreDictionary.registerOre("seedPineapple", ModItems.SEED_PINEAPPLE);
+		OreDictionary.registerOre("cropPineapple", ModItems.PINEAPPLE);	
+		OreDictionary.registerOre("seedTomato", ModItems.SEED_TOMATO);
+		OreDictionary.registerOre("cropTomato", ModItems.TOMATO);
+		OreDictionary.registerOre("seedCucumber", ModItems.SEED_CUCUMBER);
+		OreDictionary.registerOre("cropCucumber", ModItems.CUCUMBER);
+		OreDictionary.registerOre("seedCorn", ModItems.SEED_CORN);
+		OreDictionary.registerOre("cropCorn", ModItems.CORN);
+		OreDictionary.registerOre("seedBroccoli", ModItems.SEED_BROCCOLI);
+		OreDictionary.registerOre("cropBroccoli", ModItems.BROCCOLI);
 	}
 }

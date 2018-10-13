@@ -31,7 +31,7 @@ public class ItemPeel extends ItemTool implements IHasModel
 {
 	private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.AIR});
 	
-	public static final ToolMaterial ItemDurabilityMaterial = EnumHelper.addToolMaterial("peel", 0, 150, 1.0F, 1.0F, 0);
+	public static final ToolMaterial PEEL_MATERIAL = EnumHelper.addToolMaterial("peel", 0, 150, 1.0F, 1.0F, 0);
 			
 	public ItemPeel(String name, float attackDamageIn, float attackSpeedIn, ToolMaterial materialIn) 
 	{
@@ -39,7 +39,7 @@ public class ItemPeel extends ItemTool implements IHasModel
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setFull3D();
-		setCreativeTab(PizzaCraft.PizzaCraftTab);
+		setCreativeTab(PizzaCraft.PIZZACRAFTTAB);
 		this.setMaxStackSize(1);
 		
 		ModItems.ITEMS.add(this);
@@ -55,9 +55,7 @@ public class ItemPeel extends ItemTool implements IHasModel
 	@Override
 	public ItemStack getContainerItem(ItemStack itemstack) 
 	{
-		ItemStack item = new ItemStack(this);
-		item.setItemDamage(item.getItemDamage() + 1);
-		return item;
+		return itemstack;
 	} 
 
 	@Override

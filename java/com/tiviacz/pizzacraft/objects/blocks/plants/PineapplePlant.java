@@ -54,7 +54,7 @@ public class PineapplePlant extends BlockCrops
 		{
 			if(this.isMaxAge(state))
 			{
-				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.pineapple, 1)));
+				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.PINEAPPLE, 1)));
 				worldIn.setBlockState(pos, this.getDefaultState().withProperty(getAgeProperty(), 0));
 				return true;
 			}				
@@ -65,13 +65,13 @@ public class PineapplePlant extends BlockCrops
 	@Override
 	protected Item getSeed()
 	{
-		return ModItems.seed_pineapple;
+		return ModItems.SEED_PINEAPPLE;
 	}
 	
 	@Override
 	protected Item getCrop()
 	{
-		return ModItems.pineapple;
+		return ModItems.PINEAPPLE;
 	}
 	
 	@Override
@@ -84,12 +84,12 @@ public class PineapplePlant extends BlockCrops
 		{
 			if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.seed_pineapple, 1));
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.SEED_PINEAPPLE, 1));
 				worldIn.setBlockToAir(pos);
 			}
 			else
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.pineapple, 1));
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.PINEAPPLE, 1));
 				worldIn.setBlockToAir(pos);
 			}
 		} 
@@ -163,11 +163,11 @@ public class PineapplePlant extends BlockCrops
 		int a = ((Integer)state.getValue(this.getAgeProperty()));
 		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 		{
-			return new ItemStack(ModItems.seed_pineapple);
+			return new ItemStack(ModItems.SEED_PINEAPPLE);
 		}
 		else
 		{
-			return new ItemStack(ModItems.pineapple);
+			return new ItemStack(ModItems.PINEAPPLE);
 		}
 	}
 	
@@ -178,11 +178,11 @@ public class PineapplePlant extends BlockCrops
 		int a = ((Integer)state.getValue(this.getAgeProperty()));
 		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
 		{
-			return new ItemStack(ModItems.seed_pineapple).getItem();
+			return new ItemStack(ModItems.SEED_PINEAPPLE).getItem();
 		}
 		else
 		{
-			return new ItemStack(ModItems.pineapple).getItem();
+			return new ItemStack(ModItems.PINEAPPLE).getItem();
 		}
     }
 	

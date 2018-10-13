@@ -25,7 +25,7 @@ public class ItemSeed extends Item implements IHasModel, IPlantable
 	{
 		setUnlocalizedName(name);
 		setRegistryName(name);
-		setCreativeTab(PizzaCraft.PizzaCraftTab);
+		setCreativeTab(PizzaCraft.PIZZACRAFTTAB);
 		this.plant = plant;
 		
 		ModItems.ITEMS.add(this);

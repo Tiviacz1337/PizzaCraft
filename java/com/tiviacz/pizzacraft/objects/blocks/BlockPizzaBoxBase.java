@@ -70,7 +70,7 @@ public class BlockPizzaBoxBase extends BlockBase
         	float z = pos.getZ();
         	
         	worldIn.setBlockState(pos, pizzablock);
-        	InventoryHelper.spawnItemStack(worldIn, x, y, z, new ItemStack(ModItems.cardboard, 3));  
+        	InventoryHelper.spawnItemStack(worldIn, x, y, z, new ItemStack(ModItems.CARDBOARD, 3));  
 	    }
 	 return true; 
 	}
