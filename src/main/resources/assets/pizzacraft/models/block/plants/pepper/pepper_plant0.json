@@ -1,0 +1,6 @@
+{
+    "parent": "block/cross",
+    "textures": {
+        "cross": "pizzacraft:blocks/pepper_plant0"
+    }
+}

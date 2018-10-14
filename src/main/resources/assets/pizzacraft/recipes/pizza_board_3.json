@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "pizzacraft:pizza_3"
+    },
+    {
+      "item": "pizzacraft:pizza_board"
+    }
+  ],
+  "result": {
+    "item": "pizzacraft:pizza_board_3",
+    "count": 1
+  }
+}

@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "BBB",
+        "B B",
+        "BBB"
+    ],
+       
+       "key":
+        {
+            "B":
+            {
+                "item": "pizzacraft:cardboard"
+            }   
+       },
+       
+       "result":
+       {
+            "item": "pizzacraft:pizza_box",
+            "count": 1
+        }        
+}

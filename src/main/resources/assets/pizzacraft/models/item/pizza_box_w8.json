@@ -1,0 +1,16 @@
+{
+    "parent": "pizzacraft:block/pizza_box_filled/pizza_box_w8",
+    "display": {
+        "thirdperson_righthand": {
+            "rotation": [ 75, 0, 0 ],
+            "translation": [ 0, 5, 3.5],
+            "scale": [ 0.575, 0.575, 0.575 ]
+        },
+        
+        "firstperson_righthand": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 0, 5, 2 ],
+            "scale": [ 0.75, 0.75, 0.75 ]
+        }
+    }
+}

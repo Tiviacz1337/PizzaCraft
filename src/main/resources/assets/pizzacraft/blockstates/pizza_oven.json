@@ -1,0 +1,11 @@
+{
+    "variants": 
+    {
+        "wood=0": { "model": "pizzacraft:pizza_oven_0" },
+        "wood=1": { "model": "pizzacraft:pizza_oven_1" },
+        "wood=2": { "model": "pizzacraft:pizza_oven_2" },
+        "wood=3": { "model": "pizzacraft:pizza_oven_3" },
+        "wood=4": { "model": "pizzacraft:pizza_oven_4" }
+        
+    }
+}

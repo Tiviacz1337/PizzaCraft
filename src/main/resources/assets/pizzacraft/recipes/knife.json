@@ -1,0 +1,28 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "BX"
+    ],
+       
+       "key":
+        {
+            "B":
+            {
+                "item": "minecraft:stick"
+            },
+            
+            "X":
+            {
+                "item": "minecraft:iron_ingot"
+            }          
+       },
+       
+       "result":
+       {
+            "item": "pizzacraft:knife",
+            "count": 1
+        }     
+  
+}

@@ -1,0 +1,6 @@
+{
+    "parent": "block/crop",
+    "textures": {
+        "crop": "pizzacraft:blocks/onion_plant3"
+    }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "pizzacraft:milk_bottle"
+    }
+  ],
+  "result": {
+    "item": "pizzacraft:cheese",
+    "count": 1
+  }
+}

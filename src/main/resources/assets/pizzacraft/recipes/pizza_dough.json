@@ -1,0 +1,38 @@
+{
+  "type": "forge:ore_shaped",
+  
+  "pattern": [
+  
+        " A ",
+        "FCF",
+        "XXX"
+  ],
+  
+  "key": 
+  {
+    "C": 
+    {
+      "type": "forge:ore_dict",
+      "ore": "foodFlour"
+    },
+    
+    "X": 
+    {
+      "item": "minecraft:wheat"
+    },
+    
+    "F": 
+    {
+        "item": "minecraft:egg"
+    },
+    
+    "A":
+    {
+          "item": "pizzacraft:milk_bottle"
+    }
+  },
+  "result": {
+    "item": "pizzacraft:pizza_dough",
+    "count": 1
+  }
+}

@@ -1,0 +1,11 @@
+{
+    "variants": {   
+        "bites=0": { "model": "pizzacraft:pizza_board/pizza_board_8/pizza_board_8_uneaten" },
+        "bites=1": { "model": "pizzacraft:pizza_board/pizza_board_8/pizza_board_8_slice1" },
+        "bites=2": { "model": "pizzacraft:pizza_board/pizza_board_8/pizza_board_8_slice2" },
+        "bites=3": { "model": "pizzacraft:pizza_board/pizza_board_8/pizza_board_8_slice3" },
+        "bites=4": { "model": "pizzacraft:pizza_board/pizza_board_8/pizza_board_8_slice4" },
+        "bites=5": { "model": "pizzacraft:pizza_board/pizza_board_8/pizza_board_8_slice5" }
+    }
+}
+

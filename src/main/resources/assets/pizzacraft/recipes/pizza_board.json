@@ -1,0 +1,22 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "B"
+    ],
+       
+       "key":
+        {
+            "B":
+            {
+                "item": "minecraft:wooden_pressure_plate"
+            }          
+       },
+       
+       "result":
+       {
+            "item": "pizzacraft:pizza_board",
+            "count": 1
+        }        
+}

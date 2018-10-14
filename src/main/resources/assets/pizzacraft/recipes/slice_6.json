@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "pizzacraft:knife"
+    },
+    {
+      "item": "pizzacraft:pizza_6"
+    }
+  ],
+  "result": {
+    "item": "pizzacraft:slice_6",
+    "count": 6
+  }
+}

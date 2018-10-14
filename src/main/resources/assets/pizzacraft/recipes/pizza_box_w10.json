@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "pizzacraft:pizza_10"
+    },
+    {
+      "item": "pizzacraft:pizza_box"
+    }
+  ],
+  "result": {
+    "item": "pizzacraft:pizza_box_w10",
+    "count": 1
+  }
+}

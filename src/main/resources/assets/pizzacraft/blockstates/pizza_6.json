@@ -1,0 +1,11 @@
+{
+    "variants": {
+        "bites=0": { "model": "pizzacraft:pizza/pizza_6/pizza_6_uneaten" },
+        "bites=1": { "model": "pizzacraft:pizza/pizza_6/pizza_6_slice1" },
+        "bites=2": { "model": "pizzacraft:pizza/pizza_6/pizza_6_slice2" },
+        "bites=3": { "model": "pizzacraft:pizza/pizza_6/pizza_6_slice3" },
+        "bites=4": { "model": "pizzacraft:pizza/pizza_6/pizza_6_slice4" },
+        "bites=5": { "model": "pizzacraft:pizza/pizza_6/pizza_6_slice5" }
+    }
+}
+

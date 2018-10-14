@@ -1,0 +1,9 @@
+{
+    "variants": {
+        "facing=up": { "model": "pizzacraft:pizza_box_filled/pizza_box_w9" },
+  "facing=south": { "model": "pizzacraft:pizza_box_filled/pizza_box_w9" },
+  "facing=east": { "model": "pizzacraft:pizza_box_filled/pizza_box_w9","y":270 },
+  "facing=west": { "model": "pizzacraft:pizza_box_filled/pizza_box_w9","y":90 },
+  "facing=north": { "model": "pizzacraft:pizza_box_filled/pizza_box_w9","y":180 }
+    }
+}

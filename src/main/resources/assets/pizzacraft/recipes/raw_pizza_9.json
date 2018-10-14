@@ -1,0 +1,40 @@
+{
+  "type": "forge:ore_shapeless",
+  "ingredients": [
+    {
+      "type": "forge:ore_dict",
+      "ore": "toolBakeware"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "foodDough"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "foodCheese"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "cropBellpepper"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "cropTomato"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "cropBroccoli"
+    },
+    {
+      "type": "forge:ore_dict",
+      "ore": "cropCorn"
+    }
+  ],
+  "result": {
+    "item": "pizzacraft:raw_pizza_9",
+    "count": 1
+  }
+}
+
+
+
