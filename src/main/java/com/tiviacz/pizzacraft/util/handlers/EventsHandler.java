@@ -10,6 +10,7 @@ import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.init.ModSmeltery;
 import com.tiviacz.pizzacraft.init.OreDictInit;
 import com.tiviacz.pizzacraft.objects.items.ItemMilkBottle;
+import com.tiviacz.pizzacraft.proxy.ClientProxy;
 import com.tiviacz.pizzacraft.util.IHasModel;
 
 import net.minecraft.block.Block;
@@ -67,7 +68,6 @@ public class EventsHandler
 			ModSmeltery.init();			
 			TileEntityHandler.registerTileEntity();
 			OreDictInit.registerOres();
-		//	NetworkRegistry.INSTANCE.registerGuiHandler(PizzaCraft.instance, new GuiHandler());
 		}
 		
 		public static void PostInitRegistries(FMLPostInitializationEvent event){}

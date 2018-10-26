@@ -101,6 +101,5 @@ public class ModBlocks
 		//Other
 		
 		public static final Block PIZZA_OVEN = new BlockPizzaOven("pizza_oven", Material.IRON);
-		public static final Block BURNING_PIZZA_OVEN = new BlockPizzaOvenBurning("burning_pizza_oven", Material.IRON);	
-				
+		public static final Block BURNING_PIZZA_OVEN = new BlockPizzaOvenBurning("burning_pizza_oven", Material.IRON);
 }

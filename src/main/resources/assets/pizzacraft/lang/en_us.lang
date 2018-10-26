@@ -13,9 +13,6 @@ item.mortar_and_pestle.name=Mortar and Pestle
 item.knife.name=Knife
 item.peel.name=Peel
 
-tile.pizza_oven.name=Pizza Oven
-tile.burning_pizza_oven.name=Burning Pizza Oven
-
 //Ingredients
 item.cheese.name=Cheese
 item.flour.name=Flour
