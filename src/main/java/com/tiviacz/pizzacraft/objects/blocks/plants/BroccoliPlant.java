@@ -45,7 +45,6 @@ public class BroccoliPlant extends BlockCrops
 		setRegistryName(name);
 		
 		ModBlocks.BLOCKS.add(this);
-		ModItems.ITEMS.add(new ItemBlock(this).setRegistryName(getRegistryName()));
 	}
 	
 	@Override
