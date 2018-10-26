@@ -3,10 +3,9 @@ package com.tiviacz.pizzacraft.init;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tiviacz.pizzacraft.init.base.ArmorBase;
-import com.tiviacz.pizzacraft.init.base.DrinkBase;
 import com.tiviacz.pizzacraft.init.base.FoodBase;
 import com.tiviacz.pizzacraft.init.base.ItemBase;
+import com.tiviacz.pizzacraft.objects.items.ItemDeliverArmor;
 import com.tiviacz.pizzacraft.objects.items.ItemMilkBottle;
 import com.tiviacz.pizzacraft.objects.items.ItemPeel;
 import com.tiviacz.pizzacraft.objects.items.ItemReturn;
@@ -15,6 +14,7 @@ import com.tiviacz.pizzacraft.objects.items.seeds.ItemSeedCorn;
 import com.tiviacz.pizzacraft.objects.items.seeds.ItemSeedCucumber;
 import com.tiviacz.pizzacraft.objects.items.seeds.ItemSeedOnion;
 import com.tiviacz.pizzacraft.objects.items.seeds.ItemSeedPepper;
+import com.tiviacz.pizzacraft.objects.items.seeds.ItemSeedPineapple;
 import com.tiviacz.pizzacraft.objects.items.seeds.ItemSeedTomato;
 
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -55,7 +55,7 @@ public class ModItems
 		
 		public static final Item SEED_ONION = new ItemSeedOnion("seed_onion");
 		public static final Item SEED_PEPPER = new ItemSeedPepper("seed_pepper");
-		public static final Item SEED_PINEAPPLE = new ItemSeedBroccoli("seed_pineapple");
+		public static final Item SEED_PINEAPPLE = new ItemSeedPineapple("seed_pineapple");
 		public static final Item SEED_TOMATO = new ItemSeedTomato("seed_tomato");
 		public static final Item SEED_CUCUMBER = new ItemSeedCucumber("seed_cucumber");
 		public static final Item SEED_CORN = new ItemSeedCorn("seed_corn");
@@ -77,8 +77,8 @@ public class ModItems
 
 		//Pizza's deliver set
 		
-		public static final Item PIZZA_DELIVER_HAT = new ArmorBase("pizza_deliver_hat", ArmorBase.PIZZA_DELIVER_SET, 1, EntityEquipmentSlot.HEAD);
-		public static final Item PIZZA_DELIVER_SHIRT = new ArmorBase("pizza_deliver_shirt", ArmorBase.PIZZA_DELIVER_SET, 1, EntityEquipmentSlot.CHEST);
-		public static final Item PIZZA_DELIVER_LEGGINGS = new ArmorBase("pizza_deliver_leggings", ArmorBase.PIZZA_DELIVER_SET, 2, EntityEquipmentSlot.LEGS);
-		public static final Item PIZZA_DELIVER_BOOTS = new ArmorBase("pizza_deliver_boots", ArmorBase.PIZZA_DELIVER_SET, 1, EntityEquipmentSlot.FEET);
+		public static final Item PIZZA_DELIVER_HAT = new ItemDeliverArmor("pizza_deliver_hat", ItemDeliverArmor.PIZZA_DELIVER_SET, 1, EntityEquipmentSlot.HEAD);
+		public static final Item PIZZA_DELIVER_SHIRT = new ItemDeliverArmor("pizza_deliver_shirt", ItemDeliverArmor.PIZZA_DELIVER_SET, 1, EntityEquipmentSlot.CHEST);
+		public static final Item PIZZA_DELIVER_LEGGINGS = new ItemDeliverArmor("pizza_deliver_leggings", ItemDeliverArmor.PIZZA_DELIVER_SET, 2, EntityEquipmentSlot.LEGS);
+		public static final Item PIZZA_DELIVER_BOOTS = new ItemDeliverArmor("pizza_deliver_boots", ItemDeliverArmor.PIZZA_DELIVER_SET, 1, EntityEquipmentSlot.FEET);
  }
