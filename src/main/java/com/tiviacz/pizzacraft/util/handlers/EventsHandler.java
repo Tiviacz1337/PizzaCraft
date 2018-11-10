@@ -7,9 +7,11 @@ import javax.annotation.Nonnull;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.ModItems;
+import com.tiviacz.pizzacraft.init.ModRecipes;
 import com.tiviacz.pizzacraft.init.ModSmeltery;
 import com.tiviacz.pizzacraft.init.OreDictInit;
 import com.tiviacz.pizzacraft.objects.items.ItemMilkBottle;
+import com.tiviacz.pizzacraft.objects.items.ItemPizzaBurntShield;
 import com.tiviacz.pizzacraft.proxy.ClientProxy;
 import com.tiviacz.pizzacraft.util.IHasModel;
 
@@ -24,11 +26,15 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -65,9 +71,10 @@ public class EventsHandler
 		
 		public static void initRegistries(FMLInitializationEvent event)
 		{
-			ModSmeltery.init();			
+			ModSmeltery.init();
 			TileEntityHandler.registerTileEntity();
 			OreDictInit.registerOres();
+			ModRecipes.initRecipes();
 		}
 		
 		public static void PostInitRegistries(FMLPostInitializationEvent event){}
@@ -125,11 +132,49 @@ public class EventsHandler
 		    	event.setBurnTime(100);
 		    }
 		    
-		    if(event.getItemStack().getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_BOX) || event.getItemStack().getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_BOARD))
+		    if(event.getItemStack().getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_BOX))
 		    {
 		    	event.setBurnTime(800);
 		    }
+		    
+		    if(event.getItemStack().getItem() == ModItems.PIZZA_BOARD_SHIELD || event.getItemStack().getItem() == ModItems.PIZZA_BURNT_SHIELD)
+		    {
+		    	event.setBurnTime(200);
+		    }
+		    
+		    if(event.getItemStack().getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_BOARD) || event.getItemStack().getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_BURNT))
+		    {
+		    	event.setBurnTime(400);
+		    }
 		}
+		
+		@SubscribeEvent
+	    public static void attackEvent(LivingAttackEvent event) 
+		{
+	        float damage = event.getAmount();
+	        
+	        if(damage > 0 && event.getEntityLiving() instanceof EntityPlayer) 
+	        {
+	            EntityPlayer player = (EntityPlayer)event.getEntityLiving();
+	            if(player.world.isRemote) 
+	            {
+	            	return;
+	            }
+	            
+	            ItemStack activeItemStack = player.getActiveItemStack();
+	            if(!activeItemStack.isEmpty() && activeItemStack.getItem() instanceof ItemPizzaBurntShield) 
+	            { 
+	                activeItemStack.damageItem(1 + MathHelper.floor(damage), player);
+	                if(activeItemStack.isEmpty()) 
+	                {
+	                    EnumHand hand = player.getActiveHand();
+	                    ForgeEventFactory.onPlayerDestroyItem(player, activeItemStack, hand);
+	                    player.setHeldItem(hand, ItemStack.EMPTY);
+	                    player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, 0.6F + player.getRNG().nextFloat() * 0.4F, 0.8F + player.getRNG().nextFloat() * 0.4F);
+	                }
+	            }
+	        }
+	    }
 		
 		@SubscribeEvent
 		public static void checkLeaves(BlockEvent.HarvestDropsEvent event)

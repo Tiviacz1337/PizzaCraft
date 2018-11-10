@@ -30,7 +30,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockRawPizza extends BlockBase implements ITileEntityProvider
 {
-	protected static final AxisAlignedBB RAW_PIZZA_AABB = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.0625D, 0.9375D);
+	public static final AxisAlignedBB RAW_PIZZA_AABB = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.0625D, 0.9375D);
 
 	public BlockRawPizza(String name, Material material) 
 	{
@@ -43,39 +43,43 @@ public class BlockRawPizza extends BlockBase implements ITileEntityProvider
 	
 	}
 	
+	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
     {
         return RAW_PIZZA_AABB;
     }
 	
+	@Override
 	public boolean isFullCube(IBlockState state)
     {
         return false;
     }
 
+	@Override
     public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }
-    
+	
+	@Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {	
     	if(!worldIn.isRemote)
         {	
-        	ItemStack HeldItem = playerIn.getHeldItem(EnumHand.MAIN_HAND);        	
-        	ItemStack Peel = new ItemStack(ModItems.PEEL);
+        	ItemStack helditem = playerIn.getHeldItem(EnumHand.MAIN_HAND);
         	
-        	if(HeldItem.getItem() == ModItems.PEEL && (!playerIn.capabilities.isCreativeMode || playerIn.capabilities.isCreativeMode))
+        	if(helditem.getItem() == ModItems.PEEL && (!playerIn.capabilities.isCreativeMode || playerIn.capabilities.isCreativeMode))
         	{
         		InventoryHelper.spawnItemStack(worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ(), new ItemStack(this));
 
         		worldIn.setBlockToAir(pos);
-        		playerIn.getHeldItem(EnumHand.MAIN_HAND).damageItem(1, playerIn);
+        		playerIn.getHeldItem(hand).damageItem(1, playerIn);
         	}
         }
 		return true;
     }
     
+	@Override
     public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
     {
         return super.canPlaceBlockAt(worldIn, pos) ? this.canBlockStay(worldIn, pos) : false;       
@@ -95,25 +99,29 @@ public class BlockRawPizza extends BlockBase implements ITileEntityProvider
     	return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP);
     }
     
+    @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Items.AIR;
     }
     
+    @Override
     public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
     {
         return new ItemStack(this);
     }
     
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
-        return BlockFaceShape.UNDEFINED;
-    }
-    
+    @Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.CUTOUT;
+    }
+    
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
+    {
+        return BlockFaceShape.UNDEFINED;
     }
 
 	@Override

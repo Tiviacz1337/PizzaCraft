@@ -45,60 +45,62 @@ public class BlockPizzaOven extends BlockBase
         setHarvestLevel("pickaxe", 1);
 	}
 	
+	@Override
+	public boolean isFullCube(IBlockState state)
+    {
+        return true;
+    }
+
+	@Override
+    public boolean isOpaqueCube(IBlockState state)
+    {
+        return false;
+    }
+	
+	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {	
     	if(!worldIn.isRemote)
         {	
         	ItemStack helditem = playerIn.getHeldItem(hand);
-        	int i = ((Integer)state.getValue(WOOD)).intValue();
-        	IBlockState iBlockState = worldIn.getBlockState(pos.up());
+        	int a = state.getValue(WOOD).intValue();
         	
-        	if(helditem.getItem() == Items.STICK && (i == 0 || i == 1 || i == 2))
+        	if(helditem.getItem() == Items.STICK && (a == 0 || a == 1 || a == 2))
         	{
-        		worldIn.setBlockState(pos, state.withProperty(WOOD, i + 1));
+        		worldIn.setBlockState(pos, state.withProperty(WOOD, a + 1));
         		helditem.shrink(1);
         	}
         	
-        	if(helditem.isEmpty() && (i == 1 || i == 2 || i == 3))
-        	{
-        		worldIn.setBlockState(pos, state.withProperty(WOOD, i - 1));
-        		playerIn.inventory.addItemStackToInventory(new ItemStack(Items.STICK));
-        	}
-        	
-        	if(helditem.getItem() == Item.getItemFromBlock(Blocks.NETHERRACK) && i == 0)
+        	if(helditem.getItem() == Item.getItemFromBlock(Blocks.NETHERRACK) && a == 0)
         	{
         		worldIn.setBlockState(pos, state.withProperty(WOOD, 4));
         		helditem.shrink(1);
         	}
         	
-        	if(helditem.isEmpty() && i == 4)
+        	if(helditem.isEmpty() && a > 0)
         	{
-        		worldIn.setBlockState(pos, state.withProperty(WOOD, 0));
-        		playerIn.inventory.addItemStackToInventory(new ItemStack(Blocks.NETHERRACK));
+        		if(a == 4)
+        		{
+        			worldIn.setBlockState(pos, state.withProperty(WOOD, 0));
+            		playerIn.inventory.addItemStackToInventory(new ItemStack(Blocks.NETHERRACK));
+        		}
         		
+        		else
+        		{
+        			worldIn.setBlockState(pos, state.withProperty(WOOD, a - 1));
+            		playerIn.inventory.addItemStackToInventory(new ItemStack(Items.STICK));
+        		}
         	}
         	
-        	if(helditem.getItem() == Items.FLINT_AND_STEEL && i == 1)
+        	if(helditem.getItem() == Items.FLINT_AND_STEEL)
         	{
-        		worldIn.setBlockState(pos, ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 0));
+        		if(a != 0)
+        		{
+        			worldIn.setBlockState(pos, ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, a - 1));
+        		}
         	}
         	
-        	if(helditem.getItem() == Items.FLINT_AND_STEEL && i == 2)
-        	{
-        		worldIn.setBlockState(pos, ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 1));
-        	}
-        	
-        	if(helditem.getItem() == Items.FLINT_AND_STEEL && i == 3)
-        	{
-        		worldIn.setBlockState(pos, ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 2));
-        	}
-        	
-        	if(helditem.getItem() == Items.FLINT_AND_STEEL && i == 4)
-        	{
-        		worldIn.setBlockState(pos, ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 3));
-        	}
-        	
-        	if(iBlockState == Blocks.AIR.getDefaultState())
+        	if(worldIn.getBlockState(pos.up()) == Blocks.AIR.getDefaultState())
 			{
 				if(helditem.getItem() == Item.getItemFromBlock(ModBlocks.RAW_PIZZA_0))
 				{
@@ -169,71 +171,53 @@ public class BlockPizzaOven extends BlockBase
         }
 		return true;
     }
-	
-	public boolean isFullCube(IBlockState state)
-    {
-        return true;
-    }
-
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
     
+	@Override
     public IBlockState getStateFromMeta(int meta)
     {
         return this.getDefaultState().withProperty(WOOD, meta);
     }
-
+    
+	@Override
+    public int getMetaFromState(IBlockState state)
+    {
+        return state.getValue(WOOD).intValue();
+    }
+	
+	@Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }
-    
-    public int getMetaFromState(IBlockState state)
-    {
-        return ((Integer)state.getValue(WOOD)).intValue();
-    }
-
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] {WOOD});
-    }
-
+	
+	@Override
     public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
     {
         return BlockFaceShape.UNDEFINED;
     }
+	
+	@Override
+    protected BlockStateContainer createBlockState()
+    {
+        return new BlockStateContainer(this, new IProperty[] {WOOD});
+    }
     
+	@Override
     public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
     {
+    	int a = state.getValue(WOOD).intValue();
+    	
     	if(!worldIn.isRemote && !player.capabilities.isCreativeMode)
-		{
-			int i = ((Integer)state.getValue(WOOD)).intValue();
-			
-			double x = pos.getX();
-			double y = pos.getY();
-			double z = pos.getZ();
-			
-	        if(i == 1)
+		{	
+    		for(int c = this.getDefaultState().getValue(WOOD).intValue(); c < 4;)
+    		{
+    			InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Items.STICK, c));
+    		}
+    		
+	        if(a == 4)
 	        {
-	        	InventoryHelper.spawnItemStack(worldIn, x, y, z, new ItemStack(Items.STICK));
-	        }
-	        
-	        if(i == 2)
-	        {
-	        	InventoryHelper.spawnItemStack(worldIn, x, y, z, new ItemStack(Items.STICK, 2));
-	        }
-	        
-	        if(i == 3)
-	        {
-	        	InventoryHelper.spawnItemStack(worldIn, x, y, z, new ItemStack(Items.STICK, 3));
-	        }
-	        
-	        if(i == 4)
-	        {
-	        	InventoryHelper.spawnItemStack(worldIn, x, y, z, new ItemStack(Blocks.NETHERRACK));
+	        	InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(Blocks.NETHERRACK));
 	        }
 		}
     }

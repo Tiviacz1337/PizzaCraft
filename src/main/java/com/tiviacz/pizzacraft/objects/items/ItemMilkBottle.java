@@ -1,8 +1,6 @@
 package com.tiviacz.pizzacraft.objects.items;
 
-import com.tiviacz.pizzacraft.PizzaCraft;
-import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.util.IHasModel;
+import com.tiviacz.pizzacraft.init.base.ItemBase;
 
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,22 +19,11 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
-public class ItemMilkBottle extends Item implements IHasModel
-{	
-	
+public class ItemMilkBottle extends ItemBase
+{		
 	public ItemMilkBottle(String name)
 	{
-		setUnlocalizedName(name);
-		setRegistryName(name);
-		setCreativeTab(PizzaCraft.PIZZACRAFTTAB);
-		
-		ModItems.ITEMS.add(this);
-	}
-
-	@Override
-	public void registerModels() 
-	{
-		PizzaCraft.proxy.registerItemRenderer(this, 0, "inventory");		
+		super(name);
 	}
 	
 	@Override
@@ -67,7 +54,6 @@ public class ItemMilkBottle extends Item implements IHasModel
         }
         return stack.isEmpty() ? new ItemStack(Items.GLASS_BOTTLE) : stack;
     }
-	
 	
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack)

@@ -31,17 +31,17 @@ public class ModBlocks
 			
 		//Pizza
 		
-		public static final Block PIZZA_0 = new BlockPizza("pizza_0", Material.CAKE, 4, 15F);
-		public static final Block PIZZA_1 = new BlockPizza("pizza_1", Material.CAKE, 6, 15F);
-		public static final Block PIZZA_2 = new BlockPizza("pizza_2", Material.CAKE, 6, 15F);
-		public static final Block PIZZA_3 = new BlockPizza("pizza_3", Material.CAKE, 8, 15F);
-		public static final Block PIZZA_4 = new BlockPizza("pizza_4", Material.CAKE, 6, 15F);
-		public static final Block PIZZA_5 = new BlockPizza("pizza_5", Material.CAKE, 8, 15F);
-		public static final Block PIZZA_6 = new BlockPizza("pizza_6", Material.CAKE, 6, 15F);
-		public static final Block PIZZA_7 = new BlockPizza("pizza_7", Material.CAKE, 9, 15F);
-		public static final Block PIZZA_8 = new BlockPizza("pizza_8", Material.CAKE, 10, 15F);
-		public static final Block PIZZA_9 = new BlockPizza("pizza_9", Material.CAKE, 10, 15F);
-		public static final Block PIZZA_10 = new BlockPizza("pizza_10", Material.CAKE, 10, 15F);
+		public static final Block PIZZA_0 = new BlockPizza("pizza_0", Material.CAKE, 4, 15F, ModItems.SLICE_0);
+		public static final Block PIZZA_1 = new BlockPizza("pizza_1", Material.CAKE, 6, 15F, ModItems.SLICE_1);
+		public static final Block PIZZA_2 = new BlockPizza("pizza_2", Material.CAKE, 6, 15F, ModItems.SLICE_2);
+		public static final Block PIZZA_3 = new BlockPizza("pizza_3", Material.CAKE, 8, 15F, ModItems.SLICE_3);
+		public static final Block PIZZA_4 = new BlockPizza("pizza_4", Material.CAKE, 6, 15F, ModItems.SLICE_4);
+		public static final Block PIZZA_5 = new BlockPizza("pizza_5", Material.CAKE, 8, 15F, ModItems.SLICE_5);
+		public static final Block PIZZA_6 = new BlockPizza("pizza_6", Material.CAKE, 6, 15F, ModItems.SLICE_6);
+		public static final Block PIZZA_7 = new BlockPizza("pizza_7", Material.CAKE, 9, 15F, ModItems.SLICE_7);
+		public static final Block PIZZA_8 = new BlockPizza("pizza_8", Material.CAKE, 10, 15F, ModItems.SLICE_8);
+		public static final Block PIZZA_9 = new BlockPizza("pizza_9", Material.CAKE, 10, 15F, ModItems.SLICE_9);
+		public static final Block PIZZA_10 = new BlockPizza("pizza_10", Material.CAKE, 10, 15F, ModItems.SLICE_10);
 		public static final Block PIZZA_BURNT = new BlockPizzaBurnt("pizza_burnt", Material.CAKE);
 		
 		//Raw Pizza
@@ -61,17 +61,17 @@ public class ModBlocks
 		//Pizza Board
 		
 		public static final Block PIZZA_BOARD = new BlockPizzaBoard("pizza_board", Material.WOOD);
-		public static final Block PIZZA_BOARD_0 = new BlockPizzaBoardBase("pizza_board_0", Material.WOOD, 4, 15F);
-		public static final Block PIZZA_BOARD_1 = new BlockPizzaBoardBase("pizza_board_1", Material.WOOD, 6, 15F);
-		public static final Block PIZZA_BOARD_2 = new BlockPizzaBoardBase("pizza_board_2", Material.WOOD, 6, 15F);
-		public static final Block PIZZA_BOARD_3 = new BlockPizzaBoardBase("pizza_board_3", Material.WOOD, 8, 15F);
-		public static final Block PIZZA_BOARD_4 = new BlockPizzaBoardBase("pizza_board_4", Material.WOOD, 6, 15F);
-		public static final Block PIZZA_BOARD_5 = new BlockPizzaBoardBase("pizza_board_5", Material.WOOD, 8, 15F);
-		public static final Block PIZZA_BOARD_6 = new BlockPizzaBoardBase("pizza_board_6", Material.WOOD, 6, 15F);
-		public static final Block PIZZA_BOARD_7 = new BlockPizzaBoardBase("pizza_board_7", Material.WOOD, 9, 15F);
-		public static final Block PIZZA_BOARD_8 = new BlockPizzaBoardBase("pizza_board_8", Material.WOOD, 10, 15F);
-		public static final Block PIZZA_BOARD_9 = new BlockPizzaBoardBase("pizza_board_9", Material.WOOD, 10, 15F);
-		public static final Block PIZZA_BOARD_10 = new BlockPizzaBoardBase("pizza_board_10", Material.WOOD, 10, 15F);
+		public static final Block PIZZA_BOARD_0 = new BlockPizzaBoardBase("pizza_board_0", Material.WOOD, 4, 15F, ModItems.SLICE_0);
+		public static final Block PIZZA_BOARD_1 = new BlockPizzaBoardBase("pizza_board_1", Material.WOOD, 6, 15F, ModItems.SLICE_1);
+		public static final Block PIZZA_BOARD_2 = new BlockPizzaBoardBase("pizza_board_2", Material.WOOD, 6, 15F, ModItems.SLICE_2);
+		public static final Block PIZZA_BOARD_3 = new BlockPizzaBoardBase("pizza_board_3", Material.WOOD, 8, 15F, ModItems.SLICE_3);
+		public static final Block PIZZA_BOARD_4 = new BlockPizzaBoardBase("pizza_board_4", Material.WOOD, 6, 15F, ModItems.SLICE_4);
+		public static final Block PIZZA_BOARD_5 = new BlockPizzaBoardBase("pizza_board_5", Material.WOOD, 8, 15F, ModItems.SLICE_5);
+		public static final Block PIZZA_BOARD_6 = new BlockPizzaBoardBase("pizza_board_6", Material.WOOD, 6, 15F, ModItems.SLICE_6);
+		public static final Block PIZZA_BOARD_7 = new BlockPizzaBoardBase("pizza_board_7", Material.WOOD, 9, 15F, ModItems.SLICE_7);
+		public static final Block PIZZA_BOARD_8 = new BlockPizzaBoardBase("pizza_board_8", Material.WOOD, 10, 15F, ModItems.SLICE_8);
+		public static final Block PIZZA_BOARD_9 = new BlockPizzaBoardBase("pizza_board_9", Material.WOOD, 10, 15F, ModItems.SLICE_9);
+		public static final Block PIZZA_BOARD_10 = new BlockPizzaBoardBase("pizza_board_10", Material.WOOD, 10, 15F, ModItems.SLICE_10);
 		
 		//Boxes with Pizza
 		

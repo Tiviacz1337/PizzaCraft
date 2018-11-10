@@ -17,6 +17,7 @@ public class ItemDeliverArmor extends ItemArmor implements IHasModel
 	public ItemDeliverArmor(String name, ArmorMaterial materialIn, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn)
 	{
 		super(materialIn, renderIndexIn, equipmentSlotIn);
+		
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(PizzaCraft.PIZZACRAFTTAB);

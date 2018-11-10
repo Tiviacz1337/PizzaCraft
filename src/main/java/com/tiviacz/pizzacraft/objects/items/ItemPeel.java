@@ -29,21 +29,21 @@ import net.minecraftforge.common.util.EnumHelper;
 
 public class ItemPeel extends ItemTool implements IHasModel
 {
-	private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet(new Block[] {Blocks.AIR});
+	private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet(new Block[] {});
 	
 	public static final ToolMaterial PEEL_MATERIAL = EnumHelper.addToolMaterial("peel", 0, 150, 1.0F, 1.0F, 0);
 			
 	public ItemPeel(String name, float attackDamageIn, float attackSpeedIn, ToolMaterial materialIn) 
 	{
 		super(attackDamageIn, attackSpeedIn, materialIn, EFFECTIVE_ON);
+		
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setFull3D();
 		setCreativeTab(PizzaCraft.PIZZACRAFTTAB);
-		this.setMaxStackSize(1);
+		setMaxStackSize(1);
 		
 		ModItems.ITEMS.add(this);
-		
 	}
 
 	@Override
@@ -51,18 +51,6 @@ public class ItemPeel extends ItemTool implements IHasModel
 	{
 		PizzaCraft.proxy.registerItemRenderer(this, 0, "inventory");		
 	}
-	
-	@Override
-	public ItemStack getContainerItem(ItemStack itemstack) 
-	{
-		return itemstack;
-	} 
-
-	@Override
-	public boolean hasContainerItem(ItemStack itemstack) 
-	{
-		return true;
-	} 
 	
 	@Override
 	public boolean isRepairable()

@@ -29,15 +29,16 @@ import net.minecraftforge.common.IPlantable;
 
 public class BroccoliPlant extends BlockCrops
 {
-	private static final AxisAlignedBB[] BROCCOLI_PLANT_AABB =
-			new AxisAlignedBB[] {new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.3125D, 1.0D),
-					new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.3125D, 1.0D),
-					new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.6875D, 1.0D),			
-					new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.6875D, 1.0D),
-					new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D),	
-					new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D),
-					new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D),
-					new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D)}; 
+	private int a = this.getDefaultState().getValue(this.getAgeProperty());
+	public static final AxisAlignedBB[] BROCCOLI_PLANT_AABB = new AxisAlignedBB[] {
+	new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.3125D, 1.0D),
+	new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.3125D, 1.0D),
+	new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.6875D, 1.0D),			
+	new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.6875D, 1.0D),
+	new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D),	
+	new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.9375D, 1.0D),
+	new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D),
+	new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D)}; 
 	
 	public BroccoliPlant(String name)
 	{
@@ -49,15 +50,15 @@ public class BroccoliPlant extends BlockCrops
 	
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-	{	
+	{
 		if(!worldIn.isRemote)
 		{
 			if(this.isMaxAge(state))
 			{
-				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.BROCCOLI, 1)));
+				worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.BROCCOLI)));
 				worldIn.setBlockState(pos, this.getDefaultState().withProperty(getAgeProperty(), 3));
 				return true;
-			}				
+			}
 		}
 		return false;
 	}
@@ -76,21 +77,18 @@ public class BroccoliPlant extends BlockCrops
 	
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
-	{
-		int a = ((Integer)state.getValue(this.getAgeProperty()));
-		Block block = worldIn.getBlockState(pos.down()).getBlock();
-		
-		if(block != Blocks.FARMLAND)
+	{	
+		if(worldIn.getBlockState(pos.down()).getBlock() != Blocks.FARMLAND)
 		{
-			if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
+			worldIn.setBlockToAir(pos);
+			
+			if(a < 6)
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.SEED_BROCCOLI, 1));
-				worldIn.setBlockToAir(pos);
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.SEED_BROCCOLI));
 			}
 			else
 			{
-				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.BROCCOLI, 1));
-				worldIn.setBlockToAir(pos);
+				InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.BROCCOLI));
 			}
 		} 
 	}
@@ -98,7 +96,7 @@ public class BroccoliPlant extends BlockCrops
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
 	{
-		return BROCCOLI_PLANT_AABB[(Integer)state.getValue(this.getAgeProperty()).intValue()];
+		return BROCCOLI_PLANT_AABB[state.getValue(this.getAgeProperty()).intValue()];
 	}
 	
 	@Override
@@ -116,7 +114,7 @@ public class BroccoliPlant extends BlockCrops
 	@Override
 	protected int getAge(IBlockState state)
     {
-        return ((Integer)state.getValue(this.getAgeProperty())).intValue();
+        return state.getValue(this.getAgeProperty()).intValue();
     }
 	
 	@Override
@@ -128,7 +126,7 @@ public class BroccoliPlant extends BlockCrops
 	@Override
     public boolean isMaxAge(IBlockState state)
     {
-        return ((Integer)state.getValue(this.getAgeProperty())).intValue() >= this.getMaxAge();
+        return state.getValue(this.getAgeProperty()).intValue() >= this.getMaxAge();
     }
 	
 	@Override
@@ -159,30 +157,15 @@ public class BroccoliPlant extends BlockCrops
 	
 	@Override
 	public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) 
-	{
-		int a = ((Integer)state.getValue(this.getAgeProperty()));
-		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
-		{
-			return new ItemStack(ModItems.SEED_BROCCOLI);
-		}
-		else
-		{
-			return new ItemStack(ModItems.BROCCOLI);
-		}
+	{		
+		if(a < 6) return new ItemStack(ModItems.SEED_BROCCOLI);
+		else return new ItemStack(ModItems.BROCCOLI);
 	}
 	
 	@Override
 	public Item getItemDropped(IBlockState state, Random rand, int fortune)
 	{
-		int a = ((Integer)state.getValue(this.getAgeProperty()));
-		if(a == 0 || a == 1 || a == 2 || a == 3 || a == 4 || a == 5)
-		{
-			return ModItems.SEED_BROCCOLI;
-		}
-		else
-		{
-			return ModItems.BROCCOLI;
-		}
+		if(a < 6) return ModItems.SEED_BROCCOLI;
+		else return ModItems.BROCCOLI;
 	}
-	
 }

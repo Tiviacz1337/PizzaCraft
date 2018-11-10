@@ -16,10 +16,11 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 	public void update() 
 	{
 		Block oven = world.getBlockState(pos.down()).getBlock();
+		Block pizza = world.getBlockState(pos).getBlock();
 		
 		if(oven == ModBlocks.BURNING_PIZZA_OVEN)
 		{
-			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_0)
+			if(pizza == ModBlocks.RAW_PIZZA_0)
 			{
 				ticks++; 
 				
@@ -29,7 +30,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_1)
+			if(pizza == ModBlocks.RAW_PIZZA_1)
 			{
 				ticks++; 
 				
@@ -39,7 +40,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_2)
+			if(pizza == ModBlocks.RAW_PIZZA_2)
 			{
 				ticks++; 
 				
@@ -49,7 +50,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_3)
+			if(pizza == ModBlocks.RAW_PIZZA_3)
 			{
 				ticks++; 
 				
@@ -59,7 +60,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_4)
+			if(pizza == ModBlocks.RAW_PIZZA_4)
 			{
 				ticks++; 
 				
@@ -69,7 +70,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_5)
+			if(pizza == ModBlocks.RAW_PIZZA_5)
 			{
 				ticks++; 
 				
@@ -79,7 +80,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_6)
+			if(pizza == ModBlocks.RAW_PIZZA_6)
 			{
 				ticks++; 
 				
@@ -89,7 +90,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_7)
+			if(pizza == ModBlocks.RAW_PIZZA_7)
 			{
 				ticks++; 
 				
@@ -99,7 +100,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_8)
+			if(pizza == ModBlocks.RAW_PIZZA_8)
 			{
 				ticks++; 
 				
@@ -109,7 +110,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_9)
+			if(pizza == ModBlocks.RAW_PIZZA_9)
 			{
 				ticks++; 
 				
@@ -119,7 +120,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				}
 			}
 			
-			if(world.getBlockState(pos).getBlock() == ModBlocks.RAW_PIZZA_10)
+			if(pizza == ModBlocks.RAW_PIZZA_10)
 			{
 				ticks++; 
 				

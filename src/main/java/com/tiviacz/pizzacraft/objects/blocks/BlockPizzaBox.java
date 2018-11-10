@@ -34,16 +34,16 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockPizzaBox extends BlockBase 
 {
 	public static final PropertyInteger COUNT = PropertyInteger.create("count", 0, 8);
-	protected static final AxisAlignedBB[] PIZZA_BOX_AABB = new AxisAlignedBB[] {
-		    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D), //0
-		    new AxisAlignedBB(0D, 0, 0D, 1D, 0.25D, 1D), //1
-		    new AxisAlignedBB(0D, 0, 0D, 1D, 0.375D, 1D), //2
-		    new AxisAlignedBB(0D, 0, 0D, 1D, 0.5D, 1D), //3
-		    new AxisAlignedBB(0D, 0, 0D, 1D, 0.625D, 1D), //4
-		    new AxisAlignedBB(0D, 0, 0D, 1D, 0.75D, 1D), //5
-			new AxisAlignedBB(0D, 0, 0D, 1D, 0.875D, 1D), //6
-			new AxisAlignedBB(0D, 0, 0D, 1D, 1D, 1D), //7
-			new AxisAlignedBB(0D, 0, 0D, 1D, 1D, 1D)}; //8	
+	public static final AxisAlignedBB[] PIZZA_BOX_AABB = new AxisAlignedBB[] {
+	new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D),
+	new AxisAlignedBB(0D, 0, 0D, 1D, 0.25D, 1D),
+	new AxisAlignedBB(0D, 0, 0D, 1D, 0.375D, 1D),
+	new AxisAlignedBB(0D, 0, 0D, 1D, 0.5D, 1D),
+	new AxisAlignedBB(0D, 0, 0D, 1D, 0.625D, 1D),
+	new AxisAlignedBB(0D, 0, 0D, 1D, 0.75D, 1D),
+	new AxisAlignedBB(0D, 0, 0D, 1D, 0.875D, 1D),
+	new AxisAlignedBB(0D, 0, 0D, 1D, 1D, 1D),
+	new AxisAlignedBB(0D, 0, 0D, 1D, 1D, 1D)};
 		
 	public BlockPizzaBox(String name, Material material)
 	{
@@ -55,37 +55,26 @@ public class BlockPizzaBox extends BlockBase
         setHarvestLevel("hand", 0);
 	}
 	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	{
+		return PIZZA_BOX_AABB[state.getValue(COUNT).intValue()];
+	}
 	
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
-		int c = ((Integer)state.getValue(COUNT)).intValue();
-		
-		if(c == 8)
-		{
-			return true;
-		}
-		
-		else
-		{
-			return false; 
-		}
+		int a = state.getValue(COUNT).intValue();
+		if(a == 7) return true;
+		else return false;
 	}
 	
 	@Override
 	public boolean isFullCube(IBlockState state)
 	{
-		int c = ((Integer)state.getValue(COUNT)).intValue();
-		
-		if(c == 7)
-		{
-			return true;
-		}
-		
-		else
-		{
-			return false; 
-		}
+		int a = state.getValue(COUNT).intValue();
+		if(a == 7) return true;
+		else return false;
 	}
 	
 	@Override
@@ -93,45 +82,44 @@ public class BlockPizzaBox extends BlockBase
     {	
     	if(!worldIn.isRemote)
         {	
-    		int c = ((Integer)state.getValue(COUNT)).intValue();
-        	ItemStack HeldItem = playerIn.getHeldItem(EnumHand.MAIN_HAND);
-        	IBlockState iBlockstate = worldIn.getBlockState(pos.up());
+        	ItemStack helditem = playerIn.getHeldItem(hand);
+        	int a = state.getValue(COUNT).intValue();
         	
-        	if(HeldItem.getItem() == Item.getItemFromBlock(this))
+        	if(helditem.getItem() == Item.getItemFromBlock(this))
         	{   
-        		if(c != 7)
-        		{
-        			worldIn.setBlockState(pos, state.withProperty(COUNT, c + 1), 3);
-        			
-        			if(!playerIn.capabilities.isCreativeMode)
-        			{
-        				HeldItem.shrink(1);
-        			}
-        		}
-        		
-        		if(c == 7 && iBlockstate == Blocks.AIR.getDefaultState())
+        		if(a == 7 && worldIn.getBlockState(pos.up()) == Blocks.AIR.getDefaultState())
         		{
         			worldIn.setBlockState(pos.up(), state.withProperty(COUNT, 0));
         			
         			if(!playerIn.capabilities.isCreativeMode)
         			{
-        				HeldItem.shrink(1);
+        				helditem.shrink(1);
+        			}
+        		}
+        		
+        		else
+        		{
+        			worldIn.setBlockState(pos, state.withProperty(COUNT, a + 1), 3);
+        			
+        			if(!playerIn.capabilities.isCreativeMode)
+        			{
+        				helditem.shrink(1);
         			}
         		}
         	}
 	        	
-        	else if(HeldItem.getItem() != Item.getItemFromBlock(this))
+        	if(helditem.getItem() != Item.getItemFromBlock(this))
 	        {
-	        	if(c != 0)	
-	        	{
-	        		worldIn.setBlockState(pos, state.withProperty(COUNT, c - 1), 3);
-		        	InventoryHelper.spawnItemStack(worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ(), new ItemStack(this));	  
-	        	}
-	        	
-	        	if(c == 0)
+        		InventoryHelper.spawnItemStack(worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ(), new ItemStack(this));
+        		
+	        	if(a == 0)
 	        	{
 	        		worldIn.setBlockToAir(pos);
-	        		InventoryHelper.spawnItemStack(worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ(), new ItemStack(this));
+	        	}
+	        	
+	        	else
+	        	{
+	        		worldIn.setBlockState(pos, state.withProperty(COUNT, a - 1), 3);
 	        	}
 	        }
         }
@@ -139,21 +127,9 @@ public class BlockPizzaBox extends BlockBase
     }
 	
 	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-	{
-		return PIZZA_BOX_AABB[((Integer)state.getValue(COUNT)).intValue()];	    
-	}
-	
-	@Override
-	protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] {COUNT});
-    }
-	
-	@Override
 	public int getMetaFromState(IBlockState state)
     {
-        return ((Integer)state.getValue(COUNT)).intValue();
+        return state.getValue(COUNT).intValue();
     }
 	
 	@Override
@@ -176,48 +152,17 @@ public class BlockPizzaBox extends BlockBase
     }
 	
 	@Override
+	protected BlockStateContainer createBlockState()
+    {
+        return new BlockStateContainer(this, new IProperty[] {COUNT});
+    }
+	
+	@Override
 	public int quantityDropped(IBlockState state, int fortune, Random random)
-	{
-		int c = ((Integer)state.getValue(COUNT)).intValue();
-		
-		if(c == 0)
+	{	
+		for(int c = state.getValue(COUNT).intValue(); c < 8;)
 		{
-			return 1;
-		}
-		
-		if(c == 1)
-		{
-			return 2; 
-		}
-		
-		if(c == 2)
-		{
-			return 3;
-		}
-		
-		if(c == 3)
-		{
-			return 4;
-		}
-		
-		if(c == 4)
-		{
-			return 5;
-		}
-		
-		if(c == 5)
-		{
-			return 6;
-		}
-		
-		if(c == 6)
-		{
-			return 7;
-		}
-		
-		if(c == 7)
-		{
-			return 8;
+			return c + 1;
 		}
 		return super.quantityDropped(state, fortune, random);
 	}

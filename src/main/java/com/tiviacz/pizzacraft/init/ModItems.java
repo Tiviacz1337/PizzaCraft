@@ -5,9 +5,12 @@ import java.util.List;
 
 import com.tiviacz.pizzacraft.init.base.FoodBase;
 import com.tiviacz.pizzacraft.init.base.ItemBase;
+import com.tiviacz.pizzacraft.objects.items.ItemPizzaBurntShield;
 import com.tiviacz.pizzacraft.objects.items.ItemDeliverArmor;
+import com.tiviacz.pizzacraft.objects.items.ItemKnife;
 import com.tiviacz.pizzacraft.objects.items.ItemMilkBottle;
 import com.tiviacz.pizzacraft.objects.items.ItemPeel;
+import com.tiviacz.pizzacraft.objects.items.ItemPizzaBoardShield;
 import com.tiviacz.pizzacraft.objects.items.ItemReturn;
 import com.tiviacz.pizzacraft.objects.items.seeds.ItemSeedBroccoli;
 import com.tiviacz.pizzacraft.objects.items.seeds.ItemSeedCorn;
@@ -32,8 +35,10 @@ public class ModItems
 		public static final Item RED_CLOTH = new ItemBase("red_cloth");
 		public static final Item BAKEWARE = new ItemReturn("bakeware");
 		public static final Item MORTAR_AND_PESTLE = new ItemReturn("mortar_and_pestle");
-		public static final Item KNIFE = new ItemReturn("knife");
+		public static final Item KNIFE = new ItemKnife("knife");
 		public static final Item PEEL = new ItemPeel("peel", 1.0F, -3.0F, ItemPeel.PEEL_MATERIAL);
+		public static final Item PIZZA_BURNT_SHIELD = new ItemPizzaBurntShield("pizza_burnt_shield");
+		public static final Item PIZZA_BOARD_SHIELD = new ItemPizzaBoardShield("pizza_board_shield");
 		
 		//Ingredients
 		

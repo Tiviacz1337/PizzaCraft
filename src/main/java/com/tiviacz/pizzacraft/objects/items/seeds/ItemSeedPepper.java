@@ -3,11 +3,10 @@ package com.tiviacz.pizzacraft.objects.items.seeds;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.util.IHasModel;
+import com.tiviacz.pizzacraft.init.base.ItemBase;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -18,23 +17,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
 
-public class ItemSeedPepper extends Item implements IHasModel, IPlantable
+public class ItemSeedPepper extends ItemBase implements IPlantable
 {
-	
 	public ItemSeedPepper(String name)
 	{
-		setUnlocalizedName(name);
-		setRegistryName(name);
-		setCreativeTab(PizzaCraft.PIZZACRAFTTAB);
-		
-		ModItems.ITEMS.add(this);
-	}
-
-
-	@Override
-	public void registerModels() 
-	{
-		PizzaCraft.proxy.registerItemRenderer(this, 0, "inventory");		
+		super(name);
 	}
 	
 	@Override
@@ -42,6 +29,7 @@ public class ItemSeedPepper extends Item implements IHasModel, IPlantable
 	{		
 		ItemStack stack = player.getHeldItem(hand);
 		IBlockState state = worldIn.getBlockState(pos);
+		
 		if(facing == EnumFacing.UP && player.canPlayerEdit(pos.offset(facing), facing, stack) && state.getBlock().canSustainPlant(state, worldIn, pos, EnumFacing.UP, this) && worldIn.isAirBlock(pos.up()))
 		{
 			worldIn.setBlockState(pos.up(), ModBlocks.PEPPER_PLANT.getDefaultState());
@@ -51,7 +39,6 @@ public class ItemSeedPepper extends Item implements IHasModel, IPlantable
 		
 		else return EnumActionResult.FAIL;
 	}
-
 
 	@Override
 	public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos)

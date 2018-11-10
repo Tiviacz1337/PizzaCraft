@@ -1,6 +1,7 @@
 package com.tiviacz.pizzacraft.objects.blocks;
 
 import com.tiviacz.pizzacraft.init.ModBlocks;
+import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.init.base.BlockBase;
 
 import net.java.games.input.Keyboard;
@@ -34,6 +35,11 @@ public class BlockPizzaBoard extends BlockBase
         setHarvestLevel("hand", 0);
 	}
 	
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	{
+		return PIZZA_BOARD_AABB;    
+	}
 	
 	@Override
 	public boolean isOpaqueCube(IBlockState state)
@@ -47,13 +53,6 @@ public class BlockPizzaBoard extends BlockBase
 		return false; 
 	}
 	
-	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-	{
-		    return PIZZA_BOARD_AABB;
-		    
-	}
-	
 	private boolean canBlockStay(World worldIn, BlockPos pos)
     {
 		return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP);
@@ -62,7 +61,7 @@ public class BlockPizzaBoard extends BlockBase
 	@Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
     {
-        if (!this.canBlockStay(worldIn, pos))
+        if(!this.canBlockStay(worldIn, pos))
         {
         	this.dropBlockAsItem(worldIn, pos, state, 1);
             worldIn.setBlockToAir(pos);
@@ -80,67 +79,65 @@ public class BlockPizzaBoard extends BlockBase
     {
         if(!worldIn.isRemote)
         {
-        	ItemStack HeldItem = playerIn.getHeldItem(EnumHand.MAIN_HAND);
+        	ItemStack helditem = playerIn.getHeldItem(hand);
         	
-        	if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_0))
+        	if(helditem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_0))
             {     
-                playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
-                worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_0.getDefaultState());      
+                worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_0.getDefaultState());
+                helditem.shrink(1);
             }
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_1))
+        	else if(helditem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_1))
         	{
-        		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
                 worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_1.getDefaultState());
+                helditem.shrink(1);
         	}
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_2))
+        	else if(helditem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_2))
         	{
-        		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
                 worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_2.getDefaultState());
+                helditem.shrink(1);
         	}
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_3))
+        	else if(helditem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_3))
         	{
-        		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
                 worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_3.getDefaultState());
+                helditem.shrink(1);
         	}
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_4))
+        	else if(helditem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_4))
         	{
-        		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
                 worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_4.getDefaultState());
+                helditem.shrink(1);
         	}
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_5))
+        	else if(helditem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_5))
         	{
-        		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
         		worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_5.getDefaultState());
+        		helditem.shrink(1);
         	}
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_6))
+        	else if(helditem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_6))
         	{
-        		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
         		worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_6.getDefaultState());
+        		helditem.shrink(1);
         	}
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_7))
+        	else if(helditem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_7))
         	{
-        		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
         		worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_7.getDefaultState());
+        		helditem.shrink(1);
         	}
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_8))
+        	else if(helditem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_8))
         	{
-        		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
         		worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_8.getDefaultState());
+        		helditem.shrink(1);
         	}
-        	
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_9))
+        	else if(helditem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_9))
         	{
-        		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
         		worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_9.getDefaultState());
+        		helditem.shrink(1);
         	}
-        	
-        	else if(HeldItem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_10))
+        	else if(helditem.getItem() == Item.getItemFromBlock(ModBlocks.PIZZA_10))
         	{
-        		playerIn.inventory.decrStackSize(playerIn.inventory.currentItem, 1);
         		worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD_10.getDefaultState());
+        		helditem.shrink(1);
         	}
         	else 
-        	{        
+        	{   
                 InventoryHelper.spawnItemStack(worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ(), new ItemStack(this));
                 worldIn.setBlockToAir(pos);
         	}

@@ -42,6 +42,12 @@ public class BlockPizzaBoxBase extends BlockBase
 	}
 	
 	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+	{
+		return PIZZA_BOX_AABB;    
+	}
+	
+	@Override
 	public boolean isOpaqueCube(IBlockState state)
 	{
 		return false;
@@ -52,27 +58,16 @@ public class BlockPizzaBoxBase extends BlockBase
 	{
 		return false; 
 	}
-		
-	@Override
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-	{
-		return PIZZA_BOX_AABB;
-			    
-	}
 	
 	@Override		   
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
 	    if(!worldIn.isRemote)
-	    {		              
-	    	float x = pos.getX();
-        	float y = pos.getY() + 0.25F;
-        	float z = pos.getZ();
-        	
+	    {	
         	worldIn.setBlockState(pos, pizzablock);
-        	InventoryHelper.spawnItemStack(worldIn, x, y, z, new ItemStack(ModItems.CARDBOARD, 3));  
+        	InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY() + 0.25F, pos.getZ(), new ItemStack(ModItems.CARDBOARD, 3));  
 	    }
-	 return true; 
+	    return true;
 	}
 	
 	@Override
@@ -90,7 +85,7 @@ public class BlockPizzaBoxBase extends BlockBase
 	@Override
 	public int getMetaFromState(IBlockState state) 
 	{
-	    return ((EnumFacing) state.getValue(FACING)).getIndex();
+	    return state.getValue(FACING).getIndex();
 	}
 	    
 	@Override
@@ -104,5 +99,4 @@ public class BlockPizzaBoxBase extends BlockBase
 	{
 	    return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
 	}
-
 }

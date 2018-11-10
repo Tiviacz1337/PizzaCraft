@@ -34,20 +34,20 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockPizza extends BlockBase implements ITileEntityProvider
 {	
-	
     public static final PropertyInteger BITES = PropertyInteger.create("bites", 0, 5);
-    protected static final AxisAlignedBB[] PIZZA_AABB = new AxisAlignedBB[] {
-    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.0625D, 0.9375D), //Uneaten
-    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.0625D, 0.9375D), //Slice1
-    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.875D, 0.0625D, 0.9375D), //Slice2
-    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.5D, 0.0625D, 0.9375D), //Slice3
-    new AxisAlignedBB(0.0625D, 0.0D, 0.375D, 0.5D, 0.0625D, 0.9375D), //Slice4
-    new AxisAlignedBB(0.125D, 0.0D, 0.5625D, 0.5D, 0.0625D, 0.9375D)}; //Slice5
+    public static final AxisAlignedBB[] PIZZA_AABB = new AxisAlignedBB[] {
+    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.0625D, 0.9375D),
+    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.0625D, 0.9375D),
+    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.875D, 0.0625D, 0.9375D),
+    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.5D, 0.0625D, 0.9375D),
+    new AxisAlignedBB(0.0625D, 0.0D, 0.375D, 0.5D, 0.0625D, 0.9375D),
+    new AxisAlignedBB(0.125D, 0.0D, 0.5625D, 0.5D, 0.0625D, 0.9375D)};
     
     float saturation;
     int foodstats;
+    Item pizzaslice;
 
-    public BlockPizza(String name, Material material, int foodstats, Float saturation)
+    public BlockPizza(String name, Material material, int foodstats, Float saturation, Item pizzaslice)
     {
         super(name, material);
  
@@ -57,97 +57,100 @@ public class BlockPizza extends BlockBase implements ITileEntityProvider
         setHarvestLevel("hand", 0);
         this.saturation = saturation;
         this.foodstats = foodstats;
+        this.pizzaslice = pizzaslice;
         this.setDefaultState(this.blockState.getBaseState().withProperty(BITES, 0));
         this.setTickRandomly(true);
        
     }
 
+    @Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
     {
-        return PIZZA_AABB[((Integer)state.getValue(BITES)).intValue()];
+        return PIZZA_AABB[state.getValue(BITES).intValue()];
     }
 
+    @Override
     public boolean isFullCube(IBlockState state)
     {
         return false;
     }
 
+    @Override
     public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }
 
+    @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {	
+    	ItemStack helditem = playerIn.getHeldItem(hand);
+    	int i = state.getValue(BITES).intValue();
+    	
     	if(!worldIn.isRemote)
         {	
-    		int i = ((Integer)state.getValue(BITES)).intValue();
-        	ItemStack HeldItem = playerIn.getHeldItem(EnumHand.MAIN_HAND);        	
-        	ItemStack Peel = new ItemStack(ModItems.PEEL);
-        	
-        	if(HeldItem.getItem() == ModItems.PEEL && i == 0 && (!playerIn.capabilities.isCreativeMode || playerIn.capabilities.isCreativeMode))
+        	if(helditem.getItem() == ModItems.PEEL && i == 0 && (!playerIn.capabilities.isCreativeMode || playerIn.capabilities.isCreativeMode))
         	{
         		InventoryHelper.spawnItemStack(worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ(), new ItemStack(this));
-
         		worldIn.setBlockToAir(pos);
-        		playerIn.getHeldItem(EnumHand.MAIN_HAND).damageItem(1, playerIn);
+        		playerIn.getHeldItem(hand).damageItem(1, playerIn);
         	}
+        	
+        	if(helditem.getItem() == ModItems.KNIFE)
+        	{
+        		InventoryHelper.spawnItemStack(worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ(), new ItemStack(pizzaslice));
+        		playerIn.getHeldItem(hand).damageItem(1, playerIn);
+        		
+        		if(i < 5)
+        		{
+        			worldIn.setBlockState(pos, state.withProperty(BITES, i + 1), 3);
+        		}
+        		else
+        		{
+        			worldIn.setBlockToAir(pos);
+        		}
+        	}
+        	return this.eatCake(worldIn, pos, state, playerIn);
         }
-    	if (!worldIn.isRemote)
-        {
-            return this.eatCake(worldIn, pos, state, playerIn);
-        }
-        else
-        {
-            ItemStack itemstack = playerIn.getHeldItem(hand);
-            return this.eatCake(worldIn, pos, state, playerIn) || itemstack.isEmpty();
-        }
+		return true;
     }
    
     private boolean eatCake(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
-    {	
-    	ItemStack HeldItem = player.getHeldItem(EnumHand.MAIN_HAND);
+    {
+    	ItemStack helditem = player.getHeldItem(player.getActiveHand());
+    	int i = state.getValue(BITES).intValue();
     	
-        if (!player.canEat(false))
+        if(!player.canEat(false) || helditem.getItem() == ModItems.PEEL || helditem.getItem() == ModItems.KNIFE)
         {
             return false;
-        }
-        else if(HeldItem.getItem() == ModItems.PEEL)
-        {
-        	return false;
         }
         else
         {
             player.addStat(StatList.CAKE_SLICES_EATEN);
-            player.getFoodStats().addStats(foodstats, saturation);    //The amount of food that restores 1 piece
-            int i = ((Integer)state.getValue(BITES)).intValue();
+            player.getFoodStats().addStats(foodstats, saturation);
 
-            if (i < 5) //The amount of bites after pizza disappears
-            {	
-            	if(HeldItem.getItem() == ModItems.PEEL)
-            	{
-            		return false;
-            	}
-            	else
+            if (i < 5)
+            {
                 worldIn.setBlockState(pos, state.withProperty(BITES, i + 1), 3);
             }
             else
             {
                 worldIn.setBlockToAir(pos);
             }
-
             return true;
         }
     }
 
+    @Override
     public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
     {
         return super.canPlaceBlockAt(worldIn, pos) ? this.canBlockStay(worldIn, pos) : false;       
     }
 
+    @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
     {	
-        if (!this.canBlockStay(worldIn, pos))
+        if(!this.canBlockStay(worldIn, pos))
         {	
         	worldIn.setBlockToAir(pos);
         }      
@@ -158,45 +161,53 @@ public class BlockPizza extends BlockBase implements ITileEntityProvider
     	return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP);
     }
 
+    @Override
     public int quantityDropped(Random random)
     {
         return 0;
     }
 
+    @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
         return Items.AIR;
     }
 
+    @Override
     public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
     {
         return new ItemStack(this);
     }
 
+    @Override
     public IBlockState getStateFromMeta(int meta)
     {
         return this.getDefaultState().withProperty(BITES, meta);
     }
 
+    @Override
+    public int getMetaFromState(IBlockState state)
+    {
+        return state.getValue(BITES).intValue();
+    }
+    
+    @Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }
 
-    public int getMetaFromState(IBlockState state)
-    {
-        return ((Integer)state.getValue(BITES)).intValue();
-    }
-
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] {BITES});
-    }
-
+    @Override
     public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
     {
         return BlockFaceShape.UNDEFINED;
+    }
+    
+    @Override
+    protected BlockStateContainer createBlockState()
+    {
+        return new BlockStateContainer(this, new IProperty[] {BITES});
     }
 
 	@Override

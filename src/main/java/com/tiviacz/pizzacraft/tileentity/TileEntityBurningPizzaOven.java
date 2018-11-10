@@ -12,13 +12,11 @@ import net.minecraft.util.ITickable;
 
 public class TileEntityBurningPizzaOven extends TileEntity implements ITickable
 {
-
 	int ticks = 0;
 
 	@Override
 	public void update() 
 	{
-		
 		if(world.getBlockState(pos) == ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 2))
 		{
 			ticks++;	

@@ -16,11 +16,10 @@ import net.minecraft.world.World;
 
 public class FoodBase extends ItemFood implements IHasModel
 {
-
 	public FoodBase(String name, int amount, int saturation, boolean isWolfFood) 
 	{
-		
 		super(amount, saturation, isWolfFood);
+		
 		setUnlocalizedName(name);
 		setRegistryName(name);
 		setCreativeTab(PizzaCraft.PIZZACRAFTTAB);
@@ -33,5 +32,4 @@ public class FoodBase extends ItemFood implements IHasModel
 	{
 		PizzaCraft.proxy.registerItemRenderer(this, 0, "inventory");	
 	}
-
 }

@@ -1,8 +1,5 @@
 package com.tiviacz.pizzacraft;
 
-import java.io.File;
-import java.util.List;
-
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.proxy.CommonProxy;
 import com.tiviacz.pizzacraft.util.handlers.EventsHandler;
@@ -18,13 +15,12 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-
 @Mod(modid = PizzaCraft.MODID, name = PizzaCraft.NAME, version = PizzaCraft.VERSION, updateJSON = "https://gist.githubusercontent.com/Tiviacz1337/b916e3981957f1e6f2de99ea0aa328fa/raw/4a1b4e905a3a8fd10922e9ccd97abac3f282e222/PizzaCraftUpdateJSON.json")
 public class PizzaCraft 
 {
 	public static final String MODID = "pizzacraft";
 	public static final String NAME = "pizzacraft";
-	public static final String VERSION = "1.2.5";
+	public static final String VERSION = "1.3.0";
 
 	public static CreativeTabs PIZZACRAFTTAB = (new CreativeTabs("pizzacrafttab")
 	{

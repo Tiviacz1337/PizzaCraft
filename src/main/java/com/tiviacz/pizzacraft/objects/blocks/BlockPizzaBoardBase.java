@@ -3,6 +3,7 @@ package com.tiviacz.pizzacraft.objects.blocks;
 import java.util.Random;
 
 import com.tiviacz.pizzacraft.init.ModBlocks;
+import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.init.base.BlockBase;
 
 import net.minecraft.block.Block;
@@ -31,18 +32,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockPizzaBoardBase extends BlockBase
 {	
     public static final PropertyInteger BITES = PropertyInteger.create("bites", 0, 5);
-    protected static final AxisAlignedBB[] PIZZA_BOARD_AABB = new AxisAlignedBB[] {
-    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D), //Uneaten
-    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D), //Slice1
-    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D), //Slice2
-    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D), //Slice3
-    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D), //Slice4
-    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D)}; //Slice5
+    public static final AxisAlignedBB[] PIZZA_BOARD_AABB = new AxisAlignedBB[] {
+    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D),
+    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D),
+    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D),
+    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D),
+    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D),
+    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D)};
     
     float saturation;
     int foodstats;
+    Item pizzaslice;
 
-    public BlockPizzaBoardBase(String name, Material material, int foodstats, Float saturation)
+    public BlockPizzaBoardBase(String name, Material material, int foodstats, Float saturation, Item pizzaslice)
     {
         super(name, material);
  
@@ -52,64 +54,76 @@ public class BlockPizzaBoardBase extends BlockBase
         setHarvestLevel("hand", 0);
         this.saturation = saturation;
         this.foodstats = foodstats;
+        this.pizzaslice = pizzaslice;
         this.setDefaultState(this.blockState.getBaseState().withProperty(BITES, 0));
         this.setTickRandomly(true);       
         
     }
 
+    @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
     {
-        return PIZZA_BOARD_AABB[((Integer)state.getValue(BITES)).intValue()];
+        return PIZZA_BOARD_AABB[state.getValue(BITES).intValue()];
     }
 
+    @Override
     public boolean isFullCube(IBlockState state)
     {
         return false;
     }
 
+    @Override
     public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }
 
+    @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-    	ItemStack HeldItem = playerIn.getHeldItem(EnumHand.MAIN_HAND);
-    	int i = ((Integer)state.getValue(BITES)).intValue();
+    	ItemStack helditem = playerIn.getHeldItem(hand);
+    	int i = state.getValue(BITES).intValue();
     	
     	if(!worldIn.isRemote)
     	{
-    		if(HeldItem.isEmpty() && playerIn.isSneaking() && i == 0 && (playerIn.canEat(true) || playerIn.canEat(false)))
+    		if(helditem.isEmpty() && playerIn.isSneaking() && i == 0 && (playerIn.canEat(true) || playerIn.canEat(false)))
     		{
     			worldIn.setBlockToAir(pos);
     			InventoryHelper.spawnItemStack(worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ(), new ItemStack(this));
     		}
-    		else if(!worldIn.isRemote)
-    		{
-    			return this.eatCake(worldIn, pos, state, playerIn);
-    		}
-    		else
-    		{
-    			ItemStack itemstack = playerIn.getHeldItem(hand);
-    			return this.eatCake(worldIn, pos, state, playerIn) || itemstack.isEmpty();
-    		}
+    		
+    		if(helditem.getItem() == ModItems.KNIFE)
+        	{
+    			InventoryHelper.spawnItemStack(worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ(), new ItemStack(pizzaslice));
+    			helditem.damageItem(1, playerIn);
+    			
+        		if(i < 5)
+        		{
+        			worldIn.setBlockState(pos, state.withProperty(BITES, i + 1), 3);
+        		}
+        		else
+        		{
+        			worldIn.setBlockState(pos, ModBlocks.PIZZA_BOARD.getDefaultState());
+        		}
+        	}
+    		return this.eatCake(worldIn, pos, state, playerIn);
     	}
 		return true;
     }
 
     private boolean eatCake(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
     {
-        if (!player.canEat(false))
+        if(!player.canEat(false) || player.getHeldItem(EnumHand.MAIN_HAND).getItem() == ModItems.KNIFE)
         {
             return false;
         }
         else
         {
             player.addStat(StatList.CAKE_SLICES_EATEN);
-            player.getFoodStats().addStats(6, 15.0F);    //The amount of food that restores 1 piece
-            int i = ((Integer)state.getValue(BITES)).intValue();
+            player.getFoodStats().addStats(6, 15.0F);
+            int i = state.getValue(BITES).intValue();
 
-            if (i < 5) //The amount of bites after pizza disappears
+            if(i < 5)
             {
                 worldIn.setBlockState(pos, state.withProperty(BITES, i + 1), 3);
             }
@@ -122,14 +136,16 @@ public class BlockPizzaBoardBase extends BlockBase
         }
     }
 
+    @Override
     public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
     {
         return super.canPlaceBlockAt(worldIn, pos) ? this.canBlockStay(worldIn, pos) : false;
     }
 
+    @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
     {
-    	int i = ((Integer)state.getValue(BITES)).intValue();
+    	int i = state.getValue(BITES).intValue();
     	
         if (!this.canBlockStay(worldIn, pos))
         {
@@ -152,14 +168,17 @@ public class BlockPizzaBoardBase extends BlockBase
     	return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP);
     }
 
+    @Override
     public int quantityDropped(Random random)
     {
         return 1;
     }
 
+    @Override
     public Item getItemDropped(IBlockState state, Random rand, int fortune)
     {
-    	int i = ((Integer)state.getValue(BITES)).intValue();
+    	int i = state.getValue(BITES).intValue();
+    	
     	if(i == 0)
     	{
     		return Item.getItemFromBlock(this);
@@ -171,35 +190,41 @@ public class BlockPizzaBoardBase extends BlockBase
 
     }
 
+    @Override
     public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
     {
         return new ItemStack(this);
     }
 
+    @Override
     public IBlockState getStateFromMeta(int meta)
     {
         return this.getDefaultState().withProperty(BITES, meta);
     }
+    
+    @Override
+    public int getMetaFromState(IBlockState state)
+    {
+        return state.getValue(BITES).intValue();
+    }
 
+    @Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }
-
-    public int getMetaFromState(IBlockState state)
-    {
-        return ((Integer)state.getValue(BITES)).intValue();
-    }
-
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] {BITES});
-    }
-
+    
+    @Override
     public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
     {
         return BlockFaceShape.UNDEFINED;
+    }
+
+    @Override
+    protected BlockStateContainer createBlockState()
+    {
+        return new BlockStateContainer(this, new IProperty[] {BITES});
     }
 }
 
