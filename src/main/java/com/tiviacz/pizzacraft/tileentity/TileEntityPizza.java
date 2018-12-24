@@ -22,7 +22,7 @@ public class TileEntityPizza extends TileEntity implements ITickable
 			
 			if(ticks == 610)
 			{
-				world.setBlockState(pos, ModBlocks.PIZZA_BURNT.getDefaultState());
+				world.setBlockState(pos, ModBlocks.PIZZA_BURNT.getDefaultState(), 3);
 			}
 			
 			if(oven == ModBlocks.PIZZA_OVEN)
@@ -45,7 +45,5 @@ public class TileEntityPizza extends TileEntity implements ITickable
 	{
 		super.readFromNBT(compound);
 		this.ticks = compound.getInteger("PizzaTicksValue");
-	}
-	
-	
+	}	
 }

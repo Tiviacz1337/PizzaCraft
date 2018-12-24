@@ -2,7 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "pizzacraft:knife"
+      "item": "pizzacraft:knife",
+      "data": 32767
     },
     {
       "item": "pizzacraft:pizza_5"

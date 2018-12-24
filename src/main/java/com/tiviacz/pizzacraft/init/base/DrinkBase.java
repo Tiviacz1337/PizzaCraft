@@ -25,7 +25,6 @@ import net.minecraft.world.World;
 
 public class DrinkBase extends Item implements IHasModel
 {		
-
 	public DrinkBase(String name) 
 	{
 		setUnlocalizedName(name);
@@ -33,12 +32,6 @@ public class DrinkBase extends Item implements IHasModel
 		setCreativeTab(PizzaCraft.PIZZACRAFTTAB);
 		
 		ModItems.ITEMS.add(this);
-	}
-
-	@Override
-	public void registerModels() 
-	{
-		PizzaCraft.proxy.registerItemRenderer(this, 0, "inventory");	
 	}
 	
 	@Override
@@ -49,14 +42,14 @@ public class DrinkBase extends Item implements IHasModel
         	entityLiving.curePotionEffects(stack);
         }
         
-        if (entityLiving instanceof EntityPlayerMP)
+        if(entityLiving instanceof EntityPlayerMP)
         {
             EntityPlayerMP entityplayermp = (EntityPlayerMP)entityLiving;
             CriteriaTriggers.CONSUME_ITEM.trigger(entityplayermp, stack);
             entityplayermp.addStat(StatList.getObjectUseStats(this));
         }
 
-        if (entityLiving instanceof EntityPlayer && !((EntityPlayer)entityLiving).capabilities.isCreativeMode)
+        if(entityLiving instanceof EntityPlayer && !((EntityPlayer)entityLiving).capabilities.isCreativeMode)
         {
             stack.shrink(1);
         }
@@ -64,20 +57,22 @@ public class DrinkBase extends Item implements IHasModel
         return stack.isEmpty() ? new ItemStack(Items.GLASS_BOTTLE) : stack;
     }
 	
+	@Override
 	public int getMaxItemUseDuration(ItemStack stack)
     {
         return 32;
     }
 	
+	@Override
 	public EnumAction getItemUseAction(ItemStack stack)
-	    {
-	        return EnumAction.DRINK;
-	    }
+	{
+		return EnumAction.DRINK;
+	}
 	
+	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn)
     {
         playerIn.setActiveHand(handIn);
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
     }
-
 }

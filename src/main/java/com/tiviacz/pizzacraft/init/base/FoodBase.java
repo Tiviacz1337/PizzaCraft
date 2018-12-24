@@ -26,10 +26,4 @@ public class FoodBase extends ItemFood implements IHasModel
 		
 		ModItems.ITEMS.add(this);
 	}
-
-	@Override
-	public void registerModels() 
-	{
-		PizzaCraft.proxy.registerItemRenderer(this, 0, "inventory");	
-	}
 }

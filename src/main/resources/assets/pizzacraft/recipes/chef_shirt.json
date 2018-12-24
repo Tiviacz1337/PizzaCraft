@@ -1,0 +1,24 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "B B",
+        "BBB",
+        "BBB"
+    ],
+       
+       "key":
+        {
+            "B":
+            {
+                "item": "pizzacraft:white_cloth"
+            }          
+       },
+       
+       "result":
+       {
+            "item": "pizzacraft:chef_shirt",
+            "count": 1
+        }        
+}

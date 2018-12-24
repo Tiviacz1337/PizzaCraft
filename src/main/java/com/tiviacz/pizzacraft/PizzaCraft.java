@@ -2,7 +2,6 @@ package com.tiviacz.pizzacraft;
 
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.proxy.CommonProxy;
-import com.tiviacz.pizzacraft.util.handlers.EventsHandler;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -20,7 +19,7 @@ public class PizzaCraft
 {
 	public static final String MODID = "pizzacraft";
 	public static final String NAME = "pizzacraft";
-	public static final String VERSION = "1.3.0";
+	public static final String VERSION = "1.4.0";
 
 	public static CreativeTabs PIZZACRAFTTAB = (new CreativeTabs("pizzacrafttab")
 	{
@@ -38,20 +37,20 @@ public class PizzaCraft
 	public static CommonProxy proxy;
 	
 	@EventHandler
-	public static void PreInit(FMLPreInitializationEvent event)
+	public void PreInit(FMLPreInitializationEvent event)
 	{
-		EventsHandler.PreInitRegistries(event);
+		proxy.preInitRegistries(event);
 	}
 	
 	@EventHandler
-	public static void init(FMLInitializationEvent event)
+	public void init(FMLInitializationEvent event)
 	{
-		EventsHandler.initRegistries(event);
+		proxy.initRegistries(event);
 	}
 	
 	@EventHandler
-	public static void PostInit(FMLPostInitializationEvent event)
+	public void PostInit(FMLPostInitializationEvent event)
 	{
-		EventsHandler.PostInitRegistries(event);
+		proxy.postInitRegistries(event);
 	}
 }

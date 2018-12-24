@@ -1,9 +1,9 @@
 package com.tiviacz.pizzacraft.tileentity;
 
 import com.tiviacz.pizzacraft.init.ModBlocks;
-import com.tiviacz.pizzacraft.objects.blocks.BlockPizzaOven;
+import com.tiviacz.pizzacraft.objects.block.BlockPizzaOven;
+import com.tiviacz.pizzacraft.objects.block.BlockPizzaOvenBurning;
 import com.tiviacz.pizzacraft.util.handlers.ConfigHandler;
-import com.tiviacz.pizzacraft.objects.blocks.BlockPizzaOvenBurning;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,7 +22,7 @@ public class TileEntityBurningPizzaOven extends TileEntity implements ITickable
 			ticks++;	
 			if(ticks == ConfigHandler.burningTimeOven)
 			{
-				world.setBlockState(pos, ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 1));
+				world.setBlockState(pos, ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 1), 3);
 			}
 		}
 		
@@ -31,7 +31,7 @@ public class TileEntityBurningPizzaOven extends TileEntity implements ITickable
 			ticks++;	
 			if(ticks == ConfigHandler.burningTimeOven)
 			{
-				world.setBlockState(pos, ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 0));
+				world.setBlockState(pos, ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 0), 3);
 			}
 		}
 		
@@ -40,7 +40,7 @@ public class TileEntityBurningPizzaOven extends TileEntity implements ITickable
 			ticks++;	
 			if(ticks == ConfigHandler.burningTimeOven)
 			{
-				world.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.WOOD, 0));
+				world.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.WOOD, 0), 3);
 			}
 		}
 	}
@@ -59,5 +59,4 @@ public class TileEntityBurningPizzaOven extends TileEntity implements ITickable
 		super.readFromNBT(compound);
 		this.ticks = compound.getInteger("OvenTicksValue");
 	}
-
 }

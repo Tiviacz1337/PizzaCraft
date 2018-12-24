@@ -1,84 +1,35 @@
 package com.tiviacz.pizzacraft.util.handlers;
 
-import java.util.Random;
-
-import javax.annotation.Nonnull;
-
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.init.ModRecipes;
-import com.tiviacz.pizzacraft.init.ModSmeltery;
-import com.tiviacz.pizzacraft.init.OreDictInit;
-import com.tiviacz.pizzacraft.objects.items.ItemMilkBottle;
-import com.tiviacz.pizzacraft.objects.items.ItemPizzaBurntShield;
-import com.tiviacz.pizzacraft.proxy.ClientProxy;
 import com.tiviacz.pizzacraft.util.IHasModel;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.oredict.OreDictionary;
 
 @EventBusSubscriber
 public class EventsHandler
 {
-		public static void PreInitRegistries(FMLPreInitializationEvent event)
-		{
-			if(ConfigHandler.dropAllSeeds)
-			{
-				MinecraftForge.addGrassSeed(new ItemStack(ModItems.SEED_ONION), 1);
-				MinecraftForge.addGrassSeed(new ItemStack(ModItems.SEED_PEPPER), 1);
-				MinecraftForge.addGrassSeed(new ItemStack(ModItems.SEED_PINEAPPLE), 1);
-				MinecraftForge.addGrassSeed(new ItemStack(ModItems.SEED_TOMATO), 1);
-				MinecraftForge.addGrassSeed(new ItemStack(ModItems.SEED_CUCUMBER), 1);
-				MinecraftForge.addGrassSeed(new ItemStack(ModItems.SEED_CORN), 1);
-				MinecraftForge.addGrassSeed(new ItemStack(ModItems.SEED_BROCCOLI), 1);
-			}  
-		}
-		
-		public static void initRegistries(FMLInitializationEvent event)
-		{
-			ModSmeltery.init();
-			TileEntityHandler.registerTileEntity();
-			OreDictInit.registerOres();
-			ModRecipes.initRecipes();
-		}
-		
-		public static void PostInitRegistries(FMLPostInitializationEvent event){}
-	
 		@SubscribeEvent
 		public static void onItemRegister(RegistryEvent.Register<Item> event)
 		{
@@ -93,21 +44,22 @@ public class EventsHandler
 		
 		@SubscribeEvent
 		public static void onModelRegister(ModelRegistryEvent event)
-		{
+		{			
 			for(Item item : ModItems.ITEMS)
 			{
 				if(item instanceof IHasModel)
 				{
-					((IHasModel)item).registerModels();
+					PizzaCraft.proxy.registerItemRenderer(item, 0, "inventory");
 				}
 			}
+			
 			for(Block block : ModBlocks.BLOCKS)
 			{
 				if(block instanceof IHasModel)
 				{
-					((IHasModel)block).registerModels();
+					PizzaCraft.proxy.registerItemRenderer(Item.getItemFromBlock(block), 0, "inventory");
 				}
-			}
+			} 
 		}
 		
 		@SubscribeEvent
@@ -149,38 +101,9 @@ public class EventsHandler
 		}
 		
 		@SubscribeEvent
-	    public static void attackEvent(LivingAttackEvent event) 
-		{
-	        float damage = event.getAmount();
-	        
-	        if(damage > 0 && event.getEntityLiving() instanceof EntityPlayer) 
-	        {
-	            EntityPlayer player = (EntityPlayer)event.getEntityLiving();
-	            if(player.world.isRemote) 
-	            {
-	            	return;
-	            }
-	            
-	            ItemStack activeItemStack = player.getActiveItemStack();
-	            if(!activeItemStack.isEmpty() && activeItemStack.getItem() instanceof ItemPizzaBurntShield) 
-	            { 
-	                activeItemStack.damageItem(1 + MathHelper.floor(damage), player);
-	                if(activeItemStack.isEmpty()) 
-	                {
-	                    EnumHand hand = player.getActiveHand();
-	                    ForgeEventFactory.onPlayerDestroyItem(player, activeItemStack, hand);
-	                    player.setHeldItem(hand, ItemStack.EMPTY);
-	                    player.world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ITEM_SHIELD_BREAK, SoundCategory.PLAYERS, 0.6F + player.getRNG().nextFloat() * 0.4F, 0.8F + player.getRNG().nextFloat() * 0.4F);
-	                }
-	            }
-	        }
-	    }
-		
-		@SubscribeEvent
 		public static void checkLeaves(BlockEvent.HarvestDropsEvent event)
-		{
-			Random chance = new Random();		
-			int o = chance.nextInt(100) + 1;
+		{	
+			int o = event.getWorld().rand.nextInt(100) + 1;
 			
 			if(ConfigHandler.dropOlives)
 			{
@@ -214,7 +137,10 @@ public class EventsHandler
 					if(!event.getWorld().isRemote && event.getHand() == EnumHand.MAIN_HAND)
 					{
 						helditem.shrink(1);   
-				        player.inventory.addItemStackToInventory(new ItemStack(ModItems.MILK_BOTTLE, 1));
+				        if(!player.inventory.addItemStackToInventory(new ItemStack(ModItems.MILK_BOTTLE, 1)))
+				        {
+				        	player.world.spawnEntity(new EntityItem(player.world, entity.getPosition().getX(), entity.getPosition().getY(), entity.getPosition().getZ(), new ItemStack(ModItems.MILK_BOTTLE, 1)));
+				        }
 					}
 			    }
 			}

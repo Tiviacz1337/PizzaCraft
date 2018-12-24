@@ -7,12 +7,11 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class OreDictInit 
 {
-	
 	public static void registerOres()
 	{
 		OreDictionary.registerOre("toolBakeware", ModItems.BAKEWARE);
 		OreDictionary.registerOre("toolMortarandpestle", ModItems.MORTAR_AND_PESTLE);
-		OreDictionary.registerOre("toolKnife", ModItems.KNIFE);
+		OreDictionary.registerOre("toolKnife", new ItemStack(ModItems.KNIFE, OreDictionary.WILDCARD_VALUE));
 		
 		OreDictionary.registerOre("foodDough", ModItems.PIZZA_DOUGH);
 		OreDictionary.registerOre("foodCheese", ModItems.CHEESE);

@@ -26,7 +26,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				
 				if(ticks == ConfigHandler.cookingTimeMargherita)
 				{
-					world.setBlockState(pos, ModBlocks.PIZZA_0.getDefaultState());			
+					world.setBlockState(pos, ModBlocks.PIZZA_0.getDefaultState(), 3);			
 				}
 			}
 			
@@ -36,7 +36,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				
 				if(ticks == ConfigHandler.cookingTimeFunghi)
 				{
-					world.setBlockState(pos, ModBlocks.PIZZA_1.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_1.getDefaultState(), 3);
 				}
 			}
 			
@@ -46,7 +46,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				
 				if(ticks == ConfigHandler.cookingTimeProsciutto)
 				{
-					world.setBlockState(pos, ModBlocks.PIZZA_2.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_2.getDefaultState(), 3);
 				}
 			}
 			
@@ -56,7 +56,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				
 				if(ticks == ConfigHandler.cookingTimeMeat)
 				{
-					world.setBlockState(pos, ModBlocks.PIZZA_3.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_3.getDefaultState(), 3);
 				}
 			}
 			
@@ -66,7 +66,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				
 				if(ticks == ConfigHandler.cookingTimeClassic)
 				{
-					world.setBlockState(pos, ModBlocks.PIZZA_4.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_4.getDefaultState(), 3);
 				}
 			}
 			
@@ -76,7 +76,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				
 				if(ticks == ConfigHandler.cookingTimeCapriciosa)
 				{
-					world.setBlockState(pos, ModBlocks.PIZZA_5.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_5.getDefaultState(), 3);
 				}
 			}
 			
@@ -86,7 +86,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				
 				if(ticks == ConfigHandler.cookingTimeHawaiian)
 				{
-					world.setBlockState(pos, ModBlocks.PIZZA_6.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_6.getDefaultState(), 3);
 				}
 			}
 			
@@ -96,7 +96,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				
 				if(ticks == ConfigHandler.cookingTimeToscana)
 				{
-					world.setBlockState(pos, ModBlocks.PIZZA_7.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_7.getDefaultState(), 3);
 				}
 			}
 			
@@ -106,7 +106,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				
 				if(ticks == ConfigHandler.cookingTimeRustica)
 				{
-					world.setBlockState(pos, ModBlocks.PIZZA_8.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_8.getDefaultState(), 3);
 				}
 			}
 			
@@ -116,7 +116,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				
 				if(ticks == ConfigHandler.cookingTimeVegan)
 				{
-					world.setBlockState(pos, ModBlocks.PIZZA_9.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_9.getDefaultState(), 3);
 				}
 			}
 			
@@ -126,7 +126,7 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				
 				if(ticks == ConfigHandler.cookingTimePompea)
 				{
-					world.setBlockState(pos, ModBlocks.PIZZA_10.getDefaultState());
+					world.setBlockState(pos, ModBlocks.PIZZA_10.getDefaultState(), 3);
 				}
 			}
 		}
@@ -146,5 +146,4 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 		super.readFromNBT(compound);
 		this.ticks = compound.getInteger("RawPizzaTicksValue");
 	}
-
-}	
+}

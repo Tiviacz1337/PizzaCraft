@@ -6,9 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModSmeltery 
-{
-			
-	 public static void init()
+{	
+	 public static void initRecipes()
 	 {
 		 if(ConfigHandler.furnaceCooking)
 		 {
@@ -26,4 +25,3 @@ public class ModSmeltery
 		 }
 	 }
 }
-

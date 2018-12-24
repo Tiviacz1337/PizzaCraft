@@ -1,0 +1,30 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "BXB",
+        "XBX",
+        "BXB"
+    ],
+       
+       "key":
+        {
+            "B":
+            {
+                "item": "minecraft:string"
+            },
+            
+            "X":
+            {
+                "item": "minecraft:wool",
+                "data": 0
+            }     
+       },
+       
+       "result":
+       {
+            "item": "pizzacraft:white_cloth",
+            "count": 3
+        }        
+}
