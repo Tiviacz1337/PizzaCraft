@@ -33,9 +33,9 @@ public class ItemPeel extends ItemTool implements IHasModel
 	
 	public static final ToolMaterial PEEL_MATERIAL = EnumHelper.addToolMaterial("peel", 0, 150, 1.0F, 1.0F, 0);
 			
-	public ItemPeel(String name, float attackDamageIn, float attackSpeedIn, ToolMaterial materialIn) 
+	public ItemPeel(String name, float attackDamageIn, float attackSpeedIn) 
 	{
-		super(attackDamageIn, attackSpeedIn, materialIn, EFFECTIVE_ON);
+		super(attackDamageIn, attackSpeedIn, PEEL_MATERIAL, EFFECTIVE_ON);
 		
 		setUnlocalizedName(name);
 		setRegistryName(name);

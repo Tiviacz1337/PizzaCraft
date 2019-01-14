@@ -29,8 +29,8 @@ public class ModItems
 		
 		//Materials
 
-		public static final ArmorMaterial PIZZA_DELIVER_SET = EnumHelper.addArmorMaterial("pizza_deliver_set", PizzaCraft.MODID + ":deliver", 5, new int[]{1, 2, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F);
-		public static final ArmorMaterial CHEF_SET = EnumHelper.addArmorMaterial("chef_set", PizzaCraft.MODID + ":chef", 5, new int[]{1, 2, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F);
+		public static final ArmorMaterial PIZZA_DELIVER_SET = EnumHelper.addArmorMaterial("pizza_deliver_set", PizzaCraft.MODID + ":deliver", 15, new int[]{1, 2, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F);
+		public static final ArmorMaterial CHEF_SET = EnumHelper.addArmorMaterial("chef_set", PizzaCraft.MODID + ":chef", 15, new int[]{1, 2, 3, 1}, 15, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F);
 		
 		//Other
 		
@@ -41,7 +41,7 @@ public class ModItems
 		public static final Item BAKEWARE = new ItemReturn("bakeware");
 		public static final Item MORTAR_AND_PESTLE = new ItemReturn("mortar_and_pestle");
 		public static final Item KNIFE = new ItemKnife("knife");
-		public static final Item PEEL = new ItemPeel("peel", 1.0F, -3.0F, ItemPeel.PEEL_MATERIAL);
+		public static final Item PEEL = new ItemPeel("peel", 1.0F, -3.0F);
 		public static final Item PIZZA_BURNT_SHIELD = new ItemPizzaShield("pizza_burnt_shield", 100);
 		public static final Item PIZZA_BOARD_SHIELD = new ItemPizzaShield("pizza_board_shield", 150);
 		
@@ -51,15 +51,15 @@ public class ModItems
 		public static final Item CHEESE = new FoodBase("cheese", 2, 5, false);
 		public static final Item PIZZA_DOUGH = new ItemBase("pizza_dough");
 		public static final Item FLOUR = new ItemBase("flour");
-		public static final Item ONION = new FoodBase("onion", 2, 5, false);
-		public static final Item PEPPER = new FoodBase("pepper", 2, 5, false);
-		public static final Item OLIVE = new FoodBase("olive", 2, 5, false);
-		public static final Item BLACK_OLIVE = new FoodBase("black_olive", 2, 5, false);
-		public static final Item PINEAPPLE = new FoodBase("pineapple", 2, 5, false);
-		public static final Item TOMATO = new FoodBase("tomato", 2, 5, false);
-		public static final Item CUCUMBER = new FoodBase("cucumber", 2, 5, false);
-		public static final Item CORN = new FoodBase("corn", 2, 5, false);
-		public static final Item BROCCOLI = new FoodBase("broccoli", 2, 5, false);
+		public static final Item ONION = new FoodBase("onion", 1, 3, false);
+		public static final Item PEPPER = new FoodBase("pepper", 1, 3, false);
+		public static final Item OLIVE = new FoodBase("olive", 1, 3, false);
+		public static final Item BLACK_OLIVE = new FoodBase("black_olive", 1, 3, false);
+		public static final Item PINEAPPLE = new FoodBase("pineapple", 1, 3, false);
+		public static final Item TOMATO = new FoodBase("tomato", 1, 3, false);
+		public static final Item CUCUMBER = new FoodBase("cucumber", 1, 3, false);
+		public static final Item CORN = new FoodBase("corn", 1, 3, false);
+		public static final Item BROCCOLI = new FoodBase("broccoli", 1, 3, false);
 		
 		//Seeds
 		

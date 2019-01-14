@@ -11,15 +11,19 @@ import net.minecraftforge.fml.common.Mod;
 public class ConfigHandler 
 {
 	@Config.Comment("Grass drop seeds")
+	@Config.RequiresMcRestart
 	public static boolean dropAllSeeds = true;
 	
 	@Config.Comment("Leaves drop olives")
+	@Config.RequiresMcRestart
 	public static boolean dropOlives = true;
 	
 	@Config.Comment("Leaves drop black olives")
+	@Config.RequiresMcRestart
 	public static boolean dropBlackOlives = true;
 	
 	@Config.Comment("Pizza can be cooked in furnace")
+	@Config.RequiresMcRestart
 	public static boolean furnaceCooking = false;
 	
 	@Config.Comment("Burning Time for 1 Stick in Pizza Oven")
