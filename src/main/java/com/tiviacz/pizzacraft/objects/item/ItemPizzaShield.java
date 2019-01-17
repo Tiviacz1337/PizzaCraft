@@ -7,9 +7,9 @@ import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.init.base.ItemBase;
 import com.tiviacz.pizzacraft.util.IHasModel;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemShield;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.translation.I18n;
 
 public class ItemPizzaShield extends ItemShield implements IHasModel
 {
@@ -35,6 +35,6 @@ public class ItemPizzaShield extends ItemShield implements IHasModel
 	@Override
 	public String getItemStackDisplayName(ItemStack stack)
     {
-		return I18n.format(this.getUnlocalizedNameInefficiently(stack) + ".name").trim();
+		return I18n.translateToLocal(this.getUnlocalizedNameInefficiently(stack) + ".name").trim();
     }
 }
