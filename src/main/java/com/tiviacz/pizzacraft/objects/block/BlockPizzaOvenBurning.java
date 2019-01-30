@@ -160,6 +160,12 @@ public class BlockPizzaOvenBurning extends BlockBase implements ITileEntityProvi
     }
 	
 	@Override
+	public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    {
+        return Item.getItemFromBlock(ModBlocks.PIZZA_OVEN);
+    }
+	
+	@Override
 	@SideOnly(Side.CLIENT)
     public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
     {

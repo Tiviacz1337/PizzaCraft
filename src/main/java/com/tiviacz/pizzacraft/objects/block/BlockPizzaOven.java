@@ -204,15 +204,17 @@ public class BlockPizzaOven extends BlockBase
     	
     	if(!worldIn.isRemote && !player.capabilities.isCreativeMode)
 		{	
-    		for(int c = this.getDefaultState().getValue(WOOD).intValue(); c < 4;)
+    		if(a != 4)
     		{
-    			spawnAsEntity(worldIn, pos, new ItemStack(Items.STICK, c));
+    			if(a != 0)
+    			{
+    				spawnAsEntity(worldIn, pos, new ItemStack(Items.STICK, a));
+    			}
     		}
-    		
-	        if(a == 4)
-	        {
-	        	spawnAsEntity(worldIn, pos, new ItemStack(Blocks.NETHERRACK));
-	        }
+    		else
+    		{
+    			spawnAsEntity(worldIn, pos, new ItemStack(Blocks.NETHERRACK));
+    		}
 		}
     }
 }
