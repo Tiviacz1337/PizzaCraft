@@ -6,6 +6,5 @@
         "wood=2": { "model": "pizzacraft:pizza_oven_2" },
         "wood=3": { "model": "pizzacraft:pizza_oven_3" },
         "wood=4": { "model": "pizzacraft:pizza_oven_4" }
-        
     }
 }

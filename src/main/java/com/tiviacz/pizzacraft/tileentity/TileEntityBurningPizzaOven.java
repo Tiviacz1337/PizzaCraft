@@ -24,7 +24,7 @@ public class TileEntityBurningPizzaOven extends TileEntity implements ITickable
 			{
 				world.setBlockState(pos, ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 1), 3);
 			}
-		}
+		} 
 		
 		if(world.getBlockState(pos) == ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, 1))
 		{
