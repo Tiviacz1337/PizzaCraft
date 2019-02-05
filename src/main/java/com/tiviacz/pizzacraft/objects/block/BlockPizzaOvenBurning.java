@@ -75,12 +75,12 @@ public class BlockPizzaOvenBurning extends BlockBase implements ITileEntityProvi
     			
     			if(i != 3)
     			{
-    				worldIn.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.WOOD, i), 3);
+    				worldIn.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.STATE, i), 3);
     			}
     			
     			else
         		{
-        			worldIn.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.WOOD, 4), 3);
+        			worldIn.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.STATE, 4), 3);
         		}
     		}
     	}

@@ -18,7 +18,8 @@
       "ore": "cropOnion"
     },
     {
-      "item": "minecraft:porkchop"
+      "type": "forge:ore_dict",
+      "ore": "listAllporkraw"
     },
     {
       "item": "minecraft:beef"

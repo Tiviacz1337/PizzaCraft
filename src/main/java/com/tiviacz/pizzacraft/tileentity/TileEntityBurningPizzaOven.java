@@ -40,7 +40,7 @@ public class TileEntityBurningPizzaOven extends TileEntity implements ITickable
 			ticks++;	
 			if(ticks == ConfigHandler.burningTimeOven)
 			{
-				world.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.WOOD, 0), 3);
+				world.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.STATE, 0), 3);
 			}
 		}
 	}

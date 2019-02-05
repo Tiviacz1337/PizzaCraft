@@ -13,6 +13,9 @@ public class OreDictInit
 		OreDictionary.registerOre("toolMortarandpestle", ModItems.MORTAR_AND_PESTLE);
 		OreDictionary.registerOre("toolKnife", new ItemStack(ModItems.KNIFE, OreDictionary.WILDCARD_VALUE));
 		
+		OreDictionary.registerOre("listAllmeatraw", ModItems.HAM);
+		OreDictionary.registerOre("listAllporkraw", ModItems.HAM);
+		
 		OreDictionary.registerOre("foodDough", ModItems.PIZZA_DOUGH);
 		OreDictionary.registerOre("foodCheese", ModItems.CHEESE);
 		OreDictionary.registerOre("foodFlour", ModItems.FLOUR);

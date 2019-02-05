@@ -103,7 +103,7 @@ public class EventsHandler
 	@SubscribeEvent
 	public static void checkLeaves(BlockEvent.BreakEvent event)
 	{	
-		int o = event.getWorld().rand.nextInt(100) + 1;
+		int o = event.getWorld().rand.nextInt(500) + 1;
 			
 		if(!event.getWorld().isRemote && !event.getPlayer().capabilities.isCreativeMode)
 		{

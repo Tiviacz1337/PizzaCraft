@@ -14,7 +14,8 @@
       "ore": "foodCheese"
     },
     {
-      "item": "minecraft:porkchop"
+      "type": "forge:ore_dict",
+      "ore": "listAllporkraw"
     }
   ],
   "result": {

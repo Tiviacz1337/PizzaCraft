@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockPizzaOven extends BlockBase
 {
-	public static final PropertyInteger WOOD = PropertyInteger.create("wood", 0, 4);
+	public static final PropertyInteger STATE = PropertyInteger.create("wood", 0, 4);
 
 	public BlockPizzaOven(String name, Material material) 
 	{
@@ -36,7 +36,7 @@ public class BlockPizzaOven extends BlockBase
         setHardness(1.5F);
         setResistance(4.0F);
         setHarvestLevel("pickaxe", 1);
-        setDefaultState(blockState.getBaseState().withProperty(WOOD, 0));
+        setDefaultState(blockState.getBaseState().withProperty(STATE, 0));
 	}
 	
 	@Override
@@ -57,17 +57,17 @@ public class BlockPizzaOven extends BlockBase
     	if(!worldIn.isRemote)
         {	
         	ItemStack helditem = playerIn.getHeldItem(hand);
-        	int a = state.getValue(WOOD).intValue();
+        	int a = state.getValue(STATE).intValue();
         	
         	if(helditem.getItem() == Items.STICK && (a == 0 || a == 1 || a == 2))
         	{
-        		worldIn.setBlockState(pos, state.withProperty(WOOD, a + 1), 3);
+        		worldIn.setBlockState(pos, state.withProperty(STATE, a + 1), 3);
         		helditem.shrink(1);
         	}
         	
         	if(helditem.getItem() == Item.getItemFromBlock(Blocks.NETHERRACK) && a == 0)
         	{
-        		worldIn.setBlockState(pos, state.withProperty(WOOD, 4), 3);
+        		worldIn.setBlockState(pos, state.withProperty(STATE, 4), 3);
         		helditem.shrink(1);
         	}
         	
@@ -75,13 +75,13 @@ public class BlockPizzaOven extends BlockBase
         	{
         		if(a == 4)
         		{
-        			worldIn.setBlockState(pos, state.withProperty(WOOD, 0), 3);
+        			worldIn.setBlockState(pos, state.withProperty(STATE, 0), 3);
             		playerIn.inventory.addItemStackToInventory(new ItemStack(Blocks.NETHERRACK));
         		}
         		
         		else
         		{
-        			worldIn.setBlockState(pos, state.withProperty(WOOD, a - 1), 3);
+        			worldIn.setBlockState(pos, state.withProperty(STATE, a - 1), 3);
             		playerIn.inventory.addItemStackToInventory(new ItemStack(Items.STICK));
         		}
         	}
@@ -169,13 +169,13 @@ public class BlockPizzaOven extends BlockBase
 	@Override
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(WOOD, meta);
+        return this.getDefaultState().withProperty(STATE, meta);
     }
     
 	@Override
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(WOOD).intValue();
+        return state.getValue(STATE).intValue();
     }
 	
 	@Override
@@ -194,13 +194,13 @@ public class BlockPizzaOven extends BlockBase
 	@Override
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] {WOOD});
+        return new BlockStateContainer(this, new IProperty[] {STATE});
     }
     
 	@Override
     public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
     {
-    	int a = state.getValue(WOOD).intValue();
+    	int a = state.getValue(STATE).intValue();
     	
     	if(!worldIn.isRemote && !player.capabilities.isCreativeMode)
 		{	

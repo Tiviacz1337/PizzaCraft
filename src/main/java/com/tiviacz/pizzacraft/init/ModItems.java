@@ -47,6 +47,7 @@ public class ModItems
 		
 		//Ingredients
 		
+		public static final Item HAM = new FoodBase("ham", 1, 2, true);
 		public static final Item MILK_BOTTLE = new ItemMilkBottle("milk_bottle");
 		public static final Item CHEESE = new FoodBase("cheese", 2, 5, false);
 		public static final Item PIZZA_DOUGH = new ItemBase("pizza_dough");
