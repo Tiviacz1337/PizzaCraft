@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 
 public class FoodBase extends ItemFood implements IHasModel
 {
-	public FoodBase(String name, int amount, int saturation, boolean isWolfFood) 
+	public FoodBase(String name, int amount, float saturation, boolean isWolfFood) 
 	{
 		super(amount, saturation, isWolfFood);
 		

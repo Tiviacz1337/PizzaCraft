@@ -74,17 +74,17 @@ public class ModItems
 		
 		//Slices
 		
-		public static final Item SLICE_0 = new FoodBase("slice_0", 4, 15, false); //Cheese  											//Margherita
-		public static final Item SLICE_1 = new FoodBase("slice_1", 6, 15, false); //Cheese / Mushrooms									//Funghi
-		public static final Item SLICE_2 = new FoodBase("slice_2", 6, 15, true); //Cheese / Porkchop									//Prosciutto
-		public static final Item SLICE_3 = new FoodBase("slice_3", 8, 15, true); //Cheese / Porkchop / Chicken / Beef / Onion			//Meat
-		public static final Item SLICE_4 = new FoodBase("slice_4", 6, 15, true); //Cheese / Porkchop / Mushrooms 						//Classic
-		public static final Item SLICE_5 = new FoodBase("slice_5", 10, 15, true); //Cheese / Porkchop / Pepper / olive / Mushrooms		//Capriciosa
-		public static final Item SLICE_6 = new FoodBase("slice_6", 6, 15, true); //Cheese / Porkchop / Pineapple						//Hawaiian
-		public static final Item SLICE_7 = new FoodBase("slice_7", 9, 15, true); //Cheese / Porkchop / Tomato / Mushrooms / Cucumber	//Toscana
-		public static final Item SLICE_8 = new FoodBase("slice_8", 10, 15, true); //Cheese / Porkchop / Corn / Mushrooms / Pepper		//Rustica
-		public static final Item SLICE_9 = new FoodBase("slice_9", 10, 15, false); //Cheese / Broccoli / Corn / Pepper / Tomato			//Vegetarian
-		public static final Item SLICE_10 = new FoodBase("slice_10", 12, 15, true); //Cheese / Porkchop / Black Olive / Pepper / Onion / Mushrooms //Pompea
+		public static final Item SLICE_0 = new FoodBase("slice_0", 4, 1.2F, false); //Cheese  														//Margherita
+		public static final Item SLICE_1 = new FoodBase("slice_1", 6, 1.2F, false); //Cheese / Mushrooms											//Funghi
+		public static final Item SLICE_2 = new FoodBase("slice_2", 6, 1.2F, true); //Cheese / Ham													//Prosciutto
+		public static final Item SLICE_3 = new FoodBase("slice_3", 8, 1.2F, true); //Cheese / Ham / Chicken / Beef / Onion							//Meat
+		public static final Item SLICE_4 = new FoodBase("slice_4", 6, 1.2F, true); //Cheese / Ham / Mushrooms 										//Classic
+		public static final Item SLICE_5 = new FoodBase("slice_5", 10, 1.2F, true); //Cheese / Ham / Pepper / olive / Mushrooms						//Capriciosa
+		public static final Item SLICE_6 = new FoodBase("slice_6", 6, 1.2F, true); //Cheese / Ham / Pineapple										//Hawaiian
+		public static final Item SLICE_7 = new FoodBase("slice_7", 9, 1.2F, true); //Cheese / Ham / Tomato / Mushrooms / Cucumber					//Toscana
+		public static final Item SLICE_8 = new FoodBase("slice_8", 10, 1.2F, true); //Cheese / Ham / Corn / Mushrooms / Pepper						//Rustica
+		public static final Item SLICE_9 = new FoodBase("slice_9", 10, 1.2F, false); //Cheese / Broccoli / Corn / Pepper / Tomato					//Vegetarian
+		public static final Item SLICE_10 = new FoodBase("slice_10", 12, 1.2F, true); //Cheese / Ham / Black Olive / Pepper / Onion / Mushrooms 	//Pompea
 		
 		//Pizza's deliver set
 		

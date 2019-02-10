@@ -3,10 +3,14 @@
   "ingredients": [
     {
       "item": "minecraft:porkchop"
+    },
+    {
+      "item": "pizzacraft:knife",
+      "data": 32767
     }
   ],
   "result": {
     "item": "pizzacraft:ham",
-    "count": 4
+    "count": 3
   }
 }
