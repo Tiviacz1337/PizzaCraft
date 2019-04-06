@@ -11,7 +11,7 @@ public class ItemKnife extends ItemBase
 		super(name);
 		
 		setMaxStackSize(1);
-		setMaxDamage(24);
+		setMaxDamage(49);
 	}
 	
 	@Override
