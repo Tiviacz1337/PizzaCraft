@@ -47,20 +47,23 @@ public class ModItems
 		
 		//Ingredients
 		
-		public static final Item HAM = new FoodBase("ham", 1, 2, true);
+		public static final Item HAM = new FoodBase("ham", 1, 1F, true);
+		public static final Item TOMATO_SLICE = new FoodBase("tomato_slice", 1, 1F, false);
+		public static final Item CUCUMBER_SLICE = new FoodBase("cucumber_slice", 1, 1F, false);
 		public static final Item MILK_BOTTLE = new ItemMilkBottle("milk_bottle");
-		public static final Item CHEESE = new FoodBase("cheese", 2, 5, false);
+		public static final Item CHEESE = new FoodBase("cheese", 2, 1F, false);
 		public static final Item PIZZA_DOUGH = new ItemBase("pizza_dough");
 		public static final Item FLOUR = new ItemBase("flour");
-		public static final Item ONION = new FoodBase("onion", 1, 3, false);
-		public static final Item PEPPER = new FoodBase("pepper", 1, 3, false);
-		public static final Item OLIVE = new FoodBase("olive", 1, 3, false);
-		public static final Item BLACK_OLIVE = new FoodBase("black_olive", 1, 3, false);
-		public static final Item PINEAPPLE = new FoodBase("pineapple", 1, 3, false);
-		public static final Item TOMATO = new FoodBase("tomato", 1, 3, false);
-		public static final Item CUCUMBER = new FoodBase("cucumber", 1, 3, false);
-		public static final Item CORN = new FoodBase("corn", 1, 3, false);
-		public static final Item BROCCOLI = new FoodBase("broccoli", 1, 3, false);
+		public static final Item FLOUR_CORN = new ItemBase("flour_corn");
+		public static final Item ONION = new FoodBase("onion", 2, 1F, false);
+		public static final Item PEPPER = new FoodBase("pepper", 2, 1F, false);
+		public static final Item OLIVE = new FoodBase("olive", 2, 1F, false);
+		public static final Item BLACK_OLIVE = new FoodBase("black_olive", 2, 1F, false);
+		public static final Item PINEAPPLE = new FoodBase("pineapple", 2, 1F, false);
+		public static final Item TOMATO = new FoodBase("tomato", 2, 1F, false);
+		public static final Item CUCUMBER = new FoodBase("cucumber", 2, 1F, false);
+		public static final Item CORN = new FoodBase("corn", 2, 1F, false);
+		public static final Item BROCCOLI = new FoodBase("broccoli", 2, 1F, false);
 		
 		//Seeds
 		
