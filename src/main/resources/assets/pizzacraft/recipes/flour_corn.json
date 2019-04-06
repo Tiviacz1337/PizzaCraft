@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "pizzacraft:mortar_and_pestle"
+    },
+    {
+      "item": "pizzacraft:corn"
+    }
+  ],
+  "result": {
+    "item": "pizzacraft:flour_corn",
+    "count": 2
+  }
+}

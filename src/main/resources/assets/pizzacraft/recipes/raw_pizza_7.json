@@ -15,11 +15,11 @@
     },
     {
       "type": "forge:ore_dict",
-      "ore": "cropTomato"
+      "ore": "sliceTomato"
     },
     {
       "type": "forge:ore_dict",
-      "ore": "cropCucumber"
+      "ore": "sliceCucumber"
     },
     {
       "type": "forge:ore_dict",

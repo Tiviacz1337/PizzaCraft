@@ -16,9 +16,13 @@ public class OreDictInit
 		OreDictionary.registerOre("listAllmeatraw", ModItems.HAM);
 		OreDictionary.registerOre("listAllporkraw", ModItems.HAM);
 		
+		OreDictionary.registerOre("sliceTomato", ModItems.TOMATO_SLICE);
+		OreDictionary.registerOre("sliceCucumber", ModItems.CUCUMBER_SLICE);
+		
 		OreDictionary.registerOre("foodDough", ModItems.PIZZA_DOUGH);
 		OreDictionary.registerOre("foodCheese", ModItems.CHEESE);
 		OreDictionary.registerOre("foodFlour", ModItems.FLOUR);
+		OreDictionary.registerOre("foodFlour", ModItems.FLOUR_CORN);
 		
 		OreDictionary.registerOre("listAllmushroom", Item.getItemById(39));
 		OreDictionary.registerOre("listAllmushroom", Item.getItemById(40));

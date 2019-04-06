@@ -19,7 +19,7 @@
     },
     {
       "type": "forge:ore_dict",
-      "ore": "cropTomato"
+      "ore": "sliceTomato"
     },
     {
       "type": "forge:ore_dict",
