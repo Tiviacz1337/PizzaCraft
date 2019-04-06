@@ -12,7 +12,6 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBucketMilk;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
@@ -42,8 +41,6 @@ public class ItemMilkBottle extends ItemBase
 	            stack.shrink(1);
 	        }
 	
-	        entityLiving.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 610, 1, true, true));
-	        entityLiving.addPotionEffect(new PotionEffect(MobEffects.SPEED, 610, 1, true, true));
 	        entityLiving.removePotionEffect(MobEffects.BLINDNESS);
 	        entityLiving.removePotionEffect(MobEffects.HUNGER);
 	        entityLiving.removePotionEffect(MobEffects.NAUSEA);
