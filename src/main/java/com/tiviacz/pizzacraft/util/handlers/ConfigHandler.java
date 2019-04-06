@@ -26,6 +26,9 @@ public class ConfigHandler
 	@Config.RequiresMcRestart
 	public static boolean furnaceCooking = false;
 	
+	@Config.Comment("If false, pizza slice can be taken without knife")
+	public static boolean isKnifeNeeded = true;
+	
 	@Config.Comment("Burning Time for 1 Stick in Pizza Oven")
 	public static int burningTimeOven = 800;
 	

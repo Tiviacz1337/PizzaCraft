@@ -5,6 +5,7 @@ import java.util.Random;
 import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.init.base.BlockBase;
 import com.tiviacz.pizzacraft.tileentity.TileEntityPizza;
+import com.tiviacz.pizzacraft.util.handlers.ConfigHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -94,18 +95,37 @@ public class BlockPizza extends BlockBase implements ITileEntityProvider
         		playerIn.getHeldItem(hand).damageItem(1, playerIn);
         	}
         	
-        	if(helditem.getItem() == ModItems.KNIFE)
-        	{
-        		spawnAsEntity(worldIn, pos, new ItemStack(pizzaslice));
-        		playerIn.getHeldItem(hand).damageItem(1, playerIn);
-        		
-        		if(i < 5)
+        	if(ConfigHandler.isKnifeNeeded)
+            {
+        		if(helditem.getItem() == ModItems.KNIFE)
         		{
-        			worldIn.setBlockState(pos, state.withProperty(BITES, i + 1), 3);
+        			spawnAsEntity(worldIn, pos, new ItemStack(pizzaslice));
+                	playerIn.getHeldItem(hand).damageItem(1, playerIn);
+                		
+                	if(i < 5)
+                	{
+                		worldIn.setBlockState(pos, state.withProperty(BITES, i + 1), 3);
+                	}
+                	else
+                	{
+                		worldIn.setBlockToAir(pos);
+                	}
         		}
-        		else
+           	}
+        	else
+        	{
+        		if(playerIn.isSneaking())
         		{
-        			worldIn.setBlockToAir(pos);
+        			spawnAsEntity(worldIn, pos, new ItemStack(pizzaslice));
+            		
+                    if(i < 5)
+                   	{
+                   		worldIn.setBlockState(pos, state.withProperty(BITES, i + 1), 3);
+                   	}
+                   	else
+                   	{
+                   		worldIn.setBlockToAir(pos);
+                   	}
         		}
         	}
         	return this.eatCake(worldIn, pos, state, playerIn);
@@ -118,7 +138,7 @@ public class BlockPizza extends BlockBase implements ITileEntityProvider
     	ItemStack helditem = player.getHeldItem(player.getActiveHand());
     	int i = state.getValue(BITES).intValue();
     	
-        if(!player.canEat(false) || helditem.getItem() == ModItems.PEEL || helditem.getItem() == ModItems.KNIFE)
+        if(!player.canEat(false) || helditem.getItem() == ModItems.PEEL || helditem.getItem() == ModItems.KNIFE || player.isSneaking())
         {
             return false;
         }
