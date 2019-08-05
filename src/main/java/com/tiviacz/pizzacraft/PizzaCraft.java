@@ -1,11 +1,9 @@
 package com.tiviacz.pizzacraft;
 
-import com.tiviacz.pizzacraft.init.ModBlocks;
+import com.tiviacz.pizzacraft.common.PizzaCraftCreativeTab;
 import com.tiviacz.pizzacraft.proxy.CommonProxy;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -19,16 +17,9 @@ public class PizzaCraft
 {
 	public static final String MODID = "pizzacraft";
 	public static final String NAME = "pizzacraft";
-	public static final String VERSION = "1.4.5";
+	public static final String VERSION = "2.0.16.16";
 
-	public static CreativeTabs PIZZACRAFTTAB = (new CreativeTabs("pizzacrafttab")
-	{
-		@Override
-		public ItemStack getTabIconItem()
-		{
-			return new ItemStack(Item.getItemFromBlock(ModBlocks.PIZZA_9));
-		}
-	});
+	public static CreativeTabs PIZZACRAFTTAB = new PizzaCraftCreativeTab("pizzacrafttab");
 	
 	@Instance
 	public static PizzaCraft instance;
