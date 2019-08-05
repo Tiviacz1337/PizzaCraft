@@ -4,17 +4,39 @@ The English US language file for PizzaCraft!
 //CreativeTab
 itemGroup.pizzacrafttab=PizzaCraft
 
+//Effects
+effect.eye_irritation=Eye Irritation
+potion.effect.eye_irritation=Eye Irritation Potion
+splash_potion.effect.eye_irritation=Splash Eye Irritation Potion
+tipped_arrow.effect.eye_irritation=Eye Irritation Arrow
+lingering_potion.effect.eye_irritation=Lingering Eye Irritation Potion
+
+//Entities
+entity.Villager.pizza_chef=Pizza Chef
+
+//Container
+container.bakeware=Bakeware
+gui.jei.category.bakeware=Bakeware
+gui.jei.category.chopping_board=Chopping Board
+gui.jei.category.mortar_and_pestle=Mortar And Pestle
+container.pizza_bag=Pizza Bag
+
 //Other
 item.cardboard.name=Cardboard
 item.paper_mass.name=Paper Mass
 item.red_cloth.name=Red Cloth
 item.white_cloth.name=White Cloth
-item.bakeware.name=Bakeware
-item.mortar_and_pestle.name=Mortar and Pestle
 item.knife.name=Knife
 item.peel.name=Peel
 item.pizza_burnt_shield.name=Burnt Pizza Shield
 item.pizza_board_shield.name=Pizza Board Shield
+
+//Trees
+tile.olive_log.name=Olive Log
+tile.olive_leaves.name=Olive Leaves
+tile.olive_leaves_growing.name=Growing Olive Leaves
+tile.olive_sapling.name=Olive Sapling
+tile.olive_planks.name=Olive Planks
 
 //Ingredients
 item.ham.name=Ham
@@ -24,8 +46,10 @@ item.cheese.name=Cheese
 item.flour.name=Flour
 item.flour_corn.name=Corn Flour
 item.milk_bottle.name=Bottle of Fresh Milk
+item.olive_oil.name=Olive Oil
 item.pizza_dough.name=Pizza Dough
 item.onion.name=Onion
+item.onion_slice.name=Onion Slice
 item.pepper.name=Pepper
 item.olive.name=Olive
 item.black_olive.name=Black Olive
@@ -38,6 +62,12 @@ item.broccoli.name=Broccoli
 //Oven
 tile.pizza_oven.name=Pizza Oven
 tile.burning_pizza_oven.name=Burning Pizza Oven
+
+tile.chopping_board.name=Chopping Board
+tile.dough.name=Dough
+tile.mortar_and_pestle.name=Mortar And Pestle
+tile.bakeware.name=Bakeware
+tile.pizza_bag.name=Pizza Bag
 
 //Seeds
 item.seed_onion.name=Onion Seeds
