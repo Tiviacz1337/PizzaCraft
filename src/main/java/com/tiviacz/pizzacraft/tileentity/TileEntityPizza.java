@@ -9,7 +9,10 @@ import net.minecraft.util.ITickable;
 
 public class TileEntityPizza extends TileEntity implements ITickable
 {
-	int ticks = 0;
+	private int ticks = 0;
+	private boolean isCooking = false;
+	private boolean isFresh = false;
+	private int freshTicks = 1220;
 
 	@Override
 	public void update() 
@@ -19,6 +22,7 @@ public class TileEntityPizza extends TileEntity implements ITickable
 		if(oven == ModBlocks.BURNING_PIZZA_OVEN)
 		{
 			ticks++;
+			isCooking = true;
 			
 			if(ticks == 610)
 			{
@@ -30,13 +34,46 @@ public class TileEntityPizza extends TileEntity implements ITickable
 				ticks = 0;
 			}
 		}
+		else
+		{
+			isCooking = false;
+		}
+		
+		if(isFresh)
+		{
+			freshTicks--;
+			
+			if(freshTicks == 0)
+			{
+				freshTicks = 1220;
+				isFresh = false;
+			}
+		}
+	}
+	
+	public boolean isCooking()
+	{
+		return this.isCooking;
+	}
+	
+	public void setFresh(boolean value)
+	{
+		this.isFresh = value;
+	}
+	
+	public boolean isFresh()
+	{
+		return this.isFresh;
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
 		super.writeToNBT(compound);
-		compound.setInteger("PizzaTicksValue", ticks);
+		compound.setInteger("PizzaTicksValue", this.ticks);
+		compound.setInteger("FreshTicks", this.freshTicks);
+		compound.setBoolean("IsFresh", this.isFresh);
+		compound.setBoolean("IsCooking", this.isCooking);
 		return compound;
 	}
 	
@@ -45,5 +82,8 @@ public class TileEntityPizza extends TileEntity implements ITickable
 	{
 		super.readFromNBT(compound);
 		this.ticks = compound.getInteger("PizzaTicksValue");
+		this.freshTicks = compound.getInteger("FreshTicks");
+		this.isFresh = compound.getBoolean("IsFresh");
+		this.isCooking = compound.getBoolean("IsCooking");
 	}	
 }

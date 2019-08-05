@@ -1,7 +1,7 @@
 package com.tiviacz.pizzacraft.tileentity;
 
+import com.tiviacz.pizzacraft.handlers.ConfigHandler;
 import com.tiviacz.pizzacraft.init.ModBlocks;
-import com.tiviacz.pizzacraft.util.handlers.ConfigHandler;
 
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,8 +10,9 @@ import net.minecraft.util.ITickable;
 
 public class TileEntityRawPizza extends TileEntity implements ITickable
 {
-	int ticks = 0;
-	
+	private int ticks = 0;
+	private boolean isCooking = false;
+	 
 	@Override
 	public void update() 
 	{
@@ -20,6 +21,8 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 		
 		if(oven == ModBlocks.BURNING_PIZZA_OVEN)
 		{
+			isCooking = true;
+			
 			if(pizza == ModBlocks.RAW_PIZZA_0)
 			{
 				ticks++; 
@@ -130,13 +133,23 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 				}
 			}
 		}
+		else
+		{
+			isCooking = false;
+		}
+	}
+	
+	public boolean isCooking()
+	{
+		return this.isCooking;
 	}
 	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
 		super.writeToNBT(compound);
-		compound.setInteger("RawPizzaTicksValue", ticks);
+		compound.setInteger("RawPizzaTicksValue", this.ticks);
+		compound.setBoolean("IsCooking", this.isCooking);
 		return compound;
 	}
 	
@@ -145,5 +158,6 @@ public class TileEntityRawPizza extends TileEntity implements ITickable
 	{
 		super.readFromNBT(compound);
 		this.ticks = compound.getInteger("RawPizzaTicksValue");
+		this.isCooking = compound.getBoolean("IsCooking");
 	}
 }

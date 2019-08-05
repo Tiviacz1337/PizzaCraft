@@ -1,18 +1,17 @@
 package com.tiviacz.pizzacraft.tileentity;
 
+import com.tiviacz.pizzacraft.blocks.BlockPizzaOven;
+import com.tiviacz.pizzacraft.blocks.BlockPizzaOvenBurning;
+import com.tiviacz.pizzacraft.handlers.ConfigHandler;
 import com.tiviacz.pizzacraft.init.ModBlocks;
-import com.tiviacz.pizzacraft.objects.block.BlockPizzaOven;
-import com.tiviacz.pizzacraft.objects.block.BlockPizzaOvenBurning;
-import com.tiviacz.pizzacraft.util.handlers.ConfigHandler;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 
 public class TileEntityBurningPizzaOven extends TileEntity implements ITickable
 {
-	int ticks = 0;
+	private int ticks = 0;
 
 	@Override
 	public void update() 
