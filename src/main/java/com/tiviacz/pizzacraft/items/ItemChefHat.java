@@ -1,9 +1,6 @@
-package com.tiviacz.pizzacraft.objects.item;
+package com.tiviacz.pizzacraft.items;
 
-import javax.annotation.Nullable;
-
-import com.tiviacz.pizzacraft.client.ModelDelivererCap;
-import com.tiviacz.pizzacraft.init.base.ArmorBase;
+import com.tiviacz.pizzacraft.client.ModelChefHat;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
@@ -14,13 +11,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemDelivererCap extends ArmorBase
+public class ItemChefHat extends ArmorBase
 {
-	public ItemDelivererCap(String name, ArmorMaterial materialIn, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn) 
+	public ItemChefHat(String name, ArmorMaterial materialIn, int renderIndexIn, EntityEquipmentSlot equipmentSlotIn) 
 	{
 		super(name, materialIn, renderIndexIn, equipmentSlotIn);
 	}
-
+	
 	@SideOnly(Side.CLIENT)
     @Override
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack, EntityEquipmentSlot armorSlot, ModelBiped _default)
@@ -29,7 +26,7 @@ public class ItemDelivererCap extends ArmorBase
 		{
 			if(itemStack.getItem() instanceof ItemArmor)
 			{
-				ModelDelivererCap model = new ModelDelivererCap();
+				ModelChefHat model = new ModelChefHat();
 				
 				model.bipedHead.showModel = armorSlot == EntityEquipmentSlot.HEAD;
 			    model.isChild = _default.isChild;
@@ -47,6 +44,6 @@ public class ItemDelivererCap extends ArmorBase
 	@Override
 	public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type)
 	{
-		return "pizzacraft:textures/models/armor/deliver_hat.png";
+		return "pizzacraft:textures/models/armor/chef_hat.png";
 	}
 }

@@ -1,10 +1,7 @@
-package com.tiviacz.pizzacraft.objects.item;
-
-import javax.annotation.Nullable;
+package com.tiviacz.pizzacraft.items;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.init.base.ItemBase;
 import com.tiviacz.pizzacraft.util.IHasModel;
 
 import net.minecraft.item.ItemShield;
@@ -37,4 +34,10 @@ public class ItemPizzaShield extends ItemShield implements IHasModel
     {
 		return I18n.translateToLocal(this.getUnlocalizedNameInefficiently(stack) + ".name").trim();
     }
+
+	@Override
+	public void registerModel() 
+	{
+		PizzaCraft.proxy.registerItemRenderer(this, 0, "inventory");
+	}
 }

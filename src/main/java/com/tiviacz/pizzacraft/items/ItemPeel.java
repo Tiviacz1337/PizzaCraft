@@ -1,31 +1,24 @@
-package com.tiviacz.pizzacraft.objects.item;
+package com.tiviacz.pizzacraft.items;
 
-import java.awt.Desktop.Action;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Sets;
 import com.tiviacz.pizzacraft.PizzaCraft;
-import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.util.IHasModel;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.WorldInfo;
-import net.minecraft.item.Item.ToolMaterial;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.model.obj.OBJModel.Material;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemPeel extends ItemTool implements IHasModel
 {
@@ -43,6 +36,15 @@ public class ItemPeel extends ItemTool implements IHasModel
 		setCreativeTab(PizzaCraft.PIZZACRAFTTAB);
 		setMaxStackSize(1);
 		
+		this.addPropertyOverride(new ResourceLocation("model"), new IItemPropertyGetter()
+		{
+			@SideOnly(Side.CLIENT)
+			public float apply(ItemStack stack, @Nullable World worldIn, @Nullable EntityLivingBase entityIn)
+			{
+				return worldIn == null ? 1.0F : 0.0F;
+			}
+		});
+		
 		ModItems.ITEMS.add(this);
 	}
 	
@@ -50,5 +52,11 @@ public class ItemPeel extends ItemTool implements IHasModel
 	public boolean isRepairable()
 	{
 		return false;
+	}
+
+	@Override
+	public void registerModel() 
+	{
+		PizzaCraft.proxy.registerItemRenderer(this, 0, "inventory");
 	}
 }
