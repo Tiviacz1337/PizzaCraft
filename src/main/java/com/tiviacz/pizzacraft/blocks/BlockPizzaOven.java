@@ -1,12 +1,8 @@
-package com.tiviacz.pizzacraft.objects.block;
-
-import java.util.Random;
+package com.tiviacz.pizzacraft.blocks;
 
 import com.tiviacz.pizzacraft.init.ModBlocks;
-import com.tiviacz.pizzacraft.init.base.BlockBase;
-import com.tiviacz.pizzacraft.tileentity.TileEntityBurningPizzaOven;
+import com.tiviacz.pizzacraft.items.BlockBase;
 
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -15,36 +11,32 @@ import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockPizzaOvenBurning extends BlockBase implements ITileEntityProvider
+public class BlockPizzaOven extends BlockBase
 {
-	public static final PropertyInteger FIRE = PropertyInteger.create("fire", 0, 3);
+	public static final PropertyInteger STATE = PropertyInteger.create("wood", 0, 4);
 
-	public BlockPizzaOvenBurning(String name, Material material) 
+	public BlockPizzaOven(String name, Material material) 
 	{
 		super(name, material);
-		
+
 		setSoundType(SoundType.METAL);
         setHardness(1.5F);
         setResistance(4.0F);
         setHarvestLevel("pickaxe", 1);
-        setLightLevel(1.0F);
-        setLightOpacity(1);
-        setDefaultState(blockState.getBaseState().withProperty(FIRE, 0));
+        setDefaultState(blockState.getBaseState().withProperty(STATE, 0));
 	}
 	
 	@Override
@@ -52,7 +44,7 @@ public class BlockPizzaOvenBurning extends BlockBase implements ITileEntityProvi
     {
         return true;
     }
-	
+
 	@Override
     public boolean isOpaqueCube(IBlockState state)
     {
@@ -62,31 +54,46 @@ public class BlockPizzaOvenBurning extends BlockBase implements ITileEntityProvi
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {	
-		ItemStack helditem = playerIn.getHeldItem(hand);
-    	int i = state.getValue(FIRE).intValue();
-    	
-    	if(helditem.getItem() == Items.WATER_BUCKET)
-    	{
-    		worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
-    		
-    		if(!worldIn.isRemote)
-    		{
-    			playerIn.setHeldItem(hand, new ItemStack(Items.BUCKET));
-    			
-    			if(i != 3)
-    			{
-    				worldIn.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.STATE, i), 3);
-    			}
-    			
-    			else
+    	if(!worldIn.isRemote)
+        {	
+        	ItemStack helditem = playerIn.getHeldItem(hand);
+        	int a = state.getValue(STATE).intValue();
+        	
+        	if(helditem.getItem() == Items.STICK && (a == 0 || a == 1 || a == 2))
+        	{
+        		worldIn.setBlockState(pos, state.withProperty(STATE, a + 1), 3);
+        		helditem.shrink(1);
+        	}
+        	
+        	if(helditem.getItem() == Item.getItemFromBlock(Blocks.NETHERRACK) && a == 0)
+        	{
+        		worldIn.setBlockState(pos, state.withProperty(STATE, 4), 3);
+        		helditem.shrink(1);
+        	}
+        	
+        	if(helditem.isEmpty() && a > 0)
+        	{
+        		if(a == 4)
         		{
-        			worldIn.setBlockState(pos, ModBlocks.PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOven.STATE, 4), 3);
+        			worldIn.setBlockState(pos, state.withProperty(STATE, 0), 3);
+            		playerIn.inventory.addItemStackToInventory(new ItemStack(Blocks.NETHERRACK));
         		}
-    		}
-    	}
-    	
-		if(!worldIn.isRemote)
-        {	     	
+        		
+        		else
+        		{
+        			worldIn.setBlockState(pos, state.withProperty(STATE, a - 1), 3);
+            		playerIn.inventory.addItemStackToInventory(new ItemStack(Items.STICK));
+        		}
+        	}
+        	
+        	if(helditem.getItem() == Items.FLINT_AND_STEEL)
+        	{
+        		if(a != 0)
+        		{
+        			worldIn.setBlockState(pos, ModBlocks.BURNING_PIZZA_OVEN.getDefaultState().withProperty(BlockPizzaOvenBurning.FIRE, a - 1), 3);
+        		}
+        	}
+        	
         	if(worldIn.isAirBlock(pos.up()))
 			{
 				if(helditem.getItem() == Item.getItemFromBlock(ModBlocks.RAW_PIZZA_0))
@@ -156,41 +163,28 @@ public class BlockPizzaOvenBurning extends BlockBase implements ITileEntityProvi
 				}
 			}
         }
-    	return true;
-    }
-	
-	@Override
-	public Item getItemDropped(IBlockState state, Random rand, int fortune)
-    {
-        return Item.getItemFromBlock(ModBlocks.PIZZA_OVEN);
-    }
-	
-	@Override
-	@SideOnly(Side.CLIENT)
-    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
-    {
-		worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+		return true;
     }
     
 	@Override
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(FIRE, meta);
+        return this.getDefaultState().withProperty(STATE, meta);
     }
     
 	@Override
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(FIRE).intValue();
+        return state.getValue(STATE).intValue();
     }
-
+	
 	@Override
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer()
     {
         return BlockRenderLayer.CUTOUT;
     }
-    
+	
 	@Override
     public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
     {
@@ -200,12 +194,27 @@ public class BlockPizzaOvenBurning extends BlockBase implements ITileEntityProvi
 	@Override
     protected BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, new IProperty[] {FIRE});
+        return new BlockStateContainer(this, new IProperty[] {STATE});
     }
-
+    
 	@Override
-	public TileEntity createNewTileEntity(World worldIn, int meta) 
-	{
-		return new TileEntityBurningPizzaOven();
-	}
+    public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
+    {
+    	int a = state.getValue(STATE).intValue();
+    	
+    	if(!worldIn.isRemote && !player.capabilities.isCreativeMode)
+		{	
+    		if(a != 4)
+    		{
+    			if(a != 0)
+    			{
+    				spawnAsEntity(worldIn, pos, new ItemStack(Items.STICK, a));
+    			}
+    		}
+    		else
+    		{
+    			spawnAsEntity(worldIn, pos, new ItemStack(Blocks.NETHERRACK));
+    		}
+		}
+    }
 }

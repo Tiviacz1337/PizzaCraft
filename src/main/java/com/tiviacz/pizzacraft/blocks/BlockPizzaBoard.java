@@ -1,7 +1,8 @@
-package com.tiviacz.pizzacraft.objects.block;
+package com.tiviacz.pizzacraft.blocks;
 
 import com.tiviacz.pizzacraft.init.ModBlocks;
-import com.tiviacz.pizzacraft.init.base.BlockBase;
+import com.tiviacz.pizzacraft.items.BlockBase;
+import com.tiviacz.pizzacraft.util.Bounds;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -19,7 +20,7 @@ import net.minecraft.world.World;
 
 public class BlockPizzaBoard extends BlockBase
 {
-	public static final AxisAlignedBB PIZZA_BOARD_AABB = new AxisAlignedBB(0D, 0, 0D, 1D, 0.0625D, 1D);
+	public static final AxisAlignedBB PIZZA_BOARD_AABB = new Bounds(0, 0, 0, 16, 1, 16).toAABB();
 		
 	public BlockPizzaBoard(String name, Material material)
 	{

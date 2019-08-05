@@ -1,7 +1,9 @@
-package com.tiviacz.pizzacraft.objects.block;
+package com.tiviacz.pizzacraft.blocks;
 
 import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.init.base.BlockBase;
+import com.tiviacz.pizzacraft.items.BlockBase;
+import com.tiviacz.pizzacraft.tileentity.TileEntityPizza;
+import com.tiviacz.pizzacraft.util.Bounds;
 
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -22,9 +24,9 @@ import net.minecraft.world.World;
 public class BlockPizzaBoxBase extends BlockBase
 {
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-	public static final AxisAlignedBB PIZZA_BOX_AABB = new AxisAlignedBB(0D, 0, 0D, 1D, 0.1875D, 1D);
+	public static final AxisAlignedBB PIZZA_BOX_AABB = new Bounds(0, 0, 0, 16, 3, 16).toAABB();
 	
-	IBlockState pizzablock;
+	private IBlockState pizzablock;
 	
 	public BlockPizzaBoxBase(String name, Material material, IBlockState pizzablock) 
 	{
@@ -59,11 +61,10 @@ public class BlockPizzaBoxBase extends BlockBase
 	@Override		   
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-	    if(!worldIn.isRemote)
-	    {	
-        	worldIn.setBlockState(pos, pizzablock);
-        	spawnAsEntity(worldIn, pos, new ItemStack(ModItems.CARDBOARD, 3));
-	    }
+	    worldIn.setBlockState(pos, pizzablock);		
+        TileEntityPizza tile = (TileEntityPizza)worldIn.getTileEntity(pos);
+        tile.setFresh(true);	
+        spawnAsEntity(worldIn, pos, new ItemStack(ModItems.CARDBOARD, 3));
 	    return true;
 	}
 	

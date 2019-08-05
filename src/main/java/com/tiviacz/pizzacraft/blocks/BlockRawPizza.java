@@ -1,10 +1,13 @@
-package com.tiviacz.pizzacraft.objects.block;
+package com.tiviacz.pizzacraft.blocks;
 
 import java.util.Random;
 
+import com.tiviacz.pizzacraft.handlers.SoundHandler;
+import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.init.base.BlockBase;
+import com.tiviacz.pizzacraft.items.BlockBase;
 import com.tiviacz.pizzacraft.tileentity.TileEntityRawPizza;
+import com.tiviacz.pizzacraft.util.Bounds;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -20,6 +23,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -29,7 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockRawPizza extends BlockBase implements ITileEntityProvider
 {
-	public static final AxisAlignedBB RAW_PIZZA_AABB = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.0625D, 0.9375D);
+	public static final AxisAlignedBB RAW_PIZZA_AABB = new Bounds(1, 0, 1, 15, 1, 15).toAABB();
 
 	public BlockRawPizza(String name, Material material) 
 	{
@@ -38,7 +43,8 @@ public class BlockRawPizza extends BlockBase implements ITileEntityProvider
 		setSoundType(SoundType.CLOTH);
         setHardness(0.5F);
         setResistance(2.5F);
-        setHarvestLevel("hand", 0);     
+        setHarvestLevel("hand", 0);
+        this.setTickRandomly(true);
 	
 	}
 	
@@ -58,6 +64,26 @@ public class BlockRawPizza extends BlockBase implements ITileEntityProvider
     public boolean isOpaqueCube(IBlockState state)
     {
         return false;
+    }
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
+    {
+		if(worldIn.getBlockState(pos.down()).getBlock() == ModBlocks.BURNING_PIZZA_OVEN)
+		{
+			worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, SoundHandler.PIZZA_SIZZLING, SoundCategory.BLOCKS, 0.75F, 1.0F, false);
+		}
+		
+		TileEntity tile = worldIn.getTileEntity(pos);
+		
+		if(tile instanceof TileEntityRawPizza)
+		{
+			if(((TileEntityRawPizza)tile).isCooking())
+			{
+				worldIn.spawnParticle(EnumParticleTypes.CLOUD, pos.getX() + 0.5, pos.getY() + 0.2, pos.getZ() + 0.5, 0, 0.025, 0);
+			}
+		}
     }
 	
 	@Override

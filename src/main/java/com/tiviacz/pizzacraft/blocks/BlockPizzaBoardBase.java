@@ -1,59 +1,48 @@
-package com.tiviacz.pizzacraft.objects.block;
+package com.tiviacz.pizzacraft.blocks;
 
 import java.util.Random;
 
+import com.tiviacz.pizzacraft.handlers.ConfigHandler;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.init.base.BlockBase;
-import com.tiviacz.pizzacraft.util.handlers.ConfigHandler;
+import com.tiviacz.pizzacraft.util.Bounds;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockPizzaBoardBase extends BlockBase
+public class BlockPizzaBoardBase extends BlockPizza
 {	
-    public static final PropertyInteger BITES = PropertyInteger.create("bites", 0, 5);
     public static final AxisAlignedBB[] PIZZA_BOARD_AABB = new AxisAlignedBB[] {
-    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D),
-    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D),
-    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D),
-    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D),
-    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D),
-    new AxisAlignedBB(0D, 0, 0D, 1D, 0.125D, 1D)};
+    new Bounds(0, 0, 0, 16, 2, 16).toAABB(),
+    new Bounds(0, 0, 0, 16, 2, 16).toAABB(),
+    new Bounds(0, 0, 0, 16, 2, 16).toAABB(),
+    new Bounds(0, 0, 0, 16, 2, 16).toAABB(),
+    new Bounds(0, 0, 0, 16, 2, 16).toAABB(),
+    new Bounds(0, 0, 0, 16, 2, 16).toAABB()};
     
-    float saturation;
-    int foodstats;
-    Item pizzaslice;
+    private float saturation;
+    private int foodstats;
+    private Item pizzaslice;
 
     public BlockPizzaBoardBase(String name, Material material, int foodstats, Float saturation, Item pizzaslice)
     {
-        super(name, material);
+        super(name, material, foodstats, saturation, pizzaslice);
  
         setSoundType(SoundType.WOOD);
         setHardness(2.0F);
         setResistance(15.0F);
-        setHarvestLevel("hand", 0);
-        setDefaultState(blockState.getBaseState().withProperty(BITES, 0));
-        setTickRandomly(true);   
         this.saturation = saturation;
         this.foodstats = foodstats;
         this.pizzaslice = pizzaslice;
@@ -63,18 +52,6 @@ public class BlockPizzaBoardBase extends BlockBase
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
     {
         return PIZZA_BOARD_AABB[state.getValue(BITES).intValue()];
-    }
-
-    @Override
-    public boolean isFullCube(IBlockState state)
-    {
-        return false;
-    }
-
-    @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
     }
 
     @Override
@@ -138,7 +115,7 @@ public class BlockPizzaBoardBase extends BlockBase
         else
         {
             player.addStat(StatList.CAKE_SLICES_EATEN);
-            player.getFoodStats().addStats(6, 15.0F);
+            player.getFoodStats().addStats(foodstats, saturation);
             int i = state.getValue(BITES).intValue();
 
             if(i < 5)
@@ -152,12 +129,6 @@ public class BlockPizzaBoardBase extends BlockBase
 
             return true;
         }
-    }
-
-    @Override
-    public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
-    {
-        return super.canPlaceBlockAt(worldIn, pos) ? this.canBlockStay(worldIn, pos) : false;
     }
 
     @Override
@@ -181,11 +152,6 @@ public class BlockPizzaBoardBase extends BlockBase
         }
     }
 
-    private boolean canBlockStay(World worldIn, BlockPos pos)
-    {
-    	return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP);
-    }
-
     @Override
     public int quantityDropped(Random random)
     {
@@ -206,42 +172,5 @@ public class BlockPizzaBoardBase extends BlockBase
     		return Item.getItemFromBlock(ModBlocks.PIZZA_BOARD);
     	}
 
-    }
-
-    @Override
-    public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
-    {
-        return new ItemStack(this);
-    }
-
-    @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
-        return this.getDefaultState().withProperty(BITES, meta);
-    }
-    
-    @Override
-    public int getMetaFromState(IBlockState state)
-    {
-        return state.getValue(BITES).intValue();
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer()
-    {
-        return BlockRenderLayer.CUTOUT;
-    }
-    
-    @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
-        return BlockFaceShape.UNDEFINED;
-    }
-
-    @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] {BITES});
     }
 }

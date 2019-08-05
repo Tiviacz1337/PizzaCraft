@@ -1,11 +1,14 @@
-package com.tiviacz.pizzacraft.objects.block;
+package com.tiviacz.pizzacraft.blocks;
 
 import java.util.Random;
 
+import com.tiviacz.pizzacraft.handlers.ConfigHandler;
+import com.tiviacz.pizzacraft.handlers.SoundHandler;
+import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.init.base.BlockBase;
+import com.tiviacz.pizzacraft.items.BlockBase;
 import com.tiviacz.pizzacraft.tileentity.TileEntityPizza;
-import com.tiviacz.pizzacraft.util.handlers.ConfigHandler;
+import com.tiviacz.pizzacraft.util.Bounds;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -25,6 +28,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -36,16 +41,16 @@ public class BlockPizza extends BlockBase implements ITileEntityProvider
 {	
     public static final PropertyInteger BITES = PropertyInteger.create("bites", 0, 5);
     public static final AxisAlignedBB[] PIZZA_AABB = new AxisAlignedBB[] {
-    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.0625D, 0.9375D),
-    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.0625D, 0.9375D),
-    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.875D, 0.0625D, 0.9375D),
-    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.5D, 0.0625D, 0.9375D),
-    new AxisAlignedBB(0.0625D, 0.0D, 0.375D, 0.5D, 0.0625D, 0.9375D),
-    new AxisAlignedBB(0.125D, 0.0D, 0.5625D, 0.5D, 0.0625D, 0.9375D)};
+    new Bounds(1, 0, 1, 15, 1, 15).toAABB(),
+    new Bounds(1, 0, 1, 15, 1, 15).toAABB(),
+    new Bounds(1, 0, 1, 14, 1, 15).toAABB(),
+    new Bounds(1, 0, 1, 8, 1, 15).toAABB(),
+    new Bounds(1, 0, 6, 8, 1, 15).toAABB(),
+    new Bounds(2, 0, 9, 8, 1, 15).toAABB()};
     
-    float saturation;
-    int foodstats;
-    Item pizzaslice;
+    private float saturation;
+    private int foodstats;
+    private Item pizzaslice;
 
     public BlockPizza(String name, Material material, int foodstats, Float saturation, Item pizzaslice)
     {
@@ -78,6 +83,29 @@ public class BlockPizza extends BlockBase implements ITileEntityProvider
     public boolean isOpaqueCube(IBlockState state)
     {
         return false;
+    }
+    
+    @Override
+	@SideOnly(Side.CLIENT)
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
+    {
+		if(worldIn.getBlockState(pos.down()).getBlock() == ModBlocks.BURNING_PIZZA_OVEN)
+		{
+			worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, SoundHandler.PIZZA_SIZZLING, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+		}
+		
+		TileEntity tile = worldIn.getTileEntity(pos);
+		
+		if(tile instanceof TileEntityPizza)
+		{
+			if(((TileEntityPizza)tile).isCooking() || ((TileEntityPizza)tile).isFresh())
+			{
+				if(rand.nextInt(100) > 50)
+				{
+					worldIn.spawnParticle(EnumParticleTypes.CLOUD, pos.getX() + 0.5, pos.getY() + 0.2, pos.getZ() + 0.5, 0, 0.025, 0);
+				}
+			}
+		}
     }
 
     @Override
@@ -174,7 +202,7 @@ public class BlockPizza extends BlockBase implements ITileEntityProvider
         }      
     }
 
-    private boolean canBlockStay(World worldIn, BlockPos pos)
+    protected boolean canBlockStay(World worldIn, BlockPos pos)
     {
     	return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP);
     }

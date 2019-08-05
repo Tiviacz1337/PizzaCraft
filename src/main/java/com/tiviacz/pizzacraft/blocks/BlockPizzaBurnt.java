@@ -1,9 +1,10 @@
-package com.tiviacz.pizzacraft.objects.block;
+package com.tiviacz.pizzacraft.blocks;
 
 import java.util.Random;
 
 import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.init.base.BlockBase;
+import com.tiviacz.pizzacraft.items.BlockBase;
+import com.tiviacz.pizzacraft.util.Bounds;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -34,12 +35,12 @@ public class BlockPizzaBurnt extends BlockBase
 {
     public static final PropertyInteger BITES = PropertyInteger.create("bites", 0, 5);
     public static final AxisAlignedBB[] PIZZA_BURNT_AABB = new AxisAlignedBB[] {
-    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.0625D, 0.9375D),
-    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.0625D, 0.9375D),
-    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.875D, 0.0625D, 0.9375D),
-    new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.5D, 0.0625D, 0.9375D),
-    new AxisAlignedBB(0.0625D, 0.0D, 0.375D, 0.5D, 0.0625D, 0.9375D),
-    new AxisAlignedBB(0.125D, 0.0D, 0.5625D, 0.5D, 0.0625D, 0.9375D)};
+    new Bounds(1, 0, 1, 15, 1, 15).toAABB(),
+    new Bounds(1, 0, 1, 15, 1, 15).toAABB(),
+    new Bounds(1, 0, 1, 14, 1, 15).toAABB(),
+    new Bounds(1, 0, 1, 8, 1, 15).toAABB(),
+    new Bounds(1, 0, 6, 8, 1, 15).toAABB(),
+    new Bounds(2, 0, 9, 8, 1, 15).toAABB()};
 
     public BlockPizzaBurnt(String name, Material material)
     {
