@@ -4,22 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
-import com.tiviacz.pizzacraft.init.base.ArmorBase;
-import com.tiviacz.pizzacraft.init.base.FoodBase;
-import com.tiviacz.pizzacraft.init.base.ItemBase;
-import com.tiviacz.pizzacraft.objects.item.ItemChefHat;
-import com.tiviacz.pizzacraft.objects.item.ItemDelivererCap;
-import com.tiviacz.pizzacraft.objects.item.ItemKnife;
-import com.tiviacz.pizzacraft.objects.item.ItemMilkBottle;
-import com.tiviacz.pizzacraft.objects.item.ItemPeel;
-import com.tiviacz.pizzacraft.objects.item.ItemPizzaShield;
-import com.tiviacz.pizzacraft.objects.item.ItemPlantSeed;
-import com.tiviacz.pizzacraft.objects.item.ItemReturn;
+import com.tiviacz.pizzacraft.items.ArmorBase;
+import com.tiviacz.pizzacraft.items.FoodBase;
+import com.tiviacz.pizzacraft.items.ItemBase;
+import com.tiviacz.pizzacraft.items.ItemChefHat;
+import com.tiviacz.pizzacraft.items.ItemDelivererCap;
+import com.tiviacz.pizzacraft.items.ItemKnife;
+import com.tiviacz.pizzacraft.items.ItemMilkBottle;
+import com.tiviacz.pizzacraft.items.ItemPeel;
+import com.tiviacz.pizzacraft.items.ItemPizzaShield;
+import com.tiviacz.pizzacraft.items.ItemPlantSeed;
+import com.tiviacz.pizzacraft.items.ItemReturn;
+import com.tiviacz.pizzacraft.util.Reference;
 
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
-import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraftforge.common.util.EnumHelper;
 
@@ -38,12 +38,10 @@ public class ModItems
 		public static final Item PAPER_MASS = new ItemBase("paper_mass");
 		public static final Item RED_CLOTH = new ItemBase("red_cloth");
 		public static final Item WHITE_CLOTH = new ItemBase("white_cloth");
-		public static final Item BAKEWARE = new ItemReturn("bakeware");
-		public static final Item MORTAR_AND_PESTLE = new ItemReturn("mortar_and_pestle");
 		public static final Item KNIFE = new ItemKnife("knife");
 		public static final Item PEEL = new ItemPeel("peel", 1.0F, -3.0F);
-		public static final Item PIZZA_BURNT_SHIELD = new ItemPizzaShield("pizza_burnt_shield", 100);
-		public static final Item PIZZA_BOARD_SHIELD = new ItemPizzaShield("pizza_board_shield", 150);
+		public static final Item PIZZA_BURNT_SHIELD = new ItemPizzaShield("pizza_burnt_shield", 6);
+		public static final Item PIZZA_BOARD_SHIELD = new ItemPizzaShield("pizza_board_shield", 90);
 		
 		//Ingredients
 		
@@ -51,11 +49,13 @@ public class ModItems
 		public static final Item TOMATO_SLICE = new FoodBase("tomato_slice", 1, 1F, false);
 		public static final Item CUCUMBER_SLICE = new FoodBase("cucumber_slice", 1, 1F, false);
 		public static final Item MILK_BOTTLE = new ItemMilkBottle("milk_bottle");
+		public static final Item OLIVE_OIL = new ItemReturn("olive_oil");
 		public static final Item CHEESE = new FoodBase("cheese", 2, 1F, false);
 		public static final Item PIZZA_DOUGH = new ItemBase("pizza_dough");
 		public static final Item FLOUR = new ItemBase("flour");
 		public static final Item FLOUR_CORN = new ItemBase("flour_corn");
 		public static final Item ONION = new FoodBase("onion", 2, 1F, false);
+		public static final Item ONION_SLICE = new FoodBase("onion_slice", 1, 1F, false);
 		public static final Item PEPPER = new FoodBase("pepper", 2, 1F, false);
 		public static final Item OLIVE = new FoodBase("olive", 2, 1F, false);
 		public static final Item BLACK_OLIVE = new FoodBase("black_olive", 2, 1F, false);
@@ -73,21 +73,21 @@ public class ModItems
 		public static final Item SEED_TOMATO = new ItemPlantSeed("seed_tomato", 3);
 		public static final Item SEED_CUCUMBER = new ItemPlantSeed("seed_cucumber", 4);
 		public static final Item SEED_CORN = new ItemPlantSeed("seed_corn", 5);
-		public static final Item SEED_BROCCOLI = new ItemPlantSeed("seed_broccoli", 6);
+		public static final Item SEED_BROCCOLI = new ItemPlantSeed("seed_broccoli", 6); 
 		
 		//Slices
 		
-		public static final Item SLICE_0 = new FoodBase("slice_0", 4, 1.2F, false); //Cheese  														//Margherita
-		public static final Item SLICE_1 = new FoodBase("slice_1", 6, 1.2F, false); //Cheese / Mushrooms											//Funghi
-		public static final Item SLICE_2 = new FoodBase("slice_2", 6, 1.2F, true); //Cheese / Ham													//Prosciutto
-		public static final Item SLICE_3 = new FoodBase("slice_3", 8, 1.2F, true); //Cheese / Ham / Chicken / Beef / Onion							//Meat
-		public static final Item SLICE_4 = new FoodBase("slice_4", 6, 1.2F, true); //Cheese / Ham / Mushrooms 										//Classic
-		public static final Item SLICE_5 = new FoodBase("slice_5", 10, 1.2F, true); //Cheese / Ham / Pepper / olive / Mushrooms						//Capriciosa
-		public static final Item SLICE_6 = new FoodBase("slice_6", 6, 1.2F, true); //Cheese / Ham / Pineapple										//Hawaiian
-		public static final Item SLICE_7 = new FoodBase("slice_7", 9, 1.2F, true); //Cheese / Ham / Tomato / Mushrooms / Cucumber					//Toscana
-		public static final Item SLICE_8 = new FoodBase("slice_8", 10, 1.2F, true); //Cheese / Ham / Corn / Mushrooms / Pepper						//Rustica
-		public static final Item SLICE_9 = new FoodBase("slice_9", 10, 1.2F, false); //Cheese / Broccoli / Corn / Pepper / Tomato					//Vegetarian
-		public static final Item SLICE_10 = new FoodBase("slice_10", 12, 1.2F, true); //Cheese / Ham / Black Olive / Pepper / Onion / Mushrooms 	//Pompea
+		public static final Item SLICE_0 = new FoodBase("slice_0", Reference.SHANKS_MARGHERITA, Reference.SATURATION, false); 	//Cheese  														//Margherita
+		public static final Item SLICE_1 = new FoodBase("slice_1", Reference.SHANKS_FUNGHI, Reference.SATURATION, false); 		//Cheese / Mushrooms											//Funghi
+		public static final Item SLICE_2 = new FoodBase("slice_2", Reference.SHANKS_PROSCIUTTO, Reference.SATURATION, true); 	//Cheese / Ham													//Prosciutto
+		public static final Item SLICE_3 = new FoodBase("slice_3", Reference.SHANKS_MEAT, Reference.SATURATION, true);			//Cheese / Ham / Chicken / Beef / Onion							//Meat
+		public static final Item SLICE_4 = new FoodBase("slice_4", Reference.SHANKS_CLASSIC, Reference.SATURATION, true); 		//Cheese / Ham / Mushrooms 										//Classic
+		public static final Item SLICE_5 = new FoodBase("slice_5", Reference.SHANKS_CAPRICIOSA, Reference.SATURATION, true);	//Cheese / Ham / Pepper / olive / Mushrooms						//Capriciosa
+		public static final Item SLICE_6 = new FoodBase("slice_6", Reference.SHANKS_HAWAIIAN, Reference.SATURATION, true); 		//Cheese / Ham / Pineapple										//Hawaiian
+		public static final Item SLICE_7 = new FoodBase("slice_7", Reference.SHANKS_TOSCANA, Reference.SATURATION, true); 		//Cheese / Ham / Tomato / Mushrooms / Cucumber					//Toscana
+		public static final Item SLICE_8 = new FoodBase("slice_8", Reference.SHANKS_RUSTICA, Reference.SATURATION, true); 		//Cheese / Ham / Corn / Mushrooms / Pepper						//Rustica
+		public static final Item SLICE_9 = new FoodBase("slice_9", Reference.SHANKS_VEGETARIAN, Reference.SATURATION, false); 	//Cheese / Broccoli / Corn / Pepper / Tomato					//Vegetarian
+		public static final Item SLICE_10 = new FoodBase("slice_10", Reference.SHANKS_POMPEA, Reference.SATURATION, true); 		//Cheese / Ham / Black Olive / Pepper / Onion / Mushrooms 	//Pompea
 		
 		//Pizza's deliver set
 		

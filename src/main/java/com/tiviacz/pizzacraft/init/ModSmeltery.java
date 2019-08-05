@@ -1,6 +1,6 @@
 package com.tiviacz.pizzacraft.init;
 
-import com.tiviacz.pizzacraft.util.handlers.ConfigHandler;
+import com.tiviacz.pizzacraft.handlers.ConfigHandler;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
