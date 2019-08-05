@@ -1,0 +1,37 @@
+{
+    "parent": "pizzacraft:block/pizza_bag",
+    "display": {
+        "thirdperson_righthand": {
+            "rotation": [ 70, 0, 15 ],
+            "translation": [ 0, -2, 0 ],
+            "scale": [ 0.8, 0.8, 0.8 ]
+        },
+        "thirdperson_lefthand": {
+            "rotation": [ 70, 0, 15 ],
+            "translation": [ 0, -2, 0 ],
+            "scale": [ 0.8, 0.8, 0.8 ]
+        },
+        "firstperson_righthand": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 0, 2, 5 ],
+            "scale": [ 0.6, 0.6, 0.6 ]
+        },
+        "firstperson_lefthand": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 0, 2, 5 ],
+            "scale": [ 0.6, 0.6, 0.6 ]
+        },
+        "gui": {
+            "rotation": [ 30, 135, 0 ],
+            "translation": [ 0, 0, 0 ],
+            "scale": [ 0.6, 0.6, 0.6 ]
+        },
+        "ground": {
+            "translation": [ 0, 3, 0 ],
+            "scale": [ 0.3, 0.3, 0.3 ]
+        },
+        "fixed": {
+            "translation": [ 0, 0, 1 ]
+        }
+    }
+}

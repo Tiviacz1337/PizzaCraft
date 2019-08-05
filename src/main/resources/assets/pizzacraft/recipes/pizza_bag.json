@@ -1,0 +1,34 @@
+{
+    "type": "minecraft:crafting_shaped",
+    
+    "pattern":
+    [
+        "BXB",
+        "XCX",
+        "XXX"
+    ],
+       
+       "key":
+        {
+            "B":
+            {
+                "item": "minecraft:iron_ingot"
+            },
+            
+            "C":
+            {
+                "item": "minecraft:chest"
+            },
+            
+            "X":
+            {
+                "item": "pizzacraft:red_cloth"
+            }     
+       },
+       
+       "result":
+       {
+            "item": "pizzacraft:pizza_bag",
+            "count": 1
+        }        
+}

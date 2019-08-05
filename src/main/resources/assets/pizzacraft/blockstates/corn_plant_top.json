@@ -1,0 +1,11 @@
+{
+    "variants": 
+    {
+        "age=0": { "model": "pizzacraft:plants/corn/corn_plant4" },
+        "age=1": { "model": "pizzacraft:plants/corn/corn_plant4" },
+        "age=2": { "model": "pizzacraft:plants/corn/corn_plant4" },
+        "age=3": { "model": "pizzacraft:plants/corn/corn_plant5" },
+        "age=4": { "model": "pizzacraft:plants/corn/corn_plant5" },
+        "age=5": { "model": "pizzacraft:plants/corn/corn_plant6" }
+    }
+}

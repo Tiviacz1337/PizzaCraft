@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "pizzacraft:blocks/pizza_dough",
+		"particle": "pizzacraft:blocks/pizza_dough"
+	},
+	"elements": [
+		{
+			"name": "dough6",
+			"from": [3, 0, 3],
+			"to": [13, 2, 13],
+			"faces": {
+				"north": {"uv": [4, 0, 14, 2], "texture": "#0"},
+				"east": {"uv": [4, 0, 14, 2], "texture": "#0"},
+				"south": {"uv": [4, 0, 14, 2], "texture": "#0"},
+				"west": {"uv": [4, 0, 14, 2], "texture": "#0"},
+				"up": {"uv": [4, 0, 14, 10], "texture": "#0"},
+				"down": {"uv": [6, 0, 16, 10], "texture": "#0"}
+			}
+		}
+	]
+}

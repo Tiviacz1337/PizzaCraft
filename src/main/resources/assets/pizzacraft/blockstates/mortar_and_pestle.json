@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "pestle=0": { "model": "pizzacraft:mortar_and_pestle_0" },
+        "pestle=1": { "model": "pizzacraft:mortar_and_pestle_1" },
+        "pestle=2": { "model": "pizzacraft:mortar_and_pestle_2" },
+        "pestle=3": { "model": "pizzacraft:mortar_and_pestle_3" }
+    }
+}

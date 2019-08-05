@@ -1,0 +1,11 @@
+{
+    "variants": {
+        "kneeding=0": { "model": "pizzacraft:dough_0" },
+        "kneeding=1": { "model": "pizzacraft:dough_1" },
+        "kneeding=2": { "model": "pizzacraft:dough_2" },
+        "kneeding=3": { "model": "pizzacraft:dough_3" },
+        "kneeding=4": { "model": "pizzacraft:dough_4" },
+        "kneeding=5": { "model": "pizzacraft:dough_5" },
+        "kneeding=6": { "model": "pizzacraft:dough_6" }
+    }
+}

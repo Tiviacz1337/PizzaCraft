@@ -4,7 +4,7 @@
     "textures": {
     "particle": "pizzacraft:blocks/pizza_box_bottom",
         "0": "pizzacraft:blocks/pizza_box_side",
-        "1": "pizzacraft:blocks/pizza_box_10_top",
+        "1": "#top",
         "2": "pizzacraft:blocks/pizza_box_bottom"
     },
     "elements": [

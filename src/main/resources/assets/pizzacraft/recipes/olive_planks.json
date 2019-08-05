@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "pizzacraft:olive_log"
+    }
+  ],
+  "result": {
+    "item": "pizzacraft:olive_planks",
+    "count": 4
+  }
+}

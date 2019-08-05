@@ -1,0 +1,88 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "pizzacraft:blocks/mortar_and_pestle",
+		"particle": "pizzacraft:blocks/mortar_and_pestle"
+	},
+	"elements": [
+		{
+			"name": "bottom",
+			"from": [4, 0, 4],
+			"to": [12, 1, 12],
+			"faces": {
+				"north": {"uv": [0, 11, 8, 12], "texture": "#0"},
+				"east": {"uv": [0, 11, 8, 12], "texture": "#0"},
+				"south": {"uv": [0, 11, 8, 12], "texture": "#0"},
+				"west": {"uv": [0, 11, 8, 12], "texture": "#0"},
+				"up": {"uv": [8, 0, 16, 8], "texture": "#0"},
+				"down": {"uv": [0, 0, 8, 8], "texture": "#0"}
+			}
+		},
+		{
+			"name": "w",
+			"from": [4, 1, 4],
+			"to": [5, 4, 12],
+			"faces": {
+				"north": {"uv": [7, 8, 8, 11], "texture": "#0"},
+				"east": {"uv": [8, 8, 16, 11], "texture": "#0"},
+				"south": {"uv": [0, 8, 1, 11], "texture": "#0"},
+				"west": {"uv": [0, 8, 8, 11], "texture": "#0"},
+				"up": {"uv": [7, 0, 8, 8], "texture": "#0"},
+				"down": {"uv": [0, 0, 1, 6], "texture": "#0"}
+			}
+		},
+		{
+			"name": "e",
+			"from": [11, 1, 4],
+			"to": [12, 4, 12],
+			"faces": {
+				"north": {"uv": [0, 8, 1, 11], "texture": "#0"},
+				"east": {"uv": [0, 8, 8, 11], "texture": "#0"},
+				"south": {"uv": [7, 8, 8, 11], "texture": "#0"},
+				"west": {"uv": [8, 8, 16, 11], "texture": "#0"},
+				"up": {"uv": [0, 0, 1, 8], "texture": "#0"},
+				"down": {"uv": [0, 0, 1, 6], "texture": "#0"}
+			}
+		},
+		{
+			"name": "s",
+			"from": [5, 1, 4],
+			"to": [11, 4, 5],
+			"faces": {
+				"north": {"uv": [1, 8, 7, 11], "texture": "#0"},
+				"east": {"uv": [0, 0, 1, 2], "texture": "#0"},
+				"south": {"uv": [9, 8, 15, 11], "texture": "#0"},
+				"west": {"uv": [0, 0, 1, 2], "texture": "#0"},
+				"up": {"uv": [0, 0, 6, 1], "texture": "#0"},
+				"down": {"uv": [0, 0, 4, 1], "texture": "#0"}
+			}
+		},
+		{
+			"name": "n",
+			"from": [5, 1, 11],
+			"to": [11, 4, 12],
+			"faces": {
+				"north": {"uv": [9, 8, 15, 11], "texture": "#0"},
+				"east": {"uv": [0, 0, 1, 2], "texture": "#0"},
+				"south": {"uv": [1, 8, 7, 11], "texture": "#0"},
+				"west": {"uv": [0, 0, 1, 2], "texture": "#0"},
+				"up": {"uv": [1, 7, 7, 8], "texture": "#0"},
+				"down": {"uv": [0, 0, 4, 1], "texture": "#0"}
+			}
+		},
+		{
+			"name": "pestle",
+			"from": [5, 2.5, 6.25],
+			"to": [7, 10.5, 8.25],
+			"rotation": {"angle": -45, "axis": "x", "origin": [7, 4, 9]},
+			"faces": {
+				"north": {"uv": [0, 14, 8, 16], "rotation": 90, "texture": "#0"},
+				"east": {"uv": [0, 14, 8, 16], "rotation": 90, "texture": "#0"},
+				"south": {"uv": [0, 14, 8, 16], "rotation": 90, "texture": "#0"},
+				"west": {"uv": [0, 14, 8, 16], "rotation": 90, "texture": "#0"},
+				"up": {"uv": [10, 14, 12, 16], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [8, 14, 10, 16], "rotation": 270, "texture": "#0"}
+			}
+		}
+	]
+}
