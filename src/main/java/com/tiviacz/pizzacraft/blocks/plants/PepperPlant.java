@@ -10,7 +10,6 @@ import net.minecraft.block.BlockCrops;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -64,13 +63,6 @@ public class PepperPlant extends BlockCrops
 	{
 		return ModItems.PEPPER;
 	}
-	
-	@Override
-    public boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)
-    {
-        IBlockState soil = worldIn.getBlockState(pos.down());
-        return (worldIn.getLight(pos) >= 8 || worldIn.canSeeSky(pos)) && soil.getBlock() == Blocks.FARMLAND;
-    }
 	
 	@Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)

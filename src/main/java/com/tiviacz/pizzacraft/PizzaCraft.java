@@ -17,7 +17,7 @@ public class PizzaCraft
 {
 	public static final String MODID = "pizzacraft";
 	public static final String NAME = "pizzacraft";
-	public static final String VERSION = "2.0.16.16";
+	public static final String VERSION = "2.0.18.18";
 
 	public static CreativeTabs PIZZACRAFTTAB = new PizzaCraftCreativeTab("pizzacrafttab");
 	

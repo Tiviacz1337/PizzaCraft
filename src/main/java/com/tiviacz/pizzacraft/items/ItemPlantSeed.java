@@ -3,6 +3,7 @@ package com.tiviacz.pizzacraft.items;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -31,8 +32,9 @@ public class ItemPlantSeed extends ItemBase implements IPlantable
     {
         ItemStack itemstack = player.getHeldItem(hand);
         IBlockState state = worldIn.getBlockState(pos);
+        Block soilBlock = worldIn.getBlockState(pos).getBlock();
         
-        if(facing == EnumFacing.UP && player.canPlayerEdit(pos.offset(facing), facing, itemstack) && state.getBlock().canSustainPlant(state, worldIn, pos, EnumFacing.UP, this) && worldIn.isAirBlock(pos.up()))
+        if(facing == EnumFacing.UP && player.canPlayerEdit(pos.offset(facing), facing, itemstack) && worldIn.isAirBlock(pos.up()) && soilBlock.canSustainPlant(state, worldIn, pos, facing, this))
         {
             worldIn.setBlockState(pos.up(), this.getType());
 

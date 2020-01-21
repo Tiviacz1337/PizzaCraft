@@ -112,13 +112,10 @@ public class CornPlantTop extends CornPlantBottom
 
         if(age >= this.getMaxAge())
         {
-            for(int i = 0; i < 2 + fortune; ++i)
-            {
-                if(rand.nextInt(2 * getMaxAge()) <= age)
-                {
-                	drops.add(new ItemStack(this.getSeed(), 1, 0));
-                }
-            }
+        	if(rand.nextInt(2 * getMaxAge()) <= age)
+        	{
+        		drops.add(new ItemStack(this.getSeed(), 1, 0));
+        	}
 
         	drops.add(new ItemStack(this.getCrop(), 1, 0));
         	

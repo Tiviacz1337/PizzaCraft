@@ -19,6 +19,9 @@ public class ConfigHandler
 	@Config.RequiresMcRestart
 	public static int treeGenChance = 25;
 	
+	@Config.Comment("Grow chance for olives (Lower is faster)")
+	public static int oliveGrowChance = 25;
+	
 	@Config.Comment("Grass drop seeds")
 	@Config.RequiresMcRestart
 	public static boolean dropAllSeeds = true;

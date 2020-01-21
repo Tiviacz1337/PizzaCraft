@@ -12,7 +12,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -60,7 +59,7 @@ public class PineapplePlant extends BlockCrops
 	@Override
 	public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn)
     {
-		if(this.getAge(state) > 0)
+		if(this.getAge(state) > 1)
 		{
 			if(entityIn instanceof EntityItem)
 			{
@@ -81,13 +80,6 @@ public class PineapplePlant extends BlockCrops
 	{
 		return ModItems.PINEAPPLE;
 	}
-
-	@Override
-    public boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)
-    {
-        IBlockState soil = worldIn.getBlockState(pos.down());
-        return (worldIn.getLight(pos) >= 8 || worldIn.canSeeSky(pos)) && soil.getBlock() == Blocks.FARMLAND;
-    }
 	
 	@Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune)

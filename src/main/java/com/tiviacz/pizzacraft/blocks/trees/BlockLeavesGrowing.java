@@ -3,6 +3,7 @@ package com.tiviacz.pizzacraft.blocks.trees;
 import java.util.List;
 import java.util.Random;
 
+import com.tiviacz.pizzacraft.handlers.ConfigHandler;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.ModItems;
 
@@ -70,9 +71,7 @@ public class BlockLeavesGrowing extends BlockLeavesBase implements IGrowable
 
 		if(i < this.getMaxAge()) 
 		{
-			float f = 1.0F;
-
-			if(ForgeHooks.onCropsGrowPre(worldIn, pos, state, rand.nextInt((int) (50.0F / f) + 1) == 0)) 
+			if(ForgeHooks.onCropsGrowPre(worldIn, pos, state, rand.nextInt(ConfigHandler.oliveGrowChance) == 0)) 
 			{
 				worldIn.setBlockState(pos, state.withProperty(AGE, (i + 1)), 2);
 				ForgeHooks.onCropsGrowPost(worldIn, pos, state, worldIn.getBlockState(pos));

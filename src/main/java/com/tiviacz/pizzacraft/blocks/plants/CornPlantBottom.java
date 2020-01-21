@@ -194,13 +194,6 @@ public class CornPlantBottom extends BlockCrops
     {
     	return MathHelper.getInt(worldIn.rand, 2, 3);
     }
-
-    @Override
-    public boolean canBlockStay(World worldIn, BlockPos pos, IBlockState state)
-    {
-        IBlockState soil = worldIn.getBlockState(pos.down());
-        return (worldIn.getLight(pos) >= 8 || worldIn.canSeeSky(pos)) && soil.getBlock() == Blocks.FARMLAND;
-    }
         
     @Override
     protected Item getSeed()
@@ -217,13 +210,7 @@ public class CornPlantBottom extends BlockCrops
     @Override
     public void getDrops(NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) 
     {
-    	super.getDrops(drops, world, pos, state, 0);
-        int age = this.getAge(state);
-
-    	if(age <= this.getMaxAge())
-    	{
-        	drops.add(new ItemStack(this.getSeed(), 1));
-    	} 
+    	drops.add(new ItemStack(this.getSeed(), this.RANDOM.nextInt(2)));
     }
     
     @Override

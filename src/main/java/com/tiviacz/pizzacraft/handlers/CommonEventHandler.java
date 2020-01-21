@@ -46,6 +46,8 @@ import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @EventBusSubscriber
 public class CommonEventHandler
@@ -238,6 +240,7 @@ public class CommonEventHandler
 		}
 	}
 	
+	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public static void registerBlockColourHandlers(final ColorHandlerEvent.Block event) 
 	{
@@ -254,8 +257,9 @@ public class CommonEventHandler
 
 		blockColors.registerBlockColorHandler(grassColourHandler, ModBlocks.OLIVE_LEAVES);
 		blockColors.registerBlockColorHandler(grassColourHandler, ModBlocks.OLIVE_LEAVES_GROWING);
-	}
+	} 
 	
+	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public static void registerItemColourHandlers(final ColorHandlerEvent.Item event) 
 	{
