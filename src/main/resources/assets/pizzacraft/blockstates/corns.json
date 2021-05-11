@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "age=0,half=lower": { "model": "pizzacraft:block/crop/corns_stage0" },
+    "age=0,half=upper": { "model": "pizzacraft:block/crop/corns_stage0" },
+    "age=1,half=lower": { "model": "pizzacraft:block/crop/corns_stage1" },
+    "age=1,half=upper": { "model": "pizzacraft:block/crop/corns_stage4" },
+    "age=2,half=lower": { "model": "pizzacraft:block/crop/corns_stage2" },
+    "age=2,half=upper": { "model": "pizzacraft:block/crop/corns_stage5" },
+    "age=3,half=lower": { "model": "pizzacraft:block/crop/corns_stage3" },
+    "age=3,half=upper": { "model": "pizzacraft:block/crop/corns_stage6" }
+  }
+}

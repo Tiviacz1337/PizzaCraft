@@ -1,7 +1,0 @@
-{
-    "parent": "block/leaves",
-    "textures":
-    {
-        "all": "pizzacraft:blocks/olive_leaves"
-    }
-}

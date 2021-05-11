@@ -1,0 +1,110 @@
+{
+  "parent": "pizzacraft:root",
+  "display": {
+    "icon": {
+      "item": "pizzacraft:tomato"
+    },
+    "title": {
+      "translate": "advancements.pizzacraft.crops.title"
+    },
+    "description": {
+      "translate": "advancements.pizzacraft.crops.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "tomato": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "pizzacraft:tomato"
+        }
+      }
+    },
+    "pepper": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "pizzacraft:pepper"
+        }
+      }
+    },
+    "onion": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "pizzacraft:onion"
+        }
+      }
+    },
+    "corn": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "pizzacraft:corn"
+        }
+      }
+    },
+    "pineapple": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "pizzacraft:pineapple"
+        }
+      }
+    },
+    "olive": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "pizzacraft:olive"
+        }
+      }
+    },
+    "broccoli": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "pizzacraft:broccoli"
+        }
+      }
+    },
+    "cucumber": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "item": "pizzacraft:cucumber"
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "tomato"
+    ],
+    [
+      "pepper"
+    ],
+    [
+      "onion"
+    ],
+    [
+      "corn"
+    ],
+    [
+      "pineapple"
+    ],
+    [
+      "olive"
+    ],
+    [
+      "broccoli"
+    ],
+    [
+      "cucumber"
+    ]
+  ]
+}

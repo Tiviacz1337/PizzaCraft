@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XCX",
+    "X X",
+    "CCC"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:bricks"
+    },
+    "C": {
+      "item": "minecraft:stone"
+    }
+  },
+  "result": {
+    "item": "pizzacraft:oven"
+  }
+}

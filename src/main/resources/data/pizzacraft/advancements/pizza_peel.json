@@ -1,0 +1,35 @@
+{
+  "parent": "pizzacraft:dough",
+  "display": {
+    "icon": {
+      "item": "pizzacraft:pizza_peel"
+    },
+    "title": {
+      "translate": "advancements.pizzacraft.pizza_peel.title"
+    },
+    "description": {
+      "translate": "advancements.pizzacraft.pizza_peel.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "pizza_peel": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "pizzacraft:pizza_peel"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "pizza_peel"
+    ]
+  ]
+}

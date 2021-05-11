@@ -1,0 +1,23 @@
+modLoader="javafml"
+
+loaderVersion="[35,)"
+
+license="All Rights Reserved"
+
+issueTrackerURL="https://github.com/Tiviacz1337/PizzaCraft/issues"
+
+[[mods]]
+
+modId="pizzacraft"
+
+version="3.0.3"
+
+displayName="PizzaCraft"
+
+updateJSONURL="https://gist.githubusercontent.com/Tiviacz1337/b916e3981957f1e6f2de99ea0aa328fa/raw"
+
+displayURL="https://www.curseforge.com/minecraft/mc-mods/pizzacraft"
+
+authors="Tiviacz1337, SirSquidly"
+
+description='Brings the tasty pizza to Minecraft!'

@@ -1,5 +1,5 @@
 {
-    "parent": "pizzacraft:block/mortar_and_pestle_0",
+    "parent": "pizzacraft:block/mortar_and_pestle",
     "display": {
         "thirdperson_righthand": {
             "rotation": [ 75, 45, 0 ],

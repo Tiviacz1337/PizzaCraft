@@ -1,9 +1,0 @@
-{
-    "variants": 
-    {
-        "fire=0": { "model": "pizzacraft:burning_pizza_oven_0" },
-        "fire=1": { "model": "pizzacraft:burning_pizza_oven_1" },
-        "fire=2": { "model": "pizzacraft:burning_pizza_oven_2" },
-        "fire=3": { "model": "pizzacraft:burning_pizza_oven_3" }
-    }  
-}

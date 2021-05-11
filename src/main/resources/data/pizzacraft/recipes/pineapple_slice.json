@@ -1,0 +1,8 @@
+{
+  "type": "pizzacraft:chopping_recipe",
+  "input": {
+    "tag": "forge:pineapple"
+  },
+  "outputItem": "pizzacraft:pineapple_slice",
+  "outputCount": "2"
+}

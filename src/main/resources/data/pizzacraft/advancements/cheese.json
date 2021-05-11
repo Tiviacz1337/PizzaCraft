@@ -1,0 +1,35 @@
+{
+  "parent": "pizzacraft:cheese_block",
+  "display": {
+    "icon": {
+      "item": "pizzacraft:cheese"
+    },
+    "title": {
+      "translate": "advancements.pizzacraft.cheese.title"
+    },
+    "description": {
+      "translate": "advancements.pizzacraft.cheese.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "cheese": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "pizzacraft:cheese"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "cheese"
+    ]
+  ]
+}

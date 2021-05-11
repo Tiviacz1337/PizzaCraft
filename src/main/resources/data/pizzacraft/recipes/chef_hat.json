@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "C C"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:white_wool"
+    },
+    "C": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "pizzacraft:chef_hat"
+  }
+}

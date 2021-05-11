@@ -1,0 +1,6 @@
+{
+    "parent": "pizzacraft:block/crop/crop_cross",
+    "textures": {
+        "crop_cross": "pizzacraft:block/peppers_stage1"
+    }
+}

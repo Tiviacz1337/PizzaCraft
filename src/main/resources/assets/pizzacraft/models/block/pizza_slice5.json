@@ -1,0 +1,22 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"1": "pizzacraft:block/pizza_bottom",
+		"2": "pizzacraft:block/pizza_top",
+		"particle": "pizzacraft:block/pizza_top"
+	},
+	"elements": [
+		{
+			"from": [11, 0, 1],
+			"to": [15, 1, 15],
+			"faces": {
+				"north": {"uv": [1, 15, 5, 16], "texture": "#1"},
+				"east": {"uv": [1, 15, 15, 16], "texture": "#1"},
+				"south": {"uv": [11, 15, 15, 16], "texture": "#1"},
+				"west": {"uv": [1, 0, 15, 1], "texture": "#1"},
+				"up": {"uv": [11, 1, 15, 15], "texture": "#2", "cullface": "up"},
+				"down": {"uv": [11, 1, 15, 15], "texture": "#1"}
+			}
+		}
+	]
+}

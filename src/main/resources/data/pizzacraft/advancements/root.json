@@ -1,0 +1,21 @@
+{
+  "display": {
+    "icon": {
+      "item": "pizzacraft:pizza"
+    },
+    "title": {
+      "translate": "advancements.pizzacraft.root.title"
+    },
+    "description": {
+      "translate": "advancements.pizzacraft.root.description"
+    },
+    "background": "minecraft:textures/gui/advancements/backgrounds/husbandry.png",
+    "show_toast": false,
+    "announce_to_chat": false
+  },
+  "criteria": {
+    "tick": {
+      "trigger": "minecraft:tick"
+    }
+  }
+}

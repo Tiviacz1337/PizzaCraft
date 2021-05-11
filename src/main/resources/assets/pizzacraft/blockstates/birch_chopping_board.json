@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "pizzacraft:block/birch_chopping_board" },
+    "facing=east": { "model": "pizzacraft:block/birch_chopping_board", "y": 90 },
+    "facing=south": { "model": "pizzacraft:block/birch_chopping_board", "y": 180 },
+    "facing=west": { "model": "pizzacraft:block/birch_chopping_board", "y": 270 }
+  }
+}

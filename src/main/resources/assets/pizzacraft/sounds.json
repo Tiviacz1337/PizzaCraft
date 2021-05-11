@@ -1,6 +1,9 @@
 {
-        "pizza_sizzling": {
+  "pizza.sizzling": {
     "category": "block",
-    "sounds": [{"name" : "pizzacraft:pizza_sizzling"}]
-     }
-}   
+    "sounds": [
+        "pizzacraft:blocks/pizza/pizza_sizzling"
+    ],
+    "subtitle": "subtitles.block.pizzacraft:pizza.sizzling"
+  }
+}

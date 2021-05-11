@@ -1,6 +1,0 @@
-{
-    "parent": "pizzacraft:block/pizza_board/pizza_board_slice4",
-    "textures": {
-        "top": "pizzacraft:blocks/pizza_10_top"
-    }
-}

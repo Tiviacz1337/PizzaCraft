@@ -1,6 +1,6 @@
 {
-   "parent": "item/generated",
-   "textures": {
-       "layer0": "pizzacraft:items/broccoli"
-   }
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "pizzacraft:item/broccoli"
+  }
 }

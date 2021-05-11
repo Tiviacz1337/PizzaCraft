@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "pizzacraft:wing"
+  },
+  "result": "pizzacraft:cooked_wing",
+  "experience": 0.17,
+  "cookingtime": 200
+}

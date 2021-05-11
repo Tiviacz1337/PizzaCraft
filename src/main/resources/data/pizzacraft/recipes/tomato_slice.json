@@ -1,0 +1,8 @@
+{
+  "type": "pizzacraft:chopping_recipe",
+  "input": {
+    "tag": "forge:tomato"
+  },
+  "outputItem": "pizzacraft:tomato_slice",
+  "outputCount": "2"
+}

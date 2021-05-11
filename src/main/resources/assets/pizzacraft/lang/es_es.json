@@ -1,0 +1,82 @@
+{
+  "itemGroup.pizzacraft": "PizzaCraft",
+
+  "recipecategory.pizzacraft.chopping": "Tabla de corte",
+  "recipecategory.pizzacraft.mortar": "Mortero",
+
+  "pizzacraft.milk": "Leche",
+  "pizzacraft.fermenting_milk": "Leche fermentada",
+  "pizzacraft.cheese": "Queso",
+  "pizzacraft.tomato_sauce": "Salsa de tomate",
+  "pizzacraft.olive_oil": "Aceite de oliva",
+
+  "block.pizzacraft.pizza": "Pizza",
+  "block.pizzacraft.raw_pizza": "Pizza cruda",
+  "block.pizzacraft.dough": "Masa",
+  "block.pizzacraft.cheese_block": "Bloque de queso",
+  "block.pizzacraft.oven": "Horno",
+
+  "block.pizzacraft.oak_pizza_board": "Tabla de pizza de roble",
+
+  "block.pizzacraft.oak_chopping_board": "Tabla de corte de roble",
+  "block.pizzacraft.birch_chopping_board": "Tabla de corte de abedul",
+  "block.pizzacraft.spruce_chopping_board": "Tabla de corte de abeto",
+  "block.pizzacraft.jungle_chopping_board": "Tabla de corte de jungla",
+  "block.pizzacraft.acacia_chopping_board": "Tabla de corte de acacia",
+  "block.pizzacraft.dark_oak_chopping_board": "Tabla de corte de roble oscuro",
+  "block.pizzacraft.crimson_chopping_board": "Tabla de corte carmesí",
+  "block.pizzacraft.warped_chopping_board": "Tabla de corte distorcionada",
+
+  "block.pizzacraft.mortar_and_pestle": "Mortero y maja",
+
+  "block.pizzacraft.granite_basin": "Tazón de granito",
+  "block.pizzacraft.diorite_basin": "Tazón de diorita",
+  "block.pizzacraft.andesite_basin": "Tazón de andesita",
+  "block.pizzacraft.basalt_basin": "Tazóna de basalto",
+  "block.pizzacraft.blackstone_basin": "Tazón de piedra negra",
+
+  "item.pizzacraft.knife": "Cuchillo",
+  "item.pizzacraft.rolling_pin": "Rodillo",
+  "item.pizzacraft.pizza_peel": "Pala de pizza",
+
+  "item.pizzacraft.glass_jug": "Frasco de cristal",
+  "item.pizzacraft.olive_oil": "Aceite de oliva",
+  "item.pizzacraft.tomato_sauce": "Salsa de tomate",
+
+  "item.pizzacraft.broccoli": "Brócoli",
+  "item.pizzacraft.corn": "Maíz",
+  "item.pizzacraft.cucumber": "Pepino",
+  "item.pizzacraft.onion": "Cebolla",
+  "item.pizzacraft.pepper": "Pimiento",
+  "item.pizzacraft.pineapple": "Piña",
+  "item.pizzacraft.tomato": "Tomate",
+
+  "item.pizzacraft.olive": "Aceituna",
+
+  "item.pizzacraft.broccoli_seed": "Semilla de brócoli",
+  "item.pizzacraft.corn_seed": "Semilla de maiz",
+  "item.pizzacraft.cucumber_seed": "Semilla de pepino",
+  "item.pizzacraft.onion_seed": "Semilla de cebolla",
+  "item.pizzacraft.pepper_seed": "Semilla de pimiento",
+  "item.pizzacraft.pineapple_seed": "Semilla de piña",
+  "item.pizzacraft.tomato_seed": "Semilla de tomate",
+
+  "item.pizzacraft.cucumber_slice": "Rodaja de pepino",
+  "item.pizzacraft.onion_slice": "Rodaja de cebolla",
+  "item.pizzacraft.pepper_slice": "Rodaja de pimiento",
+  "item.pizzacraft.pineapple_slice": "Rodaja de piña",
+  "item.pizzacraft.tomato_slice": "Rodaja de tomate",
+
+  "item.pizzacraft.ham": "jamón",
+  "item.pizzacraft.wing": "Ala de pollo crudo",
+  "item.pizzacraft.cooked_wing": "Ala de pollo cocinada",
+
+  "item.pizzacraft.flour": "Harina",
+  "item.pizzacraft.corn_flour": "Harina de maíz",
+  "item.pizzacraft.cheese": "Queso",
+
+  "item.pizzacraft.chef_hat": "Sombrero de Chef",
+  "item.pizzacraft.chef_shirt": "Camisa de chef",
+  "item.pizzacraft.chef_leggings": "Pantalones de chef",
+  "item.pizzacraft.chef_boots": "Botas de Chef"
+}

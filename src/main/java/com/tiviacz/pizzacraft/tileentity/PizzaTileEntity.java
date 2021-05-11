@@ -1,0 +1,508 @@
+package com.tiviacz.pizzacraft.tileentity;
+
+import com.tiviacz.pizzacraft.PizzaCraft;
+import com.tiviacz.pizzacraft.blocks.OvenBlock;
+import com.tiviacz.pizzacraft.blocks.PizzaBlock;
+import com.tiviacz.pizzacraft.blocks.RawPizzaBlock;
+import com.tiviacz.pizzacraft.client.PizzaBakedModel;
+import com.tiviacz.pizzacraft.container.PizzaContainer;
+import com.tiviacz.pizzacraft.init.*;
+import com.tiviacz.pizzacraft.items.SauceItem;
+import com.tiviacz.pizzacraft.util.Utils;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemStackHandler;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
+
+public class PizzaTileEntity extends BaseTileEntity implements INamedContainerProvider, ITickableTileEntity //#TODO sauce application has to be done
+{
+    private final ItemStackHandler inventory = createHandler();
+    private int leftBakingTime = -1;
+    private int leftFreshTime = -1;
+    private final int baseBakingTime = 600;
+    private final int baseFreshTime = 1800;
+    private int selectedSlot = 0;
+    private Pair<Integer, Float> refillment = Pair.of(0, 0.0F);
+    private final LazyOptional<ItemStackHandler> inventoryCapability = LazyOptional.of(() -> this.inventory);
+
+    private final String LEFT_BAKING_TIME = "LeftBakingTime";
+    private final String LEFT_FRESH_TIME = "LeftFreshTime";
+    //private final String SELECTED_SLOT = "SelectedSlot";
+    private final String HUNGER = "Hunger";
+    private final String SATURATION = "Saturation";
+
+    public PizzaTileEntity()
+    {
+        super(ModTileEntityTypes.PIZZA.get());
+    }
+
+    @Override
+    public void read(BlockState state, CompoundNBT compound)
+    {
+        super.read(state, compound);
+        this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
+        this.leftBakingTime = compound.getInt(LEFT_BAKING_TIME);
+        this.leftFreshTime = compound.getInt(LEFT_FRESH_TIME);
+        //this.selectedSlot = compound.getInt(SELECTED_SLOT);
+        this.refillment = Pair.of(compound.getInt(HUNGER), compound.getFloat(SATURATION));
+    }
+
+    @Override
+    public CompoundNBT write(CompoundNBT compound)
+    {
+        super.write(compound);
+        compound.put(INVENTORY, this.inventory.serializeNBT());
+        compound.putInt(LEFT_BAKING_TIME, this.leftBakingTime);
+        compound.putInt(LEFT_FRESH_TIME, this.leftFreshTime);
+        //compound.putInt(SELECTED_SLOT, this.selectedSlot);
+        compound.putInt(HUNGER, this.refillment.getLeft());
+        compound.putFloat(SATURATION, this.refillment.getRight());
+        return compound;
+    }
+
+    /**
+     * Base Ingredients can be added to this list
+     */
+    public static Set<Item> baseIngredients = new HashSet<>(Collections.singletonList(ModItems.CHEESE.get()));
+
+    public ActionResultType onBlockActivated(PlayerEntity player, Hand hand)
+    {
+        if(hand == Hand.MAIN_HAND)
+        {
+            ItemStack stack = player.getHeldItem(hand);
+
+            if(isRaw() && !isBaking())
+            {
+                if(stack.isEmpty())
+                {
+                    //Open GUI here
+                    if(player.isSneaking())
+                    {
+                        openGUI(player, this, pos);
+                        return ActionResultType.SUCCESS;
+                    }
+                    else
+                    {
+                        //Get first not empty stack for Removal
+                        for(int i = inventory.getSlots() - 1; i >= 0; i--)
+                        {
+                            ItemStack firstNotEmpty = inventory.getStackInSlot(i);
+
+                            if(!firstNotEmpty.isEmpty())
+                            {
+                                this.selectedSlot = i;
+                                break;
+                            }
+                        }
+
+                        //Remove stack from slot
+                        if(!inventory.getStackInSlot(this.selectedSlot).isEmpty())
+                        {
+                            ItemStack modifiedCopy = inventory.getStackInSlot(this.selectedSlot).copy();
+                            modifiedCopy.setCount(1);
+
+                            if(!player.inventory.addItemStackToInventory(modifiedCopy))
+                            {
+                                world.addEntity(new ItemEntity(player.world, getPos().getX(), getPos().getY(), getPos().getZ(), modifiedCopy));
+                            }
+                            world.playSound(player, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
+                            decreaseInSlot(this.selectedSlot, 1);
+                            this.markDirty();
+                            return ActionResultType.SUCCESS;
+                        }
+                    }
+                }
+                else
+                {
+                /*    //Adding base ingredient
+                    if(inventory.getStackInSlot(0).isEmpty() && canAddIngredient(stack, this.selectedSlot))
+                    {
+                        player.setHeldItem(hand, inventory.insertItem(0, stack, false));
+                        world.playSound(player, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
+                        return ActionResultType.SUCCESS;
+                    } */
+
+                    //Get first empty or same stack
+                    for(int i = 0; i < inventory.getSlots(); i++)
+                    {
+                        ItemStack firstEmpty = inventory.getStackInSlot(i);
+
+                        if(Utils.checkItemStacksAndCount(firstEmpty, new ItemStack(stack.getItem(), 1), PizzaLayers.getMaxStackSizeMap().get(firstEmpty.getItem()) == null ? 0 : PizzaLayers.getMaxStackSizeMap().get(firstEmpty.getItem())) || firstEmpty.isEmpty())
+                        {
+                            this.selectedSlot = i;
+                            break;
+                        }
+                    }
+
+                    //Insert to selected slot or add to same stack if possible
+                    if(this.selectedSlot < 9 && canAddIngredient(stack, this.selectedSlot))
+                    {
+                        if(!inventory.getStackInSlot(this.selectedSlot).isEmpty())
+                        {
+                            ItemStack modifiedCopy = inventory.getStackInSlot(this.selectedSlot).copy();
+                            modifiedCopy.setCount(modifiedCopy.getCount() + 1);
+                            inventory.setStackInSlot(this.selectedSlot, modifiedCopy);
+                        }
+                        else
+                        {
+                            ItemStack modifiedCopy = stack.copy();
+                            modifiedCopy.setCount(1);
+                            inventory.setStackInSlot(this.selectedSlot, modifiedCopy);
+                        }
+                        stack.shrink(1);
+                        world.playSound(player, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
+                        return ActionResultType.SUCCESS;
+                    }
+                }
+            }
+
+            if(!isRaw())
+            {
+                if(stack.isEmpty())
+                {
+                    if(player.isSneaking())
+                    {
+                        //Open Gui
+                        openGUI(player, this, pos);
+                        return ActionResultType.SUCCESS;
+                    }
+                    else
+                    {
+                        //#TODO item removal
+                    }
+                }
+            }
+        }
+        return ActionResultType.FAIL;
+    }
+
+    public void writeToItemStack(ItemStack stack)
+    {
+        CompoundNBT compound = new CompoundNBT();
+        if(isEmpty(inventory))
+        {
+            return;
+        }
+        compound.put(INVENTORY, this.inventory.serializeNBT());
+        compound.putInt(LEFT_FRESH_TIME, this.leftFreshTime);
+        stack.setTag(compound);
+    }
+
+    public void readFromStack(ItemStack stack)
+    {
+        if(stack.getTag() != null)
+        {
+            this.inventory.deserializeNBT(stack.getTag().getCompound(INVENTORY));
+            this.leftFreshTime = stack.getTag().getInt(LEFT_FRESH_TIME);
+            this.setHungerAndSaturationRefillment();
+        }
+    }
+
+    // ======== BAKING ========
+
+    public boolean isFresh() {
+        return this.leftFreshTime > 0;
+    }
+
+    public int getLeftFreshTime()
+    {
+        return this.leftFreshTime;
+    }
+
+    public int getDefaultFreshTime() {
+        return this.baseFreshTime;
+    }
+
+    public boolean isBaking()
+    {
+        return this.leftBakingTime > 0;
+    }
+
+    public int getLeftBakingTime()
+    {
+        return this.leftBakingTime;
+    }
+
+    public int getDefaultBakingTime()
+    {
+        return this.baseBakingTime;
+    }
+
+    public boolean isRaw()
+    {
+        if(world == null)
+        {
+            return true;
+        }
+        return this.world.getBlockState(pos).getBlock() instanceof RawPizzaBlock;
+    }
+
+    /**
+     * Each stack increases baking time adding 20 * stack#getCount() to baseBakingTime
+     */
+    public int getBakingTime()
+    {
+        int bakingTime = this.getDefaultBakingTime();
+
+        for(int i = 0; i < inventory.getSlots(); i++)
+        {
+            if(!inventory.getStackInSlot(i).isEmpty())
+            {
+                bakingTime += 20 * inventory.getStackInSlot(i).getCount();
+            }
+        }
+        return bakingTime;
+    }
+
+    @Override
+    public void tick()
+    {
+        if(!this.isRaw() && this.isFresh())
+        {
+            this.leftFreshTime--;
+
+            if(this.leftFreshTime == 0) {
+                this.leftFreshTime = -1;
+            }
+        }
+
+        if(this.isRaw())
+        {
+            if(isBaking())
+            {
+               // world.playSound(null, pos, ModSounds.SIZZLING_SOUND.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
+
+                this.leftBakingTime--;
+
+                if(this.leftBakingTime == 0 || !(world.getBlockState(pos.down()).getBlock() instanceof OvenBlock))
+                {
+                    if(this.leftBakingTime == 0)
+                    {
+                        if(!world.isRemote)
+                        {
+                            world.setBlockState(pos, ModBlocks.PIZZA.get().getDefaultState());
+                        }
+                        this.leftFreshTime = this.baseFreshTime;
+                    }
+                    this.leftBakingTime = -1;
+                }
+            }
+
+            else if(!isBaking() && world.getBlockState(pos.down()).getBlock() instanceof OvenBlock)
+            {
+                this.leftBakingTime = this.getBakingTime();
+            }
+        }
+    }
+
+    /**
+     * Probably needs tweak
+     */
+    public void setHungerAndSaturationRefillment()
+    {
+        PizzaHungerSystem instance = new PizzaHungerSystem(this.inventory);
+        this.refillment = Pair.of(instance.getHunger(), instance.getSaturation());
+
+    /*    int baseHunger = 6;
+        float baseSaturation = 3.0F;
+
+        for(int i = 0; i < inventory.getSlots(); i++)
+        {
+            ItemStack foodStack = inventory.getStackInSlot(i);
+
+            if(foodStack.getItem().isFood())
+            {
+                Food food = foodStack.getItem().getFood();
+                baseHunger += (food.getHealing() * foodStack.getCount()) + 2;
+                baseSaturation += (food.getSaturation() * foodStack.getCount()) + 1F;
+            }
+        }
+        this.refillment = Pair.of(baseHunger, baseSaturation); */
+    }
+
+    public List<com.mojang.datafixers.util.Pair<EffectInstance, Float>> getEffects()
+    {
+        PizzaHungerSystem instance = new PizzaHungerSystem(this.inventory);
+        return instance.getEffects();
+    }
+
+    public Pair<Integer, Float> getRefillmentValues()
+    {
+        return this.refillment;
+    }
+
+    public int getHungerForSlice()
+    {
+        return this.refillment.getLeft() / 6;
+    }
+
+    public float getSaturationForSlice()
+    {
+        return this.refillment.getRight() / 6;
+    }
+
+    // ======== ITEMHANDLER ========
+
+    public IItemHandlerModifiable getInventory()
+    {
+        return inventory;
+    }
+
+    public void dropItemStack(int slot)
+    {
+        InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(slot));
+    }
+
+    public boolean canAddIngredient(ItemStack stack, int slot)
+    {
+        return PizzaLayers.getItemToLayerMap().containsKey(stack.getItem());
+    }
+  /*  public boolean canAddIngredient(ItemStack stack, int slot)
+    {
+        if(slot == 0)
+        {
+            return baseIngredients.contains(stack.getItem());
+        }
+        if(slot == 9)
+        {
+            return !isRaw();
+        }
+        else
+        {
+            if(!this.inventory.getStackInSlot(0).isEmpty() && !baseIngredients.contains(stack.getItem()))
+            {
+                return PizzaLayers.getItemToLayerMap().containsKey(stack.getItem());
+            }
+        }
+        return false;
+    } */
+
+    public void decreaseInSlot(int slot, int count)
+    {
+        ItemStack stack = inventory.getStackInSlot(slot);
+        if(stack.getCount() >= 2)
+        {
+            stack.setCount(stack.getCount() - count);
+        }
+        else
+        {
+            inventory.setStackInSlot(slot, ItemStack.EMPTY);
+        }
+    }
+
+    private ItemStackHandler createHandler()
+    {
+        return new ItemStackHandler(9)
+        {
+            protected int getStackLimit(int slot, @Nonnull ItemStack stack)
+            {
+                return Math.min(getSlotLimit(slot), PizzaLayers.getMaxStackSizeMap().get(stack.getItem()) == null ? 0 : PizzaLayers.getMaxStackSizeMap().get(stack.getItem()));
+            }
+
+            @Override
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack)
+            {
+                if(isRaw() || !isBaking())
+                {
+                    return canAddIngredient(stack, slot);
+                }
+                return false;
+            }
+
+            @Override
+            protected void onContentsChanged(int slot)
+            {
+                /*if(getStackInSlot(0).isEmpty())
+                {
+                    for(int i = 1; i < inventory.getSlots(); i++)
+                    {
+                        dropItemStack(i);
+                    }
+                } */
+
+                markDirty();
+                requestModelDataUpdate();
+            }
+        };
+    }
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> cap, @Nullable final Direction side)
+    {
+        if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+            return inventoryCapability.cast();
+        return super.getCapability(cap, side);
+    }
+
+    // ======== CONTAINER ========
+
+    @Override
+    public ITextComponent getDisplayName()
+    {
+        return getBlockState().getBlock().getTranslatedName();
+    }
+
+    @Nullable
+    @Override
+    public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity)
+    {
+        return new PizzaContainer(id, playerInventory, this);
+    }
+
+    public void openGUI(PlayerEntity player, INamedContainerProvider containerSupplier, BlockPos pos)
+    {
+        if(!player.world.isRemote)
+        {
+            NetworkHooks.openGui((ServerPlayerEntity)player, containerSupplier, pos);
+        }
+    }
+
+    // ======== MODELDATA ========
+
+    @Nonnull
+    @Override
+    public IModelData getModelData()
+    {
+        ModelDataMap modelDataMap = PizzaBakedModel.getEmptyIModelData();
+        modelDataMap.setData(PizzaBakedModel.LAYER_PROVIDERS, Optional.of(getInventory()));
+        modelDataMap.setData(PizzaBakedModel.INTEGER_PROPERTY, Optional.of(getBlockState().getBlock() == ModBlocks.PIZZA.get() ? getBlockState().get(PizzaBlock.BITES) : 0));
+        modelDataMap.setData(PizzaBakedModel.IS_RAW, Optional.of(isRaw()));
+        return modelDataMap;
+    }
+
+    public IModelData getItemStackModelData(ItemStack stack)
+    {
+        readFromStack(stack);
+        ModelDataMap modelDataMap = PizzaBakedModel.getEmptyIModelData();
+        modelDataMap.setData(PizzaBakedModel.LAYER_PROVIDERS, Optional.of(getInventory()));
+        modelDataMap.setData(PizzaBakedModel.INTEGER_PROPERTY, Optional.of(0));
+        modelDataMap.setData(PizzaBakedModel.IS_RAW, Optional.of(stack.getItem() == ModItems.RAW_PIZZA.get()));
+        return modelDataMap;
+    }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "pizzacraft:cheese_block"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "pizzacraft:cheese_block",
+          "properties": {
+            "age": "0"
+          }
+        }
+      ]
+    }
+  ]
+}

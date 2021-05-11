@@ -1,9 +1,0 @@
-{
-    "variants": {
-        "facing=up": { "model": "pizzacraft:chopping_board" },
-        "facing=south": { "model": "pizzacraft:chopping_board" },
-        "facing=east": { "model": "pizzacraft:chopping_board","y":270 },
-        "facing=west": { "model": "pizzacraft:chopping_board","y":90 },
-        "facing=north": { "model": "pizzacraft:chopping_board","y":180 }
-    }
-}

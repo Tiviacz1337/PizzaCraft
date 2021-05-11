@@ -1,9 +1,0 @@
-{
-    "variants":
-    {
-        "axis=y":  { "model": "pizzacraft:olive_log" },
-        "axis=z":   { "model": "pizzacraft:olive_log", "x": 90 },
-        "axis=x":   { "model": "pizzacraft:olive_log", "x": 90, "y": 90 },
-        "axis=none": { "model": "pizzacraft:olive_log" }
-    }
-}

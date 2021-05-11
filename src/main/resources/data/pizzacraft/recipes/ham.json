@@ -1,0 +1,8 @@
+{
+  "type": "pizzacraft:chopping_recipe",
+  "input": {
+    "tag": "forge:rawpork"
+  },
+  "outputItem": "pizzacraft:ham",
+  "outputCount": "2"
+}

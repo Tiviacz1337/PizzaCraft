@@ -1,0 +1,6 @@
+{
+    "parent": "block/crop",
+    "textures": {
+        "crop": "pizzacraft:block/cucumbers_stage0"
+    }
+}

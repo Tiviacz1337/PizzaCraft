@@ -1,0 +1,62 @@
+{
+  "credit": "Made by Sir Squidly",
+  "parent": "builtin/entity",
+  "textures": {
+    "particle": "pizzacraft:block/pizza_dough_top",
+    "1": "pizzacraft:block/pizza_dough_top",
+    "2": "pizzacraft:block/raw_pizza_bottom"
+  },
+  "elements": [
+    {
+      "name": "Pizza",
+      "from": [1, 0, 1],
+      "to": [15, 1, 15],
+      "faces": {
+        "north": {"uv": [1, 15, 15, 16], "texture": "#2"},
+        "east": {"uv": [1, 15, 15, 16], "texture": "#2"},
+        "south": {"uv": [1, 15, 15, 16], "texture": "#2"},
+        "west": {"uv": [1, 15, 15, 16], "texture": "#2"},
+        "up": {"uv": [1, 1, 15, 15], "texture": "#1"},
+        "down": {"uv": [1, 1, 15, 15], "texture": "#2"}
+      }
+    }
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [75, 45, 0],
+      "translation": [0, 2.5, 3.5],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [75, 45, 0],
+      "translation": [0, 2.5, 3.5],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 45, 0],
+      "translation": [-2.5, 7.75, 5.25],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, 45, 0],
+      "translation": [-2.5, 7.75, 5.25],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "ground": {
+      "translation": [0, 3, 0],
+      "scale": [0.5, 0.5, 0.5]
+    },
+    "gui": {
+      "rotation": [30, 225, 0],
+      "scale": [0.625, 0.625, 0.625]
+    },
+    "head": {
+      "translation": [0, 13.75, 0]
+    },
+    "fixed": {
+      "rotation": [-90, 0, 0],
+      "translation": [0, 0, -5.5],
+      "scale": [0.7, 0.7, 0.7]
+    }
+  }
+}

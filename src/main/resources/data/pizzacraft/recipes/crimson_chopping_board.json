@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:stripped_crimson_hyphae"
+    }
+  },
+  "result": {
+    "item": "pizzacraft:crimson_chopping_board"
+  }
+}

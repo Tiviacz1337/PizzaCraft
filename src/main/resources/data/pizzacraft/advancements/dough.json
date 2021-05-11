@@ -1,0 +1,35 @@
+{
+  "parent": "pizzacraft:flour",
+  "display": {
+    "icon": {
+      "item": "pizzacraft:dough"
+    },
+    "title": {
+      "translate": "advancements.pizzacraft.dough.title"
+    },
+    "description": {
+      "translate": "advancements.pizzacraft.dough.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "dough": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "pizzacraft:dough"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "dough"
+    ]
+  ]
+}

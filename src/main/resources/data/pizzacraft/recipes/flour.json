@@ -1,0 +1,13 @@
+{
+  "type": "pizzacraft:mortar_recipe",
+  "duration": 8,
+  "ingredients": [
+    {
+      "tag": "forge:wheat"
+    }
+  ],
+  "result": {
+    "item": "pizzacraft:flour",
+    "count": 2
+  }
+}

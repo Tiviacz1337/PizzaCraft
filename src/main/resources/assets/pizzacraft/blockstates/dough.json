@@ -1,11 +1,10 @@
 {
-    "variants": {
-        "kneeding=0": { "model": "pizzacraft:dough_0" },
-        "kneeding=1": { "model": "pizzacraft:dough_1" },
-        "kneeding=2": { "model": "pizzacraft:dough_2" },
-        "kneeding=3": { "model": "pizzacraft:dough_3" },
-        "kneeding=4": { "model": "pizzacraft:dough_4" },
-        "kneeding=5": { "model": "pizzacraft:dough_5" },
-        "kneeding=6": { "model": "pizzacraft:dough_6" }
-    }
+  "variants": {
+    "age=0": { "model": "pizzacraft:block/dough" },
+    "age=1": { "model": "pizzacraft:block/dough_1" },
+    "age=2": { "model": "pizzacraft:block/dough_2" },
+    "age=3": { "model": "pizzacraft:block/dough_3" },
+    "age=4": { "model": "pizzacraft:block/dough_4" },
+    "age=5": { "model": "pizzacraft:block/dough_5" }
+  }
 }

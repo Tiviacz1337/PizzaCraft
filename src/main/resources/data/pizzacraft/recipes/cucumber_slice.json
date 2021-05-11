@@ -1,0 +1,8 @@
+{
+  "type": "pizzacraft:chopping_recipe",
+  "input": {
+    "tag": "forge:cucumber"
+  },
+  "outputItem": "pizzacraft:cucumber_slice",
+  "outputCount": "2"
+}

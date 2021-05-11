@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:stripped_jungle_wood"
+    }
+  },
+  "result": {
+    "item": "pizzacraft:jungle_chopping_board"
+  }
+}

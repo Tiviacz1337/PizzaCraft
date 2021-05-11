@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  C",
+    " X ",
+    "C  "
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "minecraft:oak_planks"
+    }
+  },
+  "result": {
+    "item": "pizzacraft:rolling_pin"
+  }
+}

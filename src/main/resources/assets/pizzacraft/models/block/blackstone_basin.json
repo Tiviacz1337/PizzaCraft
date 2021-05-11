@@ -1,0 +1,7 @@
+{
+	"parent": "pizzacraft:block/base_basin",
+	"textures": {
+		"texture": "minecraft:block/polished_blackstone",
+		"top": "minecraft:block/polished_blackstone"
+	}
+}

@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "pizzacraft:oak_chopping_board",
+    "pizzacraft:birch_chopping_board",
+    "pizzacraft:spruce_chopping_board",
+    "pizzacraft:jungle_chopping_board",
+    "pizzacraft:acacia_chopping_board",
+    "pizzacraft:dark_oak_chopping_board",
+    "pizzacraft:crimson_chopping_board",
+    "pizzacraft:warped_chopping_board"
+  ]
+}

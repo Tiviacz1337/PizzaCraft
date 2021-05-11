@@ -1,0 +1,35 @@
+{
+  "parent": "pizzacraft:dough",
+  "display": {
+    "icon": {
+      "item": "pizzacraft:raw_pizza"
+    },
+    "title": {
+      "translate": "advancements.pizzacraft.raw_pizza.title"
+    },
+    "description": {
+      "translate": "advancements.pizzacraft.raw_pizza.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "raw_pizza": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "pizzacraft:raw_pizza"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "raw_pizza"
+    ]
+  ]
+}

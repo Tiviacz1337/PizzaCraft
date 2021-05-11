@@ -1,0 +1,35 @@
+{
+  "parent": "pizzacraft:oven",
+  "display": {
+    "icon": {
+      "item": "pizzacraft:pizza"
+    },
+    "title": {
+      "translate": "advancements.pizzacraft.pizza.title"
+    },
+    "description": {
+      "translate": "advancements.pizzacraft.pizza.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "pizza": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "location": {
+          "block": {
+            "block": "pizzacraft:pizza"
+          }
+        }
+      }
+    }
+  },
+  "requirements": [
+    [
+      "pizza"
+    ]
+  ]
+}

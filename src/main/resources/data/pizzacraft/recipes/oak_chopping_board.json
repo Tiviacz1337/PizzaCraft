@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:stripped_oak_wood"
+    }
+  },
+  "result": {
+    "item": "pizzacraft:oak_chopping_board"
+  }
+}

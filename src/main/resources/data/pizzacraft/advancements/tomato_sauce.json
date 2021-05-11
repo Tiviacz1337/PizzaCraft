@@ -1,0 +1,35 @@
+{
+  "parent": "pizzacraft:basin",
+  "display": {
+    "icon": {
+      "item": "pizzacraft:tomato_sauce"
+    },
+    "title": {
+      "translate": "advancements.pizzacraft.tomato_sauce.title"
+    },
+    "description": {
+      "translate": "advancements.pizzacraft.tomato_sauce.description"
+    },
+    "frame": "challenge",
+    "show_toast": false,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "tomato_sauce": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "pizzacraft:tomato_sauce"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "tomato_sauce"
+    ]
+  ]
+}

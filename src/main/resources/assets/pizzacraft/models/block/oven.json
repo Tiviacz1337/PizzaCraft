@@ -1,0 +1,8 @@
+{
+	"parent": "minecraft:block/orientable",
+	"textures": {
+		"top": "pizzacraft:block/pizza_oven_top",
+		"front": "pizzacraft:block/pizza_oven_front",
+		"side": "pizzacraft:block/pizza_oven_side"
+	}
+}

@@ -1,6 +1,0 @@
-{
-    "parent": "block/crop",
-    "textures": {
-        "crop": "pizzacraft:blocks/cucumber_plant0"
-    }
-}

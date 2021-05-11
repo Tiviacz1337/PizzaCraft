@@ -1,0 +1,59 @@
+{
+  "parent": "pizzacraft:root",
+  "display": {
+    "icon": {
+      "item": "pizzacraft:granite_basin"
+    },
+    "title": {
+      "translate": "advancements.pizzacraft.basin.title"
+    },
+    "description": {
+      "translate": "advancements.pizzacraft.basin.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "granite": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "pizzacraft:granite_basin"
+      }
+    },
+    "diorite": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "pizzacraft:diorite_basin"
+      }
+    },
+    "andesite": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "pizzacraft:andesite_basin"
+      }
+    },
+    "basalt": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "pizzacraft:basalt_basin"
+      }
+    },
+    "blackstone": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "pizzacraft:blackstone_basin"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "granite",
+      "diorite",
+      "andesite",
+      "basalt",
+      "blackstone"
+    ]
+  ]
+}

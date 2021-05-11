@@ -1,0 +1,29 @@
+{
+  "parent": "pizzacraft:root",
+  "display": {
+    "icon": {
+      "item": "pizzacraft:oak_chopping_board"
+    },
+    "title": {
+      "translate": "advancements.pizzacraft.chopping_board.title"
+    },
+    "description": {
+      "translate": "advancements.pizzacraft.chopping_board.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "chopping_board": {
+      "trigger": "pizzacraft:use_chopping_board",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "chopping_board"
+    ]
+  ]
+}

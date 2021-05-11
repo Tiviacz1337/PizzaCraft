@@ -1,6 +1,0 @@
-{
-    "parent": "pizzacraft:block/raw_pizza/raw_pizza",
-    "textures": {
-        "top": "pizzacraft:blocks/raw_pizza_0_top"
-    }
-}

@@ -1,9 +1,0 @@
-{
-    "variants": {
-        "facing=up": { "model": "pizzacraft:pizza_bag" },
-        "facing=south": { "model": "pizzacraft:pizza_bag" },
-        "facing=east": { "model": "pizzacraft:pizza_bag","y":270 },
-        "facing=west": { "model": "pizzacraft:pizza_bag","y":90 },
-        "facing=north": { "model": "pizzacraft:pizza_bag","y":180 }
-    }
-}

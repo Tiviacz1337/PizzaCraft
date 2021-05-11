@@ -1,0 +1,47 @@
+{
+  "parent": "pizzacraft:root",
+  "display": {
+    "icon": {
+      "item": "pizzacraft:chef_hat"
+    },
+    "title": {
+      "translate": "advancements.pizzacraft.chef.title"
+    },
+    "description": {
+      "translate": "advancements.pizzacraft.chef.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "chef": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "pizzacraft:chef_hat"
+          },
+          {
+            "item": "pizzacraft:chef_shirt"
+          },
+          {
+            "item": "pizzacraft:chef_leggings"
+          },
+          {
+            "item": "pizzacraft:chef_boots"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "chef"
+    ]
+  ],
+  "rewards": {
+    "experience": 100
+  }
+}
