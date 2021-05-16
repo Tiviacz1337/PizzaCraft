@@ -12,12 +12,12 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = PizzaCraft.MODID, name = PizzaCraft.NAME, version = PizzaCraft.VERSION, updateJSON = "https://gist.githubusercontent.com/Tiviacz1337/b916e3981957f1e6f2de99ea0aa328fa/raw/4a1b4e905a3a8fd10922e9ccd97abac3f282e222/PizzaCraftUpdateJSON.json")
+@Mod(modid = PizzaCraft.MODID, name = PizzaCraft.NAME, version = PizzaCraft.VERSION, updateJSON = "https://gist.githubusercontent.com/Tiviacz1337/b916e3981957f1e6f2de99ea0aa328fa/raw")
 public class PizzaCraft 
 {
 	public static final String MODID = "pizzacraft";
 	public static final String NAME = "pizzacraft";
-	public static final String VERSION = "2.0.18.18";
+	public static final String VERSION = "2.0.19";
 
 	public static CreativeTabs PIZZACRAFTTAB = new PizzaCraftCreativeTab("pizzacrafttab");
 	

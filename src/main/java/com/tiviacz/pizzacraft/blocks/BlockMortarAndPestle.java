@@ -29,6 +29,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -63,6 +66,35 @@ public class BlockMortarAndPestle extends BlockContainer implements IHasModel
 			ItemStack stack = playerIn.getHeldItem(hand);
 			TileEntityMortarAndPestle tile = (TileEntityMortarAndPestle)worldIn.getTileEntity(pos);
 			IItemHandler inv = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			
+			IFluidHandlerItem container = FluidUtil.getFluidHandler(stack);
+			
+			if(container != null)
+			{
+				FluidStack fluid = FluidUtil.getFluidContained(stack);
+				
+				if(fluid != null && fluid.amount > 0)
+				{
+					int amount = fluid.amount;
+					ItemStack stackOut = FluidUtil.tryEmptyContainer(stack, tile.getTank(), amount, playerIn, false).getResult();
+					
+					if(tile.getTank().getFluidAmount() + amount < tile.getTank().getCapacity())
+					{
+						if(tile.getTank().getFluid().isFluidEqual(fluid))
+						{
+							FluidUtil.tryEmptyContainer(stack, tile.getTank(), amount, playerIn, true);
+							tile.markDirty();
+
+							if(playerIn.addItemStackToInventory(stackOut))
+							{
+								playerIn.dropItem(stackOut.getItem(), stackOut.getCount());
+							}
+							
+							return true;
+						}
+					}
+				}
+			}
 			
 			if(stack.isEmpty() && !playerIn.isSneaking())
 			{

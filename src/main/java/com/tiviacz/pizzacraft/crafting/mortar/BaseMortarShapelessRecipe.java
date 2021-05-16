@@ -15,7 +15,7 @@ public class BaseMortarShapelessRecipe implements IMortarRecipe
     private final ItemStack recipeOutput;
     public final int duration;
 
-    public BaseMortarShapelessRecipe(ItemStack output, List<ItemStack> inputList, int duration) 
+    public BaseMortarShapelessRecipe(ItemStack output, List<ItemStack> inputList, int duration)
     {
         this.recipeOutput = output;
         this.input = inputList;

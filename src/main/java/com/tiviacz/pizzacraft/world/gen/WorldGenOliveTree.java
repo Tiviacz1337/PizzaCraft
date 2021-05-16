@@ -15,19 +15,16 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraftforge.common.IPlantable;
 
-public class WorldGenOliveTree extends WorldGenAbstractTree 
+public class WorldGenOliveTree extends WorldGenAbstractTree
 {
 	public static final IBlockState LOG = ModBlocks.OLIVE_LOG.getDefaultState();
 	public static final IBlockState LEAF = ModBlocks.OLIVE_LEAVES.getDefaultState();
 	public static final IBlockState LEAF_GROWING = ModBlocks.OLIVE_LEAVES_GROWING.getDefaultState();
 	public static final IBlockState LEAF_GROWING_1 = ModBlocks.OLIVE_LEAVES_GROWING.getDefaultState().withProperty(BlockLeavesGrowing.AGE, 1);
 	
-	private final int minHeight;
-	
 	public WorldGenOliveTree() 
 	{
 		super(false);
-		this.minHeight = 12;
 	}
 
 	@Override

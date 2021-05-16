@@ -21,11 +21,14 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class TileEntityMortarAndPestle extends TileEntity
 {	
+	private FluidTank tank = new FluidTank(1000);
+	
 	private ItemStackHandler inventory = (new ItemStackHandler(4)
 			{
 				@Override
@@ -35,7 +38,7 @@ public class TileEntityMortarAndPestle extends TileEntity
 				}
 			});
 	
-	public int craftingProgress;
+	private int craftingProgress;
 	
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) 
@@ -50,12 +53,18 @@ public class TileEntityMortarAndPestle extends TileEntity
 		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T)inventory : super.getCapability(capability, facing);
 	}
 	
+	public FluidTank getTank()
+	{
+		return this.tank;
+	}
+	
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound)
 	{
 		 super.writeToNBT(compound);
 		 compound.setTag("inventory", inventory.serializeNBT());
 		 compound.setInteger("craftingProgress", this.craftingProgress);
+		 this.tank.writeToNBT(compound);
 		 return compound;
 	} 
 
@@ -65,6 +74,7 @@ public class TileEntityMortarAndPestle extends TileEntity
 		super.readFromNBT(compound);
 		inventory.deserializeNBT(compound.getCompoundTag("inventory"));
 		this.craftingProgress = compound.getInteger("craftingProgress");
+		this.tank.readFromNBT(compound);
 	}
 	
 	public ItemStackHandler getInventory()
@@ -181,6 +191,7 @@ public class TileEntityMortarAndPestle extends TileEntity
 	    NBTTagCompound tag = super.getUpdateTag();
 	    tag.setTag("inventory", inventory.serializeNBT());
 	    tag.setInteger("craftingProgress", this.craftingProgress);
+	    this.tank.writeToNBT(tag);
 	    return tag;
 	}
 	
@@ -190,6 +201,7 @@ public class TileEntityMortarAndPestle extends TileEntity
 		super.handleUpdateTag(tag);
 		inventory.deserializeNBT(tag.getCompoundTag("inventory"));
 		this.craftingProgress = tag.getInteger("craftingProgress");
+		this.tank.readFromNBT(tag);
 		
     } 
 	

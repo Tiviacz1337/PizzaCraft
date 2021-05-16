@@ -26,25 +26,25 @@ public class WorldGenTrees implements IWorldGenerator
 	{
 		switch(world.provider.getDimension())
 		{
-		case 1:
-			
-			break;
-			
-		case 0:
-			
-			runGenerator(OLIVE, world, random, chunkX, chunkZ, ConfigHandler.treeGenChance, Blocks.GRASS);
-			
-			break;
-			
-		case -1:
-			
+			case 1:
+				break;
+
+			case 0:
+				runGenerator(OLIVE, world, random, chunkX << 4, chunkZ << 4, ConfigHandler.treeGenChance, Blocks.GRASS);
+				break;
+
+			case -1:
+				break;
+
+			default:
+				break;
 		}
 	}
 	
 	private void runGenerator(WorldGenerator generator, World world, Random random, int chunkX, int chunkZ, int chance, Block topBlock)
 	{
-		int x = (chunkX * 16) + random.nextInt(15);
-		int z = (chunkZ * 16) + random.nextInt(15);
+		int x = chunkX + random.nextInt(8) + 4;
+		int z = chunkZ + random.nextInt(8) + 4;
 		int y = calculateGenerationHeight(world, x, z, topBlock);
 		BlockPos pos = new BlockPos(x,y,z);
 		
@@ -58,6 +58,7 @@ public class WorldGenTrees implements IWorldGenerator
 				if(random.nextInt(chance) == 0)
 				{
 					generator.generate(world, random, pos);
+					System.out.println("generated at " + pos);
 				}
 			}
 		}

@@ -1,11 +1,53 @@
 {
-    "variants": {
-        "bites=0": { "model": "pizzacraft:pizza/pizza_0/pizza_0_uneaten" },
-        "bites=1": { "model": "pizzacraft:pizza/pizza_0/pizza_0_slice1" },
-        "bites=2": { "model": "pizzacraft:pizza/pizza_0/pizza_0_slice2" },
-        "bites=3": { "model": "pizzacraft:pizza/pizza_0/pizza_0_slice3" },
-        "bites=4": { "model": "pizzacraft:pizza/pizza_0/pizza_0_slice4" },
-        "bites=5": { "model": "pizzacraft:pizza/pizza_0/pizza_0_slice5" }
-    }
+   "forge_marker": 1,
+   "variants": {
+      "bites=0": [
+         {
+            "textures": {
+               "top": "pizzacraft:blocks/pizza_0_top"
+            },
+            "model": "pizzacraft:pizza/pizza_uneaten"
+         }
+      ],
+      "bites=1": [
+         {
+            "textures": {
+               "top": "pizzacraft:blocks/pizza_0_top"
+            },
+            "model": "pizzacraft:pizza/pizza_slice1"
+         }
+      ],
+      "bites=2": [
+         {
+            "textures": {
+               "top": "pizzacraft:blocks/pizza_0_top"
+            },
+            "model": "pizzacraft:pizza/pizza_slice2"
+         }
+      ],
+      "bites=3": [
+         {
+            "textures": {
+               "top": "pizzacraft:blocks/pizza_0_top"
+            },
+            "model": "pizzacraft:pizza/pizza_slice3"
+         }
+      ],
+      "bites=4": [
+         {
+            "textures": {
+               "top": "pizzacraft:blocks/pizza_0_top"
+            },
+            "model": "pizzacraft:pizza/pizza_slice4"
+         }
+      ],
+      "bites=5": [
+         {
+            "textures": {
+               "top": "pizzacraft:blocks/pizza_0_top"
+            },
+            "model": "pizzacraft:pizza/pizza_slice5"
+         }
+      ]
+   }
 }
-

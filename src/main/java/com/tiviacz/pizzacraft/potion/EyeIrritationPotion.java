@@ -33,10 +33,6 @@ public class EyeIrritationPotion extends Potion
 	@Override
 	public boolean isReady(int duration, int amplifier)
 	{
-		if(duration <= 0)
-		{
-			return true;
-		}
-		return false;
+		return duration <= 0;
 	}
 }

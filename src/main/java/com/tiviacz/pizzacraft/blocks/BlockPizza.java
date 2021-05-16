@@ -62,6 +62,7 @@ public class BlockPizza extends BlockBase implements ITileEntityProvider
         setHarvestLevel("hand", 0);
         setDefaultState(blockState.getBaseState().withProperty(BITES, 0));
         setTickRandomly(true);
+        
         this.saturation = saturation;
         this.foodstats = foodstats;
         this.pizzaslice = pizzaslice;    
