@@ -76,21 +76,37 @@ public class MortarRecipeUtils
     	
     	if(!slot0.isEmpty())
     	{
+    		if (slot0.getCount() == 1) 
+    		{
+    			slot0.shrink(1);
+    		}
     		tile.decrStackSize(0, 1);
     	}
     	
     	if(!slot1.isEmpty())
     	{
+    		if (slot1.getCount() == 1) 
+    		{
+    			slot1.shrink(1);
+    		}
     		tile.decrStackSize(1, 1);
     	}
     	
     	if(!slot2.isEmpty())
     	{
+    		if (slot2.getCount() == 1) 
+    		{
+    			slot2.shrink(1);
+    		}
     		tile.decrStackSize(2, 1);
     	}
     	
     	if(!slot3.isEmpty())
     	{
+    		if (slot3.getCount() == 1) 
+    		{
+    			slot3.shrink(1);
+    		}
     		tile.decrStackSize(3, 1);
     	}
     }
