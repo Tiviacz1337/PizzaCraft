@@ -1,0 +1,13 @@
+{
+  "type": "pizzacraft:mortar_recipe",
+  "duration": 2,
+  "ingredients": [
+    {
+      "tag": "forge:crops/cucumber"
+    }
+  ],
+  "result": {
+    "item": "pizzacraft:cucumber_seeds",
+    "count": 1
+  }
+}

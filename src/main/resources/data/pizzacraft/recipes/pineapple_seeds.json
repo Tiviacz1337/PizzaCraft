@@ -1,0 +1,13 @@
+{
+  "type": "pizzacraft:mortar_recipe",
+  "duration": 2,
+  "ingredients": [
+    {
+      "tag": "forge:crops/pineapple"
+    }
+  ],
+  "result": {
+    "item": "pizzacraft:pineapple_seeds",
+    "count": 1
+  }
+}

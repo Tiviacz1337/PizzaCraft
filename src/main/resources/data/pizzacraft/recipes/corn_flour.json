@@ -3,7 +3,7 @@
   "duration": 8,
   "ingredients": [
     {
-      "tag": "forge:corn"
+      "tag": "forge:flour_plants/corn"
     }
   ],
   "result": {

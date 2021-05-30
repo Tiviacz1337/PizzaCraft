@@ -1,0 +1,13 @@
+{
+  "type": "pizzacraft:mortar_recipe",
+  "duration": 2,
+  "ingredients": [
+    {
+      "tag": "forge:crops/pepper"
+    }
+  ],
+  "result": {
+    "item": "pizzacraft:pepper_seeds",
+    "count": 1
+  }
+}

@@ -3,7 +3,7 @@
   "duration": 8,
   "ingredients": [
     {
-      "tag": "forge:wheat"
+      "tag": "forge:flour_plants/wheat"
     }
   ],
   "result": {
