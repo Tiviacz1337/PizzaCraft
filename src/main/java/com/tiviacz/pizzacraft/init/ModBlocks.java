@@ -7,6 +7,8 @@ import com.tiviacz.pizzacraft.blocks.crops.SimpleCropBlock;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.util.Direction;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -22,7 +24,7 @@ public class ModBlocks
     public static final RegistryObject<Block> DOUGH = registerBlock("dough", new DoughBlock(AbstractBlock.Properties.from(Blocks.CAKE)));
     public static final RegistryObject<Block> CHEESE_BLOCK = registerBlock("cheese_block", new CheeseBlock(AbstractBlock.Properties.create(Material.CAKE, MaterialColor.YELLOW).hardnessAndResistance(0.5F).sound(SoundType.FUNGUS)));
     public static final RegistryObject<Block> MORTAR_AND_PESTLE = registerBlock("mortar_and_pestle", new MortarAndPestleBlock(AbstractBlock.Properties.create(Material.ROCK, MaterialColor.STONE).hardnessAndResistance(1.5F, 6.0F)));
-    public static final RegistryObject<Block> OVEN = registerBlock("oven", new OvenBlock(AbstractBlock.Properties.create(Material.ROCK, MaterialColor.STONE).hardnessAndResistance(1.5F, 6.0F).notSolid().setLightLevel(blockState -> 9)));
+    public static final RegistryObject<Block> OVEN = registerBlock("oven", new OvenBlock(AbstractBlock.Properties.create(Material.ROCK, MaterialColor.STONE).hardnessAndResistance(1.5F, 6.0F).notSolid().setLightLevel(getLightValueLit(9))));
 
     //Pizza Boards
   /*  public static final RegistryObject<Block> OAK_PIZZA_BOARD = registerBlock("oak_pizza_board", new PizzaBoard(AbstractBlock.Properties.from(Blocks.OAK_PLANKS)));
@@ -112,6 +114,10 @@ public class ModBlocks
                 BASALT_BASIN.get(),
                 BLACKSTONE_BASIN.get()
         };
+    }
+
+    private static ToIntFunction<BlockState> getLightValueLit(int lightValue) {
+        return (state) -> state.get(BlockStateProperties.LIT) ? lightValue : 0;
     }
 
     public static RegistryObject<Block> registerBlock(final String name, Block block)
