@@ -109,6 +109,12 @@
   "item.pizzacraft.chef_leggings": "Chef Leggings",
   "item.pizzacraft.chef_boots": "Chef Boots",
 
+  "information.pizzacraft.hunger": "%s%s Hunger per Slice (%s Total)",
+  "information.pizzacraft.saturation": "%f Saturation per Slice (%f Total)",
+  "information.pizzacraft.hunger_slice": "%s Hunger",
+  "information.pizzacraft.saturation_slice": "%f Saturation",
+  "information.pizzacraft.effects": "Possible Effects:",
+
   "advancements.pizzacraft.root.title": "PizzaCraft",
   "advancements.pizzacraft.root.description": "Have you ever tried Pizza in Minecraft?",
   "advancements.pizzacraft.mortar_and_pestle.title": "Tedious work",
