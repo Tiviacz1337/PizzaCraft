@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "pizzacraft:block/olive_pressure_plate"
+    },
+    "powered=true": {
+      "model": "pizzacraft:block/olive_pressure_plate_down"
+    }
+  }
+}

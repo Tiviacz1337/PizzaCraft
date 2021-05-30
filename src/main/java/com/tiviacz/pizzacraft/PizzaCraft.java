@@ -63,6 +63,11 @@ public class PizzaCraft
         RenderTypeLookup.setRenderLayer(ModBlocks.PIZZA.get(), RenderType.getCutoutMipped());
         RenderTypeLookup.setRenderLayer(ModBlocks.RAW_PIZZA.get(), RenderType.getCutoutMipped());
         RenderTypeLookup.setRenderLayer(ModBlocks.OVEN.get(), RenderType.getCutout());
+        //Trees
+        RenderTypeLookup.setRenderLayer(ModBlocks.OLIVE_SAPLING.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.OLIVE_LEAVES.get(), RenderType.getCutoutMipped());
+        RenderTypeLookup.setRenderLayer(ModBlocks.FRUIT_OLIVE_LEAVES.get(), RenderType.getCutoutMipped());
+        RenderTypeLookup.setRenderLayer(ModBlocks.OLIVE_TRAPDOOR.get(), RenderType.getCutout());
 
         //Crops
         RenderTypeLookup.setRenderLayer(ModBlocks.BROCCOLI.get(), RenderType.getCutout());

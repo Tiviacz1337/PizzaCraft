@@ -1,0 +1,6 @@
+{
+	"parent": "pizzacraft:block/chopping_board",
+	"textures": {
+		"texture": "pizzacraft:block/stripped_olive_log"
+	}
+}

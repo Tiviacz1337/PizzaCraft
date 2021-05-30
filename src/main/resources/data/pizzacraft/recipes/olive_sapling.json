@@ -1,0 +1,16 @@
+{
+  "type": "pizzacraft:mortar_recipe",
+  "duration": 4,
+  "ingredients": [
+    {
+      "tag": "minecraft:saplings"
+    },
+    {
+      "item": "pizzacraft:olive"
+    }
+  ],
+  "result": {
+    "item": "pizzacraft:olive_sapling",
+    "count": 1
+  }
+}

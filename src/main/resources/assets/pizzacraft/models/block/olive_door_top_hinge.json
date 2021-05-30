@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_rh",
+  "textures": {
+    "top": "pizzacraft:block/olive_door_top",
+    "bottom": "pizzacraft:block/olive_door_bottom"
+  }
+}

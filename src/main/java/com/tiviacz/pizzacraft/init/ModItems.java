@@ -69,6 +69,25 @@ public class ModItems
     public static final RegistryObject<Item> OLIVE_OIL = ITEMS.register("olive_oil", () -> new Item(pizzaProperties().maxStackSize(1)));
     public static final RegistryObject<Item> TOMATO_SAUCE = ITEMS.register("tomato_sauce", () -> new SauceItem(pizzaProperties().maxStackSize(1).food(ModFoods.TOMATO_SAUCE), SauceType.TOMATO));
 
+    //Trees
+    public static final RegistryObject<Item> OLIVE_PLANKS = registerBlockItem("olive_planks", ModBlocks.OLIVE_PLANKS, pizzaProperties());
+    public static final RegistryObject<Item> OLIVE_SAPLING = registerBlockItem("olive_sapling", ModBlocks.OLIVE_SAPLING, pizzaProperties());
+    public static final RegistryObject<Item> OLIVE_LOG = registerBlockItem("olive_log", ModBlocks.OLIVE_LOG, pizzaProperties());
+    public static final RegistryObject<Item> STRIPPED_OLIVE_LOG = registerBlockItem("stripped_olive_log", ModBlocks.STRIPPED_OLIVE_LOG, pizzaProperties());
+    public static final RegistryObject<Item> STRIPPED_OLIVE_WOOD = registerBlockItem("stripped_olive_wood", ModBlocks.STRIPPED_OLIVE_WOOD, pizzaProperties());
+    public static final RegistryObject<Item> OLIVE_WOOD = registerBlockItem("olive_wood", ModBlocks.OLIVE_WOOD, pizzaProperties());
+    public static final RegistryObject<Item> OLIVE_LEAVES = registerBlockItem("olive_leaves", ModBlocks.OLIVE_LEAVES, pizzaProperties());
+    public static final RegistryObject<Item> FRUIT_OLIVE_LEAVES = registerBlockItem("fruit_olive_leaves", ModBlocks.FRUIT_OLIVE_LEAVES, pizzaProperties());
+    public static final RegistryObject<Item> OLIVE_SLAB = registerBlockItem("olive_slab", ModBlocks.OLIVE_SLAB, pizzaProperties());
+    public static final RegistryObject<Item> OLIVE_PRESSURE_PLATE = registerBlockItem("olive_pressure_plate", ModBlocks.OLIVE_PRESSURE_PLATE, pizzaProperties());
+    public static final RegistryObject<Item> OLIVE_FENCE = registerBlockItem("olive_fence", ModBlocks.OLIVE_FENCE, pizzaProperties());
+    public static final RegistryObject<Item> OLIVE_TRAPDOOR = registerBlockItem("olive_trapdoor", ModBlocks.OLIVE_TRAPDOOR, pizzaProperties());
+    public static final RegistryObject<Item> OLIVE_FENCE_GATE = registerBlockItem("olive_fence_gate", ModBlocks.OLIVE_FENCE_GATE, pizzaProperties());
+    public static final RegistryObject<Item> OLIVE_BUTTON = registerBlockItem("olive_button", ModBlocks.OLIVE_BUTTON, pizzaProperties());
+    public static final RegistryObject<Item> OLIVE_STAIRS = registerBlockItem("olive_stairs", ModBlocks.OLIVE_STAIRS, pizzaProperties());
+    public static final RegistryObject<Item> OLIVE_DOOR = registerBlockItem("olive_door", ModBlocks.OLIVE_DOOR, pizzaProperties());
+    public static final RegistryObject<Item> OLIVE_BOOKSHELF = registerBlockItem("olive_bookshelf", ModBlocks.OLIVE_BOOKSHELF, pizzaProperties());
+
     //Vegetables
     public static final RegistryObject<Item> BROCCOLI = ITEMS.register("broccoli", () -> new Item(pizzaProperties().food(ModFoods.BROCCOLI)));
     public static final RegistryObject<Item> CORN = ITEMS.register("corn", () -> new BlockNamedItem(ModBlocks.CORNS.get(), pizzaProperties().food(ModFoods.CORN)));

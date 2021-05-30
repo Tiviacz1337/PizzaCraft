@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "pizzacraft:block/olive_slab"
+    },
+    "type=double": {
+      "model": "pizzacraft:block/olive_planks"
+    },
+    "type=top": {
+      "model": "pizzacraft:block/olive_slab_top"
+    }
+  }
+}

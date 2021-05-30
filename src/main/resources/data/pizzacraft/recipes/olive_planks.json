@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "tag": "pizzacraft:olive_logs"
+    }
+  ],
+  "result": {
+    "item": "pizzacraft:olive_planks",
+    "count": 4
+  }
+}

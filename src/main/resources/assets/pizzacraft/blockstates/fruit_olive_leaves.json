@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "age=0": { "model": "pizzacraft:block/olive_leaves" },
+    "age=1": { "model": "pizzacraft:block/fruit_olive_leaves_stage1" },
+    "age=2": { "model": "pizzacraft:block/fruit_olive_leaves_stage1" },
+    "age=3": { "model": "pizzacraft:block/fruit_olive_leaves_stage2" }
+  }
+}

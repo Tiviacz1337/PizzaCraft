@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "pizzacraft:block/olive_planks",
+    "top": "pizzacraft:block/olive_planks",
+    "side": "pizzacraft:block/olive_planks"
+  }
+}

@@ -50,6 +50,24 @@ public class ModBlocks
     public static final RegistryObject<Block> DARK_OAK_CHOPPING_BOARD = registerBlock("dark_oak_chopping_board", new ChoppingBoardBlock(AbstractBlock.Properties.from(Blocks.DARK_OAK_PLANKS)));
     public static final RegistryObject<Block> CRIMSON_CHOPPING_BOARD = registerBlock("crimson_chopping_board", new ChoppingBoardBlock(AbstractBlock.Properties.from(Blocks.CRIMSON_PLANKS)));
     public static final RegistryObject<Block> WARPED_CHOPPING_BOARD = registerBlock("warped_chopping_board", new ChoppingBoardBlock(AbstractBlock.Properties.from(Blocks.WARPED_PLANKS)));
+    //Trees
+    public static final RegistryObject<Block> OLIVE_PLANKS = registerBlock("olive_planks", new Block(AbstractBlock.Properties.from(Blocks.OAK_PLANKS)));
+    public static final RegistryObject<Block> OLIVE_SAPLING = registerBlock("olive_sapling", new SaplingBlock(new OliveTree(), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));
+    public static final RegistryObject<Block> OLIVE_LOG = registerOliveLogBlock("olive_log", MaterialColor.WOOD, MaterialColor.LIGHT_GRAY_TERRACOTTA);
+    public static final RegistryObject<Block> STRIPPED_OLIVE_LOG = registerOliveLogBlock("stripped_olive_log", MaterialColor.WOOD, MaterialColor.WOOD);
+    public static final RegistryObject<Block> STRIPPED_OLIVE_WOOD = registerBlock("stripped_olive_wood", new RotatedPillarBlock(AbstractBlock.Properties.from(Blocks.STRIPPED_OAK_WOOD)));
+    public static final RegistryObject<Block> OLIVE_WOOD = registerBlock("olive_wood", new RotatedPillarBlock(AbstractBlock.Properties.from(Blocks.OAK_WOOD)));
+    public static final RegistryObject<Block> OLIVE_LEAVES = registerBlock("olive_leaves", new LeavesBlock(AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
+    public static final RegistryObject<Block> FRUIT_OLIVE_LEAVES = registerBlock("fruit_olive_leaves", new OliveLeavesBlock(AbstractBlock.Properties.from(Blocks.OAK_LEAVES)));
+    public static final RegistryObject<Block> OLIVE_SLAB = registerBlock("olive_slab", new SlabBlock(AbstractBlock.Properties.from(Blocks.OAK_SLAB)));
+    public static final RegistryObject<Block> OLIVE_PRESSURE_PLATE = registerBlock("olive_pressure_plate", new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, AbstractBlock.Properties.from(Blocks.OAK_PRESSURE_PLATE)));
+    public static final RegistryObject<Block> OLIVE_FENCE = registerBlock("olive_fence", new FenceBlock(AbstractBlock.Properties.create(Material.WOOD, MaterialColor.WOOD).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> OLIVE_TRAPDOOR = registerBlock("olive_trapdoor", new TrapDoorBlock(AbstractBlock.Properties.from(Blocks.OAK_TRAPDOOR)));
+    public static final RegistryObject<Block> OLIVE_FENCE_GATE = registerBlock("olive_fence_gate", new FenceGateBlock(AbstractBlock.Properties.from(Blocks.OAK_FENCE_GATE)));
+    public static final RegistryObject<Block> OLIVE_BUTTON = registerBlock("olive_button", new WoodButtonBlock(AbstractBlock.Properties.from(Blocks.OAK_BUTTON)));
+    public static final RegistryObject<Block> OLIVE_STAIRS = registerBlock("olive_stairs", new StairsBlock(() -> OLIVE_PLANKS.get().getDefaultState(), AbstractBlock.Properties.from(Blocks.OAK_STAIRS)));
+    public static final RegistryObject<Block> OLIVE_DOOR = registerBlock("olive_door", new DoorBlock(AbstractBlock.Properties.from(Blocks.OAK_DOOR)));
+    public static final RegistryObject<Block> OLIVE_BOOKSHELF = registerBlock("olive_bookshelf", new OliveBookshelfBlock(AbstractBlock.Properties.from(Blocks.BOOKSHELF)));
 
     //Crops
     public static final RegistryObject<Block> BROCCOLI = registerBlock("broccoli", new SimpleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.BROCCOLI_SEED.get()));
@@ -97,6 +115,12 @@ public class ModBlocks
     public static RegistryObject<Block> registerBlock(final String name, Block block)
     {
         return BLOCKS.register(name, () -> block);
+    }
+
+    private static RegistryObject<Block> registerOliveLogBlock(final String name, MaterialColor topColor, MaterialColor barkColor)
+    {
+        return BLOCKS.register(name, () -> new RotatedPillarBlock(AbstractBlock.Properties.create(Material.WOOD, (state) ->
+                state.get(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? topColor : barkColor).hardnessAndResistance(2.0F).sound(SoundType.WOOD)));
     }
 
 /*    private static ToIntFunction<BlockState> getLightValueLit(int lightValue)
