@@ -4,6 +4,7 @@ import com.tiviacz.pizzacraft.blocks.ChoppingBoardBlock;
 import com.tiviacz.pizzacraft.init.ModAdvancements;
 import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.init.ModTileEntityTypes;
+import com.tiviacz.pizzacraft.items.KnifeItem;
 import com.tiviacz.pizzacraft.recipes.chopping.ChoppingRecipe;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
@@ -35,9 +36,11 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
 {
     private final ItemStackHandler inventory = createHandler();
     private boolean isItemCarvingBoard = false;
+    private Direction facing = Direction.NORTH;
     private final LazyOptional<ItemStackHandler> inventoryCapability = LazyOptional.of(() -> this.inventory);
 
     private final String IS_ITEM_CARVING_BOARD = "IsItemCarvingBoard";
+    private final String FACING = "Facing";
 
     public ChoppingBoardTileEntity()
     {
@@ -49,6 +52,7 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
     {
         super.read(state, compound);
         this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
+        this.facing = Direction.byHorizontalIndex(compound.getInt(FACING));
         this.isItemCarvingBoard = compound.getBoolean(IS_ITEM_CARVING_BOARD);
     }
 
@@ -57,8 +61,19 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
     {
         super.write(compound);
         compound.put(INVENTORY, this.inventory.serializeNBT());
+        compound.putInt(FACING, this.facing.getHorizontalIndex());
         compound.putBoolean(IS_ITEM_CARVING_BOARD, this.isItemCarvingBoard);
         return compound;
+    }
+
+    public Direction getFacing()
+    {
+        return this.facing;
+    }
+
+    public void setFacing(Direction direction)
+    {
+        this.facing = direction;
     }
 
     // ======== CHOPPING ========
@@ -66,7 +81,7 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
     public boolean canChop(ItemStack stack)
     {
         Optional<ChoppingRecipe> match = world.getRecipeManager().getRecipe(ChoppingRecipe.Type.CHOPPING_BOARD_RECIPE_TYPE, new RecipeWrapper(getInventory()), world);
-        boolean matchTool = stack.getItem() == ModItems.KNIFE.get() || stack.getItem() instanceof TieredItem || stack.getItem() instanceof TridentItem || stack.getItem() instanceof ShearsItem;
+        boolean matchTool = stack.getItem() instanceof KnifeItem || stack.getItem() instanceof TieredItem || stack.getItem() instanceof TridentItem || stack.getItem() instanceof ShearsItem;
         return matchTool && match.isPresent();
     }
 
@@ -80,7 +95,7 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
             world.addParticle(new ItemParticleData(ParticleTypes.ITEM, getStoredStack()), pos.getX() + 0.5D, pos.getY() + 0.3D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
             world.playSound(player, pos, SoundEvents.BLOCK_PUMPKIN_CARVE, SoundCategory.BLOCKS, 0.7F, 0.8F);
 
-            Direction direction = this.getBlockState().get(ChoppingBoardBlock.FACING).rotateYCCW();
+            Direction direction = facing.rotateYCCW(); //#TODO
             ItemEntity entity = new ItemEntity(world, pos.getX() + 0.5 + (direction.getXOffset() * 0.2), pos.getY() + 0.2, pos.getZ() + 0.5 + (direction.getZOffset() * 0.2), result.copy());
             entity.setMotion(direction.getXOffset() * 0.2F, 0.0F, direction.getZOffset() * 0.2F);
             world.addEntity(entity);

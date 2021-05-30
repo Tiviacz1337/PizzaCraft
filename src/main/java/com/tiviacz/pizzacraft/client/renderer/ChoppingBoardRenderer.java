@@ -25,7 +25,7 @@ public class ChoppingBoardRenderer extends TileEntityRenderer<ChoppingBoardTileE
     @Override
     public void render(ChoppingBoardTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn)
     {
-        Direction direction = tileEntityIn.getBlockState().get(ChoppingBoardBlock.FACING).getOpposite();
+        Direction direction = tileEntityIn.getFacing().getOpposite();
         ItemStack stack = tileEntityIn.getStoredStack();
 
         if(!stack.isEmpty())
@@ -57,7 +57,7 @@ public class ChoppingBoardRenderer extends TileEntityRenderer<ChoppingBoardTileE
             else if(blockItem)
             {
                 // Center block above the cutting board
-                matrixStackIn.translate(0.5D, 0.27D, 0.5D);
+                matrixStackIn.translate(0.5D, 0.25D, 0.5D);
 
                 // Rotate block to face the cutting board's front side
                 float f = -direction.getHorizontalAngle();
@@ -79,7 +79,7 @@ public class ChoppingBoardRenderer extends TileEntityRenderer<ChoppingBoardTileE
                 matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90.0F));
 
                 // Resize the item
-                matrixStackIn.scale(0.45F, 0.45F, 0.45F);
+                matrixStackIn.scale(0.6F, 0.6F, 0.6F);
             }
 
             itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);

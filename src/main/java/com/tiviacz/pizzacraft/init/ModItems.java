@@ -43,6 +43,7 @@ public class ModItems
     public static final RegistryObject<Item> DARK_OAK_CHOPPING_BOARD = registerBlockItem("dark_oak_chopping_board", ModBlocks.DARK_OAK_CHOPPING_BOARD, pizzaProperties());
     public static final RegistryObject<Item> CRIMSON_CHOPPING_BOARD = registerBlockItem("crimson_chopping_board", ModBlocks.CRIMSON_CHOPPING_BOARD, pizzaProperties());
     public static final RegistryObject<Item> WARPED_CHOPPING_BOARD = registerBlockItem("warped_chopping_board", ModBlocks.WARPED_CHOPPING_BOARD, pizzaProperties());
+    public static final RegistryObject<Item> OLIVE_CHOPPING_BOARD = registerBlockItem("olive_chopping_board", ModBlocks.OLIVE_CHOPPING_BOARD, pizzaProperties());
 
     //Basins
     public static final RegistryObject<Item> GRANITE_BASIN = registerBlockItem("granite_basin", ModBlocks.GRANITE_BASIN, pizzaProperties());

@@ -50,6 +50,8 @@ public class ModBlocks
     public static final RegistryObject<Block> DARK_OAK_CHOPPING_BOARD = registerBlock("dark_oak_chopping_board", new ChoppingBoardBlock(AbstractBlock.Properties.from(Blocks.DARK_OAK_PLANKS)));
     public static final RegistryObject<Block> CRIMSON_CHOPPING_BOARD = registerBlock("crimson_chopping_board", new ChoppingBoardBlock(AbstractBlock.Properties.from(Blocks.CRIMSON_PLANKS)));
     public static final RegistryObject<Block> WARPED_CHOPPING_BOARD = registerBlock("warped_chopping_board", new ChoppingBoardBlock(AbstractBlock.Properties.from(Blocks.WARPED_PLANKS)));
+    public static final RegistryObject<Block> OLIVE_CHOPPING_BOARD = registerBlock("olive_chopping_board", new ChoppingBoardBlock(AbstractBlock.Properties.from(Blocks.OAK_PLANKS)));
+
     //Trees
     public static final RegistryObject<Block> OLIVE_PLANKS = registerBlock("olive_planks", new Block(AbstractBlock.Properties.from(Blocks.OAK_PLANKS)));
     public static final RegistryObject<Block> OLIVE_SAPLING = registerBlock("olive_sapling", new SaplingBlock(new OliveTree(), AbstractBlock.Properties.from(Blocks.OAK_SAPLING)));

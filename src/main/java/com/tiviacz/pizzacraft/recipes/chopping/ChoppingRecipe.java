@@ -69,6 +69,12 @@ public class ChoppingRecipe implements IRecipe<RecipeWrapper>
         return Type.CHOPPING_BOARD_RECIPE_TYPE;
     }
 
+    @Override
+    public String getGroup()
+    {
+        return "";
+    }
+
     public static class Type implements IRecipeType<ChoppingRecipe>
     {
         private Type() {}

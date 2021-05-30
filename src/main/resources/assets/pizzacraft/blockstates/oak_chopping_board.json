@@ -1,8 +1,5 @@
 {
   "variants": {
-    "facing=north": { "model": "pizzacraft:block/oak_chopping_board" },
-    "facing=east": { "model": "pizzacraft:block/oak_chopping_board", "y": 90 },
-    "facing=south": { "model": "pizzacraft:block/oak_chopping_board", "y": 180 },
-    "facing=west": { "model": "pizzacraft:block/oak_chopping_board", "y": 270 }
+    "": { "model": "pizzacraft:block/oak_chopping_board" }
   }
 }

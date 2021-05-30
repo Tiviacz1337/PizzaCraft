@@ -2,6 +2,7 @@ package com.tiviacz.pizzacraft.blocks;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.ModItems;
+import com.tiviacz.pizzacraft.items.KnifeItem;
 import com.tiviacz.pizzacraft.tileentity.ChoppingBoardTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -26,27 +27,28 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.IItemHandler;
 
-public class ChoppingBoardBlock extends HorizontalBlock
+public class ChoppingBoardBlock extends Block //HorizontalBlock
 {
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    //public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
     public ChoppingBoardBlock(Properties properties)
     {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
+        //this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
     {
-        switch(state.get(HORIZONTAL_FACING))
+        return Block.makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 1.0D, 14.0D);
+    /*    switch(state.get(HORIZONTAL_FACING))
         {
             case NORTH:
             case SOUTH:
                 return Block.makeCuboidShape(2.0D, 0.0D, 4.0D, 14.0D, 0.75D, 12.0D);
             default:
                 return Block.makeCuboidShape(4.0D, 0.0D, 2.0D, 12.0D, 0.75D, 14.0D);
-        }
+        } */
     }
 
     @Override
@@ -75,10 +77,12 @@ public class ChoppingBoardBlock extends HorizontalBlock
                 {
                     if(!player.isCreative())
                     {
+                        choppingBoardTile.setFacing(player.getHorizontalFacing().getOpposite());
                         player.setHeldItem(handIn, choppingBoardTile.getInventory().insertItem(0, itemHeld, false));
                     }
                     else
                     {
+                        choppingBoardTile.setFacing(player.getHorizontalFacing().getOpposite());
                         choppingBoardTile.getInventory().insertItem(0, itemHeld.copy(), false);
                     }
                     worldIn.playSound(player, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + worldIn.rand.nextFloat());
@@ -190,11 +194,11 @@ public class ChoppingBoardBlock extends HorizontalBlock
         return facing == Direction.DOWN && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context)
-    {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
-    }
+   // @Override
+   // public BlockState getStateForPlacement(BlockItemUseContext context)
+   // {
+        //return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+  //  }
 
     @Override
     public boolean hasComparatorInputOverride(BlockState state)
@@ -213,8 +217,8 @@ public class ChoppingBoardBlock extends HorizontalBlock
         return 0;
     }
 
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) { builder.add(FACING); }
+   // @Override
+    //protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) { builder.add(FACING); }
 
     @Override
     public boolean hasTileEntity(BlockState state)
@@ -242,12 +246,13 @@ public class ChoppingBoardBlock extends HorizontalBlock
 
             if(player.isSecondaryUseActive() && !heldItem.isEmpty() && tile instanceof ChoppingBoardTileEntity)
             {
-                if(heldItem.getItem() == ModItems.KNIFE.get() || heldItem.getItem() instanceof TieredItem || heldItem.getItem() instanceof TridentItem || heldItem.getItem() instanceof ShearsItem)
+                if(heldItem.getItem() instanceof KnifeItem || heldItem.getItem() instanceof TieredItem || heldItem.getItem() instanceof TridentItem || heldItem.getItem() instanceof ShearsItem)
                 {
                     boolean success = ((ChoppingBoardTileEntity)tile).carveToolOnBoard(player.abilities.isCreativeMode ? heldItem.copy() : heldItem);
 
                     if(success)
                     {
+                        ((ChoppingBoardTileEntity)tile).setFacing(player.getHorizontalFacing().getOpposite());
                         world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_WOOD_PLACE, SoundCategory.BLOCKS, 1.0F, 0.8F);
                         event.setCanceled(true);
                         event.setCancellationResult(ActionResultType.SUCCESS);

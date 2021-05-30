@@ -20,7 +20,8 @@ public class ModTileEntityTypes
                     ModBlocks.ACACIA_CHOPPING_BOARD.get(),
                     ModBlocks.DARK_OAK_CHOPPING_BOARD.get(),
                     ModBlocks.CRIMSON_CHOPPING_BOARD.get(),
-                    ModBlocks.WARPED_CHOPPING_BOARD.get()).build(null));
+                    ModBlocks.WARPED_CHOPPING_BOARD.get(),
+                    ModBlocks.OLIVE_CHOPPING_BOARD.get()).build(null));
 
     public static final RegistryObject<TileEntityType<PizzaBoardTileEntity>> PIZZA_BOARD = TILE_ENTITY_TYPES.register("pizza_board",
             () -> TileEntityType.Builder.create(PizzaBoardTileEntity::new,
