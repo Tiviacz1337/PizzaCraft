@@ -1,8 +1,11 @@
 {
   "type": "pizzacraft:chopping_recipe",
-  "input": {
-    "tag": "forge:rawchicken"
-  },
-  "outputItem": "pizzacraft:wing",
-  "outputCount": "2"
+  "input":
+    {
+      "tag": "forge:rawchicken"
+    },
+  "result": {
+    "item": "pizzacraft:wing",
+    "count": 2
+  }
 }

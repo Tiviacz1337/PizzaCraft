@@ -1,8 +1,11 @@
 {
   "type": "pizzacraft:chopping_recipe",
-  "input": {
-    "tag": "forge:pepper"
-  },
-  "outputItem": "pizzacraft:pepper_slice",
-  "outputCount": "2"
+  "input":
+    {
+      "tag": "forge:crops/pepper"
+    },
+  "result": {
+    "item": "pizzacraft:pepper_slice",
+    "count": 2
+  }
 }
