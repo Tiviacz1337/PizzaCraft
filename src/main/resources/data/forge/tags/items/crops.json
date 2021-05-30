@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:crops/broccoli",
+    "#forge:crops/corn",
+    "#forge:crops/cucumber",
+    "#forge:crops/onion",
+    "#forge:crops/pepper",
+    "#forge:crops/pineapple",
+    "#forge:crops/tomato"
+  ]
+}

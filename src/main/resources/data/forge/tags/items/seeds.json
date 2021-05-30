@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:seeds/broccoli_seeds",
+    "#forge:seeds/cucumber_seeds",
+    "#forge:seeds/pepper_seeds",
+    "#forge:seeds/pineapple_seeds",
+    "#forge:seeds/tomato_seeds"
+  ]
+}

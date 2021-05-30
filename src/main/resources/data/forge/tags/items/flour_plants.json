@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:flour_plants/wheat",
+    "#forge:flour_plants/corn"
+  ]
+}
