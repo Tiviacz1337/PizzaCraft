@@ -103,15 +103,34 @@ public class PizzaBlock extends Block
                 worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack));
             }
 
-            worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+            if(itemstack.getItem() instanceof KnifeItem)
+            {
+                int i = state.get(BITES);
 
-            return ActionResultType.SUCCESS;
-        }
+                ItemStack stack = ModItems.PIZZA_SLICE.get().getDefaultInstance();
+                PizzaTileEntity tile = (PizzaTileEntity)worldIn.getTileEntity(pos);
+                tile.writeToSliceItemStack(stack, i);
 
-        if(itemstack.isEmpty() && player.isSneaking() && worldIn.getTileEntity(pos) instanceof PizzaTileEntity)
-        {
-            ((PizzaTileEntity)worldIn.getTileEntity(pos)).openGUI(player, (PizzaTileEntity)worldIn.getTileEntity(pos), pos);
-            return ActionResultType.SUCCESS;
+                if(i < 6)
+                {
+                    worldIn.setBlockState(pos, state.with(BITES, i + 1), 3);
+                }
+                else
+                {
+                    worldIn.removeBlock(pos, false);
+                }
+
+                ItemEntity itemEntity = new ItemEntity(worldIn, pos.getX() + 0.5D, pos.getY() + 0.25D, pos.getZ() + 0.5D, stack);
+                itemEntity.setDefaultPickupDelay();
+
+                worldIn.addEntity(itemEntity);
+
+                tile.requestModelDataUpdate();
+
+                itemstack.damageItem(1, player, (entity) -> entity.sendBreakAnimation(EquipmentSlotType.MAINHAND));
+
+                return ActionResultType.SUCCESS;
+            }
         }
 
         if(this.eatPizza(worldIn, pos, state, player) == ActionResultType.SUCCESS)

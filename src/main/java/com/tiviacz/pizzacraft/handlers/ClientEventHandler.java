@@ -1,6 +1,7 @@
 package com.tiviacz.pizzacraft.handlers;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
+import com.tiviacz.pizzacraft.client.DynamicPizzaSliceModel;
 import com.tiviacz.pizzacraft.client.PizzaBakedModel;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.PizzaLayers;
@@ -9,29 +10,23 @@ import net.minecraft.client.renderer.BlockModelShapes;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = PizzaCraft.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientEventHandler
 {
-
-    //Cooked
-   // public static final ResourceLocation COOKED_CHEESE_LAYER = new ResourceLocation(PizzaCraft.MODID, "block/cooked_cheese_layer");
-
- /*   @SubscribeEvent
-    public static void onModelBakery(ModelBakeEvent event)
+    @SubscribeEvent
+    public static void registerModels(ModelRegistryEvent event)
     {
-        IUnbakedModel unbakedModel = event.getModelLoader().getModelOrLogError(CRUST_MODEL, "Didn't fetch the model!");
-        IBakedModel bakedModel = unbakedModel.bakeModel(event.getModelLoader(), RenderMaterial::getSprite, SimpleModelTransform.IDENTITY, CRUST_MODEL);
-        event.getModelRegistry().put(CRUST_MODEL, bakedModel);
-        //IBakedModel bakedModel = unbakedModel.bakeModel(Minecraft.getInstance().getModelManager().getModel())
-        //IBakedModel bakedModel = event.getModelManager().getModel(CRUST_MODEL);
-        //event.getModelRegistry().put();
-    } */
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(PizzaCraft.MODID, "pizza_slice_loader"), DynamicPizzaSliceModel.Loader.INSTANCE);
+    }
 
     @SubscribeEvent
     public static void onModelBakeEvent(ModelBakeEvent event)
@@ -75,20 +70,18 @@ public class ClientEventHandler
         }
     }
 
-/*    @SubscribeEvent
-    public static void onModelRegistryEvent(ModelRegistryEvent event)
-    {
-        ModelLoader.addSpecialModel(CRUST_MODEL);
-    } */
-
     @SubscribeEvent
     public static void stitcherEventPre(TextureStitchEvent.Pre event)
     {
         if(event.getMap().getTextureLocation() == PlayerContainer.LOCATION_BLOCKS_TEXTURE)
         {
+            event.addSprite(PizzaLayers.PIZZA_SLICE);
+
+            //Base
             event.addSprite(PizzaLayers.CHEESE_LAYER);
             event.addSprite(PizzaLayers.RAW_CHEESE_LAYER);
 
+            //Vegetables
             event.addSprite(PizzaLayers.BROCCOLI_LAYER);
             event.addSprite(PizzaLayers.CORN_LAYER);
             event.addSprite(PizzaLayers.CUCUMBER_LAYER);
@@ -103,15 +96,31 @@ public class ClientEventHandler
             event.addSprite(PizzaLayers.RAW_PEPPER_LAYER);
             event.addSprite(PizzaLayers.RAW_TOMATO_LAYER);
 
+            event.addSprite(PizzaLayers.BROCCOLI_ITEM_LAYER);
+            event.addSprite(PizzaLayers.CORN_ITEM_LAYER);
+            event.addSprite(PizzaLayers.CUCUMBER_ITEM_LAYER);
+            event.addSprite(PizzaLayers.ONION_ITEM_LAYER);
+            event.addSprite(PizzaLayers.PEPPER_ITEM_LAYER);
+            event.addSprite(PizzaLayers.TOMATO_ITEM_LAYER);
+
+            //Fruits
             event.addSprite(PizzaLayers.PINEAPPLE_LAYER);
             event.addSprite(PizzaLayers.OLIVE_LAYER);
 
             event.addSprite(PizzaLayers.RAW_PINEAPPLE_LAYER);
             event.addSprite(PizzaLayers.RAW_OLIVE_LAYER);
 
+            event.addSprite(PizzaLayers.PINEAPPLE_ITEM_LAYER);
+            event.addSprite(PizzaLayers.OLIVE_ITEM_LAYER);
+
+            //Mushrooms
             event.addSprite(PizzaLayers.MUSHROOM_LAYER);
+
             event.addSprite(PizzaLayers.RAW_MUSHROOM_LAYER);
 
+            event.addSprite(PizzaLayers.MUSHROOM_ITEM_LAYER);
+
+            //Meats
             event.addSprite(PizzaLayers.HAM_LAYER);
             event.addSprite(PizzaLayers.BEEF_LAYER);
             event.addSprite(PizzaLayers.CHICKEN_LAYER);
@@ -120,7 +129,13 @@ public class ClientEventHandler
             event.addSprite(PizzaLayers.RAW_BEEF_LAYER);
             event.addSprite(PizzaLayers.RAW_CHICKEN_LAYER);
 
+            event.addSprite(PizzaLayers.HAM_ITEM_LAYER);
+            event.addSprite(PizzaLayers.BEEF_ITEM_LAYER);
+            event.addSprite(PizzaLayers.CHICKEN_ITEM_LAYER);
+
+            //Sauces
             event.addSprite(PizzaLayers.TOMATO_SAUCE_LAYER);
+            event.addSprite(PizzaLayers.TOMATO_SAUCE_ITEM_LAYER);
         }
     }
 }

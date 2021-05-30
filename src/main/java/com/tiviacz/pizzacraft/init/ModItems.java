@@ -61,6 +61,8 @@ public class ModItems
     public static final RegistryObject<Item> KNIFE = ITEMS.register("knife", () -> new KnifeItem(0.5F, -2.0F, ItemTier.IRON, pizzaProperties().maxStackSize(1)));
     public static final RegistryObject<Item> ROLLING_PIN = ITEMS.register("rolling_pin", () -> new Item(pizzaProperties().maxStackSize(1).maxDamage(60)));
     public static final RegistryObject<Item> PIZZA_PEEL = ITEMS.register("pizza_peel", () -> new PizzaPeelItem(1.5F, -3.0F, ItemTier.IRON, pizzaProperties().maxStackSize(1)));
+    //Pizza Slice
+    public static final RegistryObject<Item> PIZZA_SLICE = ITEMS.register("pizza_slice", () -> new PizzaSliceItem(pizzaProperties()));
 
     //Jugs
     //public static final RegistryObject<Item> GLASS_JUG = ITEMS.register("glass_jug", () -> new Item(pizzaProperties().maxStackSize(16)));
