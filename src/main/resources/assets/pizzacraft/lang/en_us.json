@@ -37,7 +37,6 @@
   "block.pizzacraft.basalt_basin": "Basalt Basin",
   "block.pizzacraft.blackstone_basin": "Blackstone Basin",
 
-  "item.pizzacraft.knife": "Knife",
   "block.pizzacraft.olive_planks": "Olive Planks",
   "block.pizzacraft.olive_sapling": "Olive Sapling",
   "block.pizzacraft.olive_log": "Olive Log",
@@ -56,8 +55,18 @@
   "block.pizzacraft.olive_door": "Olive Door",
   "block.pizzacraft.olive_bookshelf": "Olive Bookshelf",
 
+  "item.pizzacraft.stone_knife": "Stone Knife",
+  "item.pizzacraft.golden_knife": "Golden Knife",
+  "item.pizzacraft.iron_knife": "Iron Knife",
+  "item.pizzacraft.diamond_knife": "Diamond Knife",
+  "item.pizzacraft.netherite_knife": "Netherite Knife",
   "item.pizzacraft.rolling_pin": "Rolling Pin",
-  "item.pizzacraft.pizza_peel": "Pizza Peel",
+  "item.pizzacraft.stone_pizza_peel": "Stone Pizza Peel",
+  "item.pizzacraft.golden_pizza_peel": "Golden Pizza Peel",
+  "item.pizzacraft.iron_pizza_peel": "Iron Pizza Peel",
+  "item.pizzacraft.diamond_pizza_peel": "Diamond Pizza Peel",
+  "item.pizzacraft.netherite_pizza_peel": "Netherite Pizza Peel",
+
 
   "item.pizzacraft.glass_jug": "Glass Jug",
   "item.pizzacraft.olive_oil": "Olive Oil",

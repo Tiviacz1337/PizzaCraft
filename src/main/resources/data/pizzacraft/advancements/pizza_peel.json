@@ -2,7 +2,7 @@
   "parent": "pizzacraft:dough",
   "display": {
     "icon": {
-      "item": "pizzacraft:pizza_peel"
+      "item": "pizzacraft:iron_pizza_peel"
     },
     "title": {
       "translate": "advancements.pizzacraft.pizza_peel.title"
@@ -16,12 +16,52 @@
     "hidden": false
   },
   "criteria": {
-    "pizza_peel": {
+    "stone_pizza_peel": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "pizzacraft:pizza_peel"
+            "item": "pizzacraft:stone_pizza_peel"
+          }
+        ]
+      }
+    },
+    "golden_pizza_peel": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "pizzacraft:golden_pizza_peel"
+          }
+        ]
+      }
+    },
+    "iron_pizza_peel": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "pizzacraft:iron_pizza_peel"
+          }
+        ]
+      }
+    },
+    "diamond_pizza_peel": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "pizzacraft:diamond_pizza_peel"
+          }
+        ]
+      }
+    },
+    "netherite_pizza_peel": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "pizzacraft:netherite_pizza_peel"
           }
         ]
       }
@@ -29,7 +69,11 @@
   },
   "requirements": [
     [
-      "pizza_peel"
+      "stone_pizza_peel",
+      "golden_pizza_peel",
+      "iron_pizza_peel",
+      "diamond_pizza_peel",
+      "netherite_pizza_peel"
     ]
   ]
 }

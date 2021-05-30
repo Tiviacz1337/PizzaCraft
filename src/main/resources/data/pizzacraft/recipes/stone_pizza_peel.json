@@ -7,13 +7,13 @@
   ],
   "key": {
     "C": {
-      "item": "minecraft:iron_ingot"
+      "item": "minecraft:cobblestone"
     },
     "X": {
       "item": "minecraft:stick"
     }
   },
   "result": {
-    "item": "pizzacraft:pizza_peel"
+    "item": "pizzacraft:stone_pizza_peel"
   }
 }

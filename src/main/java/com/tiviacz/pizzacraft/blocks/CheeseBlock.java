@@ -66,7 +66,7 @@ public class CheeseBlock extends Block
             }
         }
 
-        if(itemstack.getItem() == ModItems.KNIFE.get() || itemstack.getItem() instanceof TieredItem || itemstack.getItem() instanceof TridentItem || itemstack.getItem() instanceof ShearsItem)
+        if(itemstack.getItem() instanceof KnifeItem || itemstack.getItem() instanceof TieredItem || itemstack.getItem() instanceof TridentItem || itemstack.getItem() instanceof ShearsItem)
         {
             worldIn.addEntity(new ItemEntity(worldIn, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModItems.CHEESE.get().getDefaultInstance()));
             worldIn.playSound(null, pos, SoundEvents.BLOCK_FUNGUS_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);

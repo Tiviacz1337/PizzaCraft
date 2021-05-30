@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XAA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:gold_ingot"
+    },
+    "X": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "pizzacraft:golden_knife"
+  }
+}

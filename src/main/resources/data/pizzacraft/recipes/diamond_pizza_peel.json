@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  C",
+    " X ",
+    "X  "
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:diamond"
+    },
+    "X": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "pizzacraft:diamond_pizza_peel"
+  }
+}

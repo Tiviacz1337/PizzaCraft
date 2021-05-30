@@ -1,70 +1,119 @@
 package com.tiviacz.pizzacraft.items;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import com.tiviacz.pizzacraft.PizzaCraft;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.client.util.InputMappings;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IItemTier;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
-import net.minecraft.item.ToolItem;
-import net.minecraft.tags.BlockTags;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.lwjgl.glfw.GLFW;
 
-import java.util.Set;
+import javax.annotation.Nullable;
+import java.util.List;
 
-public class KnifeItem extends ToolItem
+public class KnifeItem extends SwordItem
 {
-    private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet();
+    private final Multimap<Attribute, AttributeModifier> attributeModifier;
 
-    public KnifeItem(float attackDamageIn, float attackSpeedIn, IItemTier tier, Properties builderIn)
+    public KnifeItem(IItemTier tier, int attackDamageIn, float attackSpeedIn, Item.Properties builderIn)
     {
-        super(attackDamageIn, attackSpeedIn, tier, EFFECTIVE_ON, builderIn);
+        super(tier, attackDamageIn, attackSpeedIn, builderIn);
+
+        Multimap<Attribute, AttributeModifier> attributeMap = getAttributeModifiers(EquipmentSlotType.MAINHAND);
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> modifierBuilder = ImmutableMultimap.builder();
+        modifierBuilder.putAll(attributeMap);
+        modifierBuilder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier("KnifeMovementSpeedModifier", 0.1D, AttributeModifier.Operation.MULTIPLY_BASE));
+        modifierBuilder.put(Attributes.ATTACK_KNOCKBACK, new AttributeModifier("KnifeAttackKnockbackModifier", -0.1D, AttributeModifier.Operation.ADDITION));
+        this.attributeModifier = modifierBuilder.build();
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.damageItem(1, attacker, (entity) -> {
-            entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
-        });
-        return true;
-    }
-
-    @Override
-    public float getDestroySpeed(ItemStack stack, BlockState state)
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot, ItemStack stack)
     {
-        Material material = state.getMaterial();
-        return material != Material.WOOL && material != Material.CARPET && material != Material.CAKE && material != Material.WEB ? super.getDestroySpeed(stack, state) : this.efficiency;
+        return equipmentSlot == EquipmentSlotType.MAINHAND ? this.attributeModifier : super.getAttributeModifiers(equipmentSlot, stack);
     }
 
     @Override
-    public boolean canPlayerBreakBlockWhileHolding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
-        return !player.isCreative();
+    @OnlyIn(Dist.CLIENT)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+
+        tooltip.add(new TranslationTextComponent("description.pizzacraft.backstab.title").mergeStyle(TextFormatting.RED));
+
+        if(InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) || InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT))
+        {
+            tooltip.add(new TranslationTextComponent("description.pizzacraft.backstab.description").mergeStyle(TextFormatting.BLUE));
+        }
+        else
+        {
+            tooltip.add(new TranslationTextComponent("description.pizzacraft.hold_shift.title").mergeStyle(TextFormatting.BLUE));
+        }
     }
 
     @Mod.EventBusSubscriber(modid = PizzaCraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class KnifeEvents
     {
         @SubscribeEvent
-        public static void onKnifeKnockback(LivingKnockBackEvent event)
+        public static void onKnifeBackstab(LivingHurtEvent event)
         {
-            LivingEntity attacker = event.getEntityLiving().getAttackingEntity();
-            ItemStack tool = attacker != null ? attacker.getHeldItem(Hand.MAIN_HAND) : ItemStack.EMPTY;
+            LivingEntity victim = event.getEntityLiving();
+            Entity attacker = event.getSource().getTrueSource();
 
-            if(tool.getItem() instanceof KnifeItem)
+            if(victim != null && attacker != null)
             {
-                event.setStrength(event.getOriginalStrength() - 0.1F);
+                if(attacker instanceof LivingEntity)
+                {
+                    if(compareRotations(attacker.rotationYaw, victim.rotationYaw, 50.0D))
+                    {
+                        Hand activeHand = ((LivingEntity)attacker).getActiveHand();
+
+                        if(activeHand == Hand.MAIN_HAND)
+                        {
+                            ItemStack stack = ((LivingEntity)attacker).getHeldItem(activeHand);
+
+                            if(stack.getItem() instanceof KnifeItem)
+                            {
+                                float newDamage = event.getAmount() * 1.25F;
+                                event.setAmount(newDamage);
+                                attacker.world.playSound(null, attacker.getPosX(), attacker.getPosY(), attacker.getPosZ(), SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, attacker.getSoundCategory(), 1.0F, 1.2F);
+                                Minecraft.getInstance().particles.emitParticleAtEntity(victim, ParticleTypes.CRIT, 10);
+                            }
+                        }
+                    }
+                }
             }
+        }
+
+        public static boolean compareRotations(double yaw1, double yaw2, double maxDiff)
+        {
+            maxDiff = Math.abs(maxDiff);
+            double d = Math.abs(yaw1 - yaw2) % 360;
+            double diff = d > 180.0D ? 360.0D - d : d;
+
+            return diff < maxDiff;
         }
     }
 }

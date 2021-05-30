@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "pizzacraft:item/knife"
+    "layer0": "pizzacraft:item/golden_pizza_peel"
   }
 }

@@ -1,55 +1,41 @@
 package com.tiviacz.pizzacraft.items;
 
-import com.google.common.collect.Sets;
-import com.tiviacz.pizzacraft.PizzaCraft;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.ai.attributes.Attribute;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolItem;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.event.entity.living.LivingKnockBackEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraft.item.ShovelItem;
 
-import java.util.Set;
-
-public class PizzaPeelItem extends ToolItem
+public class PizzaPeelItem extends ShovelItem
 {
-    private static final Set<Block> EFFECTIVE_ON = Sets.newHashSet();
+    private final Multimap<Attribute, AttributeModifier> attributeModifier;
 
-    public PizzaPeelItem(float attackDamageIn, float attackSpeedIn, IItemTier tier, Properties builderIn)
+    public PizzaPeelItem(IItemTier tier, float attackDamageIn, float attackSpeedIn, Properties builderIn)
     {
-        super(attackDamageIn, attackSpeedIn, tier, EFFECTIVE_ON, builderIn);
+        super(tier, attackDamageIn, attackSpeedIn, builderIn);
+
+        Multimap<Attribute, AttributeModifier> attributeMap = getAttributeModifiers(EquipmentSlotType.MAINHAND);
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> modifierBuilder = ImmutableMultimap.builder();
+        modifierBuilder.putAll(attributeMap);
+        modifierBuilder.put(Attributes.ATTACK_KNOCKBACK, new AttributeModifier("PeelAttackKnockbackModifier", 0.25D, AttributeModifier.Operation.ADDITION));
+        this.attributeModifier = modifierBuilder.build();
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        stack.damageItem(1, attacker, (entity) -> {
-            entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
-        });
-        return true;
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot, ItemStack stack)
+    {
+        return equipmentSlot == EquipmentSlotType.MAINHAND ? this.attributeModifier : super.getAttributeModifiers(equipmentSlot, stack);
     }
 
-    @Mod.EventBusSubscriber(modid = PizzaCraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class PizzaPeelEvents
+    @Override
+    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker)
     {
-        @SubscribeEvent
-        public static void onPizzaPeelKnockback(LivingKnockBackEvent event)
-        {
-            LivingEntity attacker = event.getEntityLiving().getAttackingEntity();
-            ItemStack tool = attacker != null ? attacker.getHeldItem(Hand.MAIN_HAND) : ItemStack.EMPTY;
-
-            if(tool.getItem() instanceof PizzaPeelItem)
-            {
-                event.setStrength(event.getOriginalStrength() + 0.25F);
-            }
-        }
+        stack.damageItem(1, attacker, (entity) -> entity.sendBreakAnimation(EquipmentSlotType.MAINHAND));
+        return true;
     }
 }

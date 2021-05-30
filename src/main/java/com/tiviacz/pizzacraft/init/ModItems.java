@@ -59,9 +59,18 @@ public class ModItems
     public static final RegistryObject<Item> CHEF_BOOTS = ITEMS.register("chef_boots", () -> new ChefArmor(ArmorMaterials.CHEF, EquipmentSlotType.FEET, pizzaProperties()));
 
     //Tools
-    public static final RegistryObject<Item> KNIFE = ITEMS.register("knife", () -> new KnifeItem(0.5F, -2.0F, ItemTier.IRON, pizzaProperties().maxStackSize(1)));
     public static final RegistryObject<Item> ROLLING_PIN = ITEMS.register("rolling_pin", () -> new Item(pizzaProperties().maxStackSize(1).maxDamage(60)));
-    public static final RegistryObject<Item> PIZZA_PEEL = ITEMS.register("pizza_peel", () -> new PizzaPeelItem(1.5F, -3.0F, ItemTier.IRON, pizzaProperties().maxStackSize(1)));
+    public static final RegistryObject<Item> STONE_KNIFE = ITEMS.register("stone_knife", () -> new KnifeItem(ItemTier.STONE, 1, -2.0F, pizzaProperties().maxStackSize(1)));
+    public static final RegistryObject<Item> GOLDEN_KNIFE = ITEMS.register("golden_knife", () -> new KnifeItem(ItemTier.GOLD, 1, -2.0F, pizzaProperties().maxStackSize(1)));
+    public static final RegistryObject<Item> IRON_KNIFE = ITEMS.register("iron_knife", () -> new KnifeItem(ItemTier.IRON, 1, -2.0F, pizzaProperties().maxStackSize(1)));
+    public static final RegistryObject<Item> DIAMOND_KNIFE = ITEMS.register("diamond_knife", () -> new KnifeItem(ItemTier.DIAMOND, 1, -2.0F, pizzaProperties().maxStackSize(1)));
+    public static final RegistryObject<Item> NETHERITE_KNIFE = ITEMS.register("netherite_knife", () -> new KnifeItem(ItemTier.NETHERITE, 1, -2.0F, pizzaProperties().maxStackSize(1)));
+    public static final RegistryObject<Item> STONE_PIZZA_PEEL = ITEMS.register("stone_pizza_peel", () -> new PizzaPeelItem(ItemTier.STONE,1.5F, -3.0F, pizzaProperties().maxStackSize(1)));
+    public static final RegistryObject<Item> GOLDEN_PIZZA_PEEL = ITEMS.register("golden_pizza_peel", () -> new PizzaPeelItem( ItemTier.GOLD,1.5F, -3.0F, pizzaProperties().maxStackSize(1)));
+    public static final RegistryObject<Item> IRON_PIZZA_PEEL = ITEMS.register("iron_pizza_peel", () -> new PizzaPeelItem(ItemTier.IRON, 1.5F, -3.0F, pizzaProperties().maxStackSize(1)));
+    public static final RegistryObject<Item> DIAMOND_PIZZA_PEEL = ITEMS.register("diamond_pizza_peel", () -> new PizzaPeelItem(ItemTier.DIAMOND, 1.5F, -3.0F, pizzaProperties().maxStackSize(1)));
+    public static final RegistryObject<Item> NETHERITE_PIZZA_PEEL = ITEMS.register("netherite_pizza_peel", () -> new PizzaPeelItem(ItemTier.NETHERITE, 1.5F, -3.0F, pizzaProperties().maxStackSize(1)));
+
     //Pizza Slice
     public static final RegistryObject<Item> PIZZA_SLICE = ITEMS.register("pizza_slice", () -> new PizzaSliceItem(pizzaProperties()));
 

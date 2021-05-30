@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XAA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:diamond"
+    },
+    "X": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "pizzacraft:diamond_knife"
+  }
+}
