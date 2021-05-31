@@ -1,6 +1,9 @@
 package com.tiviacz.pizzacraft.util;
 
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particles.ParticleType;
+import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceContext;
@@ -10,6 +13,17 @@ import net.minecraftforge.common.ForgeMod;
 
 public class RenderUtils
 {
+    public static double[] getPosRandomAboveBlockHorizontal(World world, BlockPos pos)
+    {
+        double d0 = 0.5D;
+        double d5 = 0.5D - d0;
+        double d6 = (double)pos.getX() + d5 + world.rand.nextDouble() * d0 * 2.0D;
+        //double d7 = (double)pos.getY() + world.rand.nextDouble() * y;
+        double d8 = (double)pos.getZ() + d5 + world.rand.nextDouble() * d0 * 2.0D;
+
+        return new double[] {d6, d8};
+    }
+
     public static BlockRayTraceResult getBlockRayTraceResult(PlayerEntity player, World world)
     {
         float f = player.rotationPitch;

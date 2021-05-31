@@ -69,6 +69,7 @@
   "item.pizzacraft.diamond_pizza_peel": "Diamond Pizza Peel",
   "item.pizzacraft.netherite_pizza_peel": "Netherite Pizza Peel",
 
+  "item.pizzacraft.pizza_slice": "Pizza Slice",
 
   "item.pizzacraft.glass_jug": "Glass Jug",
   "item.pizzacraft.olive_oil": "Olive Oil",
@@ -119,6 +120,10 @@
   "information.pizzacraft.hunger_slice": "%s Hunger",
   "information.pizzacraft.saturation_slice": "%f Saturation",
   "information.pizzacraft.effects": "Possible Effects:",
+
+  "description.pizzacraft.hold_shift.title": "Hold Shift For Description",
+  "description.pizzacraft.backstab.title": "Backstab",
+  "description.pizzacraft.backstab.description": "Deals 125% of base damage, if entity is attacked from behind",
 
   "advancements.pizzacraft.root.title": "PizzaCraft",
   "advancements.pizzacraft.root.description": "Have you ever tried Pizza in Minecraft?",
