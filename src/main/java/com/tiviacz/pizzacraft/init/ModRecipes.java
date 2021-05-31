@@ -3,6 +3,8 @@ package com.tiviacz.pizzacraft.init;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.recipes.chopping.ChoppingRecipe;
 import com.tiviacz.pizzacraft.recipes.chopping.ChoppingRecipeSerializer;
+import com.tiviacz.pizzacraft.recipes.crushing.CrushingRecipe;
+import com.tiviacz.pizzacraft.recipes.crushing.CrushingRecipeSerializer;
 import com.tiviacz.pizzacraft.recipes.mortar.MortarRecipe;
 import com.tiviacz.pizzacraft.recipes.mortar.MortarRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -18,7 +20,9 @@ public class ModRecipes
 
     public static final IRecipeType<ChoppingRecipe> CHOPPING = IRecipeType.register(new ResourceLocation(PizzaCraft.MODID, "chopping").toString());
     public static final IRecipeType<MortarRecipe> MORTAR = IRecipeType.register(new ResourceLocation(PizzaCraft.MODID, "mortar").toString());
+    public static final IRecipeType<CrushingRecipe> CRUSHING = IRecipeType.register(new ResourceLocation(PizzaCraft.MODID, "crushing").toString());
 
     public static final RegistryObject<IRecipeSerializer<?>> CHOPPING_RECIPE_SERIALIZER = SERIALIZERS.register(ChoppingRecipeSerializer.ID.getPath(), () -> ChoppingRecipeSerializer.INSTANCE);
     public static final RegistryObject<IRecipeSerializer<?>> MORTAR_RECIPE_SERIALIZER = SERIALIZERS.register(MortarRecipeSerializer.ID.getPath(), () -> MortarRecipeSerializer.INSTANCE);
+    public static final RegistryObject<IRecipeSerializer<?>> CRUSHING_RECIPE_SERIALIZER = SERIALIZERS.register(CrushingRecipeSerializer.ID.getPath(), () -> CrushingRecipeSerializer.INSTANCE);
 }
