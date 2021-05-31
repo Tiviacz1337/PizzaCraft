@@ -62,6 +62,12 @@ public class BasinRenderer extends TileEntityRenderer<BasinTileEntity>
             model.render(matrixStackIn, bufferIn.getBuffer(RenderType.getEntitySolid(tex)), combinedLightIn, combinedOverlayIn, rgb[0], rgb[1], rgb[2], 1.0F);
         }
 
+        if(basinContent.getContentType() == BasinContentType.OIL)
+        {
+            SauceModel model = new SauceModel(64, 32, tileEntityIn.getAmount());
+            model.render(matrixStackIn, bufferIn.getBuffer(RenderType.getEntitySolid(tex)), combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
+        }
+
         else if(basinContent.getContentType() != BasinContentType.EMPTY)
         {
             if(basinContent.getContentType() == BasinContentType.FERMENTING_MILK || basinContent.getContentType() == BasinContentType.MILK)
