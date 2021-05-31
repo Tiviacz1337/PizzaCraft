@@ -6,6 +6,7 @@ import com.tiviacz.pizzacraft.client.renderer.BasinRenderer;
 import com.tiviacz.pizzacraft.client.renderer.ChoppingBoardRenderer;
 import com.tiviacz.pizzacraft.client.renderer.MortarAndPestleRenderer;
 import com.tiviacz.pizzacraft.client.renderer.PizzaRenderer;
+import com.tiviacz.pizzacraft.config.PizzaCraftConfig;
 import com.tiviacz.pizzacraft.init.*;
 import com.tiviacz.pizzacraft.recipes.BasinRecipeRegistry;
 import com.tiviacz.pizzacraft.worldgen.TreeGenerator;
@@ -39,6 +40,8 @@ public class PizzaCraft
 
     public PizzaCraft()
     {
+        PizzaCraftConfig.register(ModLoadingContext.get());
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onFinish);
