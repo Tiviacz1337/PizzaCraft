@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.ModItems;
+import com.tiviacz.pizzacraft.recipes.crushing.CrushingRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
@@ -22,28 +23,32 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Quaternion;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeType>
+public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipe>
 {
     public static final ResourceLocation ID = new ResourceLocation(PizzaCraft.MODID, "crushing");
 
     private final IDrawable background;
     private final IDrawable icon;
     private final String title;
-    private final ITickTimer timer;
+    //private final ITickTimer timer;
 
     public CrushingRecipeCategory(IGuiHelper guiHelper)
     {
         background = guiHelper.createDrawable(new ResourceLocation(PizzaCraft.MODID, "textures/gui/crushing_recipe.png"), -5, -5, 96, 36);
         icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.GRANITE_BASIN.get()));
         title = I18n.format("recipecategory." + PizzaCraft.MODID + ".crushing");
-        timer = guiHelper.createTickTimer(60, 320, false);
+        //timer = guiHelper.createTickTimer(60, 320, false);
     }
 
     @Override
@@ -53,9 +58,9 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeTyp
     }
 
     @Override
-    public Class<? extends CrushingRecipeType> getRecipeClass()
+    public Class<? extends CrushingRecipe> getRecipeClass()
     {
-        return CrushingRecipeType.class;
+        return CrushingRecipe.class;
     }
 
     @Override
@@ -76,31 +81,35 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipeTyp
         return icon;
     }
 
-    @Nonnull
+  /*  @Nonnull
     public static List<CrushingRecipeType> getRecipes()
     {
         List<CrushingRecipeType> recipes = new ArrayList<>();
         recipes.add(new CrushingRecipeType(new ItemStack(ModItems.TOMATO.get(), 5), 5, new ItemStack(ModItems.TOMATO_SAUCE.get())));
         return recipes;
-    }
+    } */
 
     @Override
-    public void setIngredients(CrushingRecipeType basinRecipe, IIngredients iIngredients)
+    public void setIngredients(CrushingRecipe crushingRecipe, IIngredients iIngredients)
     {
-        iIngredients.setInput(VanillaTypes.ITEM, basinRecipe.getInput());
-        iIngredients.setOutput(VanillaTypes.ITEM, basinRecipe.getOutput());
+        List<Ingredient> ingredients = Collections.singletonList(crushingRecipe.getInput());
+        iIngredients.setInputIngredients(ingredients);
+        iIngredients.setOutput(VanillaTypes.ITEM, crushingRecipe.getRecipeOutput());
     }
 
     @Override
-    public void setRecipe(IRecipeLayout iRecipeLayout, CrushingRecipeType basinRecipe, IIngredients iIngredients)
+    public void setRecipe(IRecipeLayout iRecipeLayout, CrushingRecipe crushingRecipe, IIngredients iIngredients)
     {
         IGuiItemStackGroup guiItemStacks = iRecipeLayout.getItemStacks();
 
         guiItemStacks.init(0, false, 5, 9);
         guiItemStacks.init(1, false, 68, 9);
 
-        guiItemStacks.set(0, iIngredients.getInputs(VanillaTypes.ITEM).get(0));
-        guiItemStacks.set(1, iIngredients.getOutputs(VanillaTypes.ITEM).get(0));
+        List<ItemStack> inputs = Arrays.asList(crushingRecipe.getInput().getMatchingStacks());
+        inputs.forEach(s -> s.setCount(crushingRecipe.getInputCount()));
+
+        guiItemStacks.set(0, inputs);
+        guiItemStacks.set(1, crushingRecipe.getRecipeOutput());
     }
 
   //  @Override

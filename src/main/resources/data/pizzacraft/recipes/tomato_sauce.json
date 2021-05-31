@@ -1,0 +1,13 @@
+{
+  "type": "pizzacraft:crushing_recipe",
+  "input":
+  {
+      "tag": "forge:crops/tomato"
+  },
+  "inputCount": 4,
+  "content": "tomato_sauce",
+  "result": {
+    "item": "pizzacraft:tomato_sauce",
+    "count": 1
+  }
+}

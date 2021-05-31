@@ -17,12 +17,12 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class BasinTileEntity extends BaseTileEntity implements ITickableTileEntity
 {
@@ -316,8 +316,72 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
         {
             ItemStack stack = getInventory().getStackInSlot(0);
 
+            Optional<CrushingRecipe> match = world.getRecipeManager().getRecipe(CrushingRecipe.Type.CRUSHING_RECIPE_TYPE, new RecipeWrapper(getInventory()), world);
+
+            if(match.isPresent())
+            {
+                if(SauceRegistry.INSTANCE.basinContentFromString(match.get().getContentOutput()) == null)
+                {
+                    throw new JsonSyntaxException(String.format("Content in %s recipe does not exist", match.get()));
+                }
+
+                if(getBasinContent() == BasinContent.AIR || getBasinContent() == SauceRegistry.INSTANCE.basinContentFromString(match.get().getContentOutput()))
+                {
+                    if(getSquashedStack().isEmpty())
+                    {
+                        this.squashedStack = new ItemStack(stack.getItem(), 1);
+                    }
+                    else
+                    {
+                        setSquashedStackCount(getSquashedStackCount() + 1);
+                    }
+
+                    this.content = SauceRegistry.INSTANCE.basinContentFromString(match.get().getContentOutput());
+                    decrStackSize(inventory, 0, 1);
+                    world.playSound(player, pos, SoundEvents.BLOCK_SLIME_BLOCK_FALL, SoundCategory.BLOCKS, 0.7F, 0.9F + (0.1F * world.rand.nextFloat()));
+                }
+            }
             //Check for possible recipes
-            for(Map<Item, String> map : BasinRecipeRegistry.RECIPES_REGISTRY)
+       /*     for(Map<ResourceLocation, String> recipe : BasinRecipeRegistry.RECIPES_REGISTRY2)
+            {
+                if(Utils.matchRecipeTag(recipe, stack) != null)
+                {
+                    ResourceLocation tagLocation = Utils.matchRecipeTag(recipe, stack);
+
+                    if(getBasinContent() == BasinContent.AIR || getBasinContent() == SauceRegistry.INSTANCE.basinContentFromString(recipe.get(tagLocation)))
+                    {
+                        if(getSquashedStack().isEmpty())
+                        {
+                            this.squashedStack = new ItemStack(stack.getItem(), 1);
+                        }
+                        else
+                        {
+                            setSquashedStackCount(getSquashedStackCount() + 1);
+                        }
+
+                        this.content = SauceRegistry.INSTANCE.basinContentFromString(recipe.get(tagLocation));
+                        decrStackSize(inventory, 0, 1);
+                        world.playSound(player, pos, SoundEvents.BLOCK_SLIME_BLOCK_FALL, SoundCategory.BLOCKS, 0.7F, 0.9F + (0.1F * world.rand.nextFloat()));
+                    }
+                } 8/
+            /*    if(Utils.recipeContainsTag(recipe, stack) && (getBasinContent() == BasinContent.AIR || getBasinContent() == SauceRegistry.INSTANCE.basinContentFromString(recipe.get(Ingredient.fromStacks(stack)))));
+                {
+                    if(getSquashedStack().isEmpty())
+                    {
+                        this.squashedStack = new ItemStack(stack.getItem(), 1);
+                    }
+                    else
+                    {
+                        setSquashedStackCount(getSquashedStackCount() + 1);
+                    }
+
+                    this.content = SauceRegistry.INSTANCE.basinContentFromString(recipe.get(Ingredient.fromStacks(stack)));
+                    decrStackSize(inventory, 0, 1);
+                    world.playSound(player, pos, SoundEvents.BLOCK_SLIME_BLOCK_FALL, SoundCategory.BLOCKS, 0.7F, 0.9F + (0.1F * world.rand.nextFloat()));
+                } */
+            }
+
+        /*    for(Map<Item, String> map : BasinRecipeRegistry.RECIPES_REGISTRY)
             {
                 if(map.containsKey(stack.getItem()) && (getBasinContent() == BasinContent.AIR || getBasinContent() == SauceRegistry.INSTANCE.basinContentFromString(map.get(stack.getItem()))))
                 {
@@ -334,8 +398,8 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                     decrStackSize(inventory, 0, 1);
                     world.playSound(player, pos, SoundEvents.BLOCK_SLIME_BLOCK_FALL, SoundCategory.BLOCKS, 0.7F, 0.9F + (0.1F * world.rand.nextFloat()));
                 }
-            }
-        }
+            } */
+       // }
     }
 
     // ======== FERMENTING ========

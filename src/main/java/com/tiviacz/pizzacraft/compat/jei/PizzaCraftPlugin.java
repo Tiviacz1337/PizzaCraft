@@ -8,6 +8,7 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -32,6 +33,7 @@ public class PizzaCraftPlugin implements IModPlugin
         registration.addRecipeCategories(new ChoppingRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new MortarRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new CrushingRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
+        //registration.addRecipeCategories(new PizzaIngredientsCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -48,6 +50,8 @@ public class PizzaCraftPlugin implements IModPlugin
         {
             registration.addRecipeCatalyst(new ItemStack(basin), CrushingRecipeCategory.ID);
         }
+
+     //   registration.addRecipeCatalyst(new ItemStack(ModBlocks.RAW_PIZZA.get()), PizzaIngredientsCategory.ID);
     }
 
     @Override
@@ -61,6 +65,8 @@ public class PizzaCraftPlugin implements IModPlugin
     {
         registration.addRecipes(findRecipes(ModRecipes.CHOPPING_RECIPE_SERIALIZER.get()), ChoppingRecipeCategory.ID);
         registration.addRecipes(findRecipes(ModRecipes.MORTAR_RECIPE_SERIALIZER.get()), MortarRecipeCategory.ID);
-        registration.addRecipes(CrushingRecipeCategory.getRecipes(), CrushingRecipeCategory.ID);
+        registration.addRecipes(findRecipes(ModRecipes.CRUSHING_RECIPE_SERIALIZER.get()), CrushingRecipeCategory.ID);
+        //registration.addRecipes(CrushingRecipeCategory.getRecipes(), CrushingRecipeCategory.ID);
+       // registration.addRecipes(PizzaIngredientsCategory.getIngredients(), PizzaIngredientsCategory.ID);
     }
 }

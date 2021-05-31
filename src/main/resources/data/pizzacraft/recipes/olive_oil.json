@@ -1,0 +1,13 @@
+{
+  "type": "pizzacraft:crushing_recipe",
+  "input":
+  {
+      "tag": "forge:fruits/olive"
+  },
+  "inputCount": 4,
+  "content": "olive_oil",
+  "result": {
+    "item": "pizzacraft:olive_oil",
+    "count": 1
+  }
+}
