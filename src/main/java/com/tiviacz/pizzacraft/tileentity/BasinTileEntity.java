@@ -1,15 +1,21 @@
 package com.tiviacz.pizzacraft.tileentity;
 
 import com.google.common.collect.Maps;
+import com.google.gson.JsonSyntaxException;
+import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.*;
-import com.tiviacz.pizzacraft.recipes.BasinRecipeRegistry;
+import com.tiviacz.pizzacraft.recipes.crushing.CrushingRecipe;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.*;
+import net.minecraft.item.BucketItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.MilkBucketItem;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.RedstoneParticleData;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.*;
 import net.minecraftforge.common.capabilities.Capability;
@@ -156,7 +162,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
         return map;
     }
 
-    public static List<Item> acceptableFermentingItems = Arrays.asList(Items.BROWN_MUSHROOM, Items.RED_MUSHROOM, Items.SPIDER_EYE, Items.FERMENTED_SPIDER_EYE, Items.POISONOUS_POTATO, Items.CRIMSON_FUNGUS, Items.WARPED_FUNGUS);
+    public static final ResourceLocation FERMENTING_ITEMS_TAG = new ResourceLocation(PizzaCraft.MODID, "fermenting_items");
 
     public ActionResultType onBlockActivated(PlayerEntity player, Hand hand)
     {
@@ -178,7 +184,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
             if(basinContentType == BasinContentType.MILK)
             {
                 //Check if player holds acceptable fermenting item, if so start fermenting process.
-                if(acceptableFermentingItems.contains(itemHeld.getItem()))
+                if(itemHeld.getItem().isIn(ItemTags.getCollection().getTagByID(FERMENTING_ITEMS_TAG)))
                 {
                     this.content = BasinContent.FERMENTING_MILK;
                     world.playSound(player, pos, SoundEvents.BLOCK_COMPOSTER_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
