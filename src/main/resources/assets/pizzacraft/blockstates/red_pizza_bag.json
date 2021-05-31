@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "open=false": { "model": "pizzacraft:block/red_pizza_bag" },
+    "open=true": { "model": "pizzacraft:block/red_pizza_bag_open"}
+  }
+}

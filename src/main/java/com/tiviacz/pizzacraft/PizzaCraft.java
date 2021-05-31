@@ -26,11 +26,14 @@ public class PizzaCraft
     public static final String MODID = "pizzacraft";
     public static final Logger LOGGER = LogManager.getLogger();
 
+    public static boolean curiosLoaded;
+
     public PizzaCraft()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onFinish);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onEnqueueIMC);
 
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -40,6 +43,11 @@ public class PizzaCraft
         ModContainerTypes.CONTAINER_TYPES.register(modEventBus);
         ModRecipes.SERIALIZERS.register(modEventBus);
         ModSounds.SOUND_EVENTS.register(modEventBus);
+        curiosLoaded = ModList.get().isLoaded("curios");
+    private void onEnqueueIMC(InterModEnqueueEvent event)
+    {
+        if(!curiosLoaded) return;
+        InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE, () -> SlotTypePreset.BACK.getMessageBuilder().build());
     }
 
     private void setup(final FMLCommonSetupEvent event)
@@ -51,6 +59,7 @@ public class PizzaCraft
     {
         //Screens
         ScreenManager.registerFactory(ModContainerTypes.PIZZA.get(), ScreenPizza::new);
+        ScreenManager.registerFactory(ModContainerTypes.PIZZA_BAG.get(), ScreenPizzaBag::new);
         //ScreenManager.registerFactory(ModContainerTypes.OVEN.get(), ScreenOven::new);
 
         //TESRs
@@ -63,6 +72,8 @@ public class PizzaCraft
         RenderTypeLookup.setRenderLayer(ModBlocks.PIZZA.get(), RenderType.getCutoutMipped());
         RenderTypeLookup.setRenderLayer(ModBlocks.RAW_PIZZA.get(), RenderType.getCutoutMipped());
         RenderTypeLookup.setRenderLayer(ModBlocks.OVEN.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.RED_PIZZA_BAG.get(), RenderType.getCutout());
+
         //Trees
         RenderTypeLookup.setRenderLayer(ModBlocks.OLIVE_SAPLING.get(), RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(ModBlocks.OLIVE_LEAVES.get(), RenderType.getCutoutMipped());

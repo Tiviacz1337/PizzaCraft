@@ -26,6 +26,9 @@ public class ModBlocks
     public static final RegistryObject<Block> MORTAR_AND_PESTLE = registerBlock("mortar_and_pestle", new MortarAndPestleBlock(AbstractBlock.Properties.create(Material.ROCK, MaterialColor.STONE).hardnessAndResistance(1.5F, 6.0F)));
     public static final RegistryObject<Block> OVEN = registerBlock("oven", new OvenBlock(AbstractBlock.Properties.create(Material.ROCK, MaterialColor.STONE).hardnessAndResistance(1.5F, 6.0F).notSolid().setLightLevel(getLightValueLit(9))));
 
+    //GEAR
+    public static final RegistryObject<Block> RED_PIZZA_BAG = registerBlock("red_pizza_bag", new PizzaBagBlock(AbstractBlock.Properties.from(Blocks.RED_WOOL)));
+
     //Pizza Boards
   /*  public static final RegistryObject<Block> OAK_PIZZA_BOARD = registerBlock("oak_pizza_board", new PizzaBoard(AbstractBlock.Properties.from(Blocks.OAK_PLANKS)));
     public static final RegistryObject<Block> BIRCH_PIZZA_BOARD = registerBlock("birch_pizza_board", new PizzaBoard(AbstractBlock.Properties.from(Blocks.BIRCH_PLANKS)));

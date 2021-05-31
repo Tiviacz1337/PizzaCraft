@@ -17,6 +17,8 @@
   "block.pizzacraft.cheese_block": "Cheese Block",
   "block.pizzacraft.oven": "Oven",
 
+  "block.pizzacraft.red_pizza_bag": "Red Pizza Bag",
+
   "block.pizzacraft.oak_pizza_board": "Oak Pizza Board",
 
   "block.pizzacraft.oak_chopping_board": "Oak Chopping Board",
@@ -108,6 +110,11 @@
   "item.pizzacraft.chef_shirt": "Chef Shirt",
   "item.pizzacraft.chef_leggings": "Chef Leggings",
   "item.pizzacraft.chef_boots": "Chef Boots",
+
+  "item.pizzacraft.pizza_delivery_cap": "Pizza Delivery Cap",
+  "item.pizzacraft.pizza_delivery_shirt": "Pizza Delivery Shirt",
+  "item.pizzacraft.pizza_delivery_leggings": "Pizza Delivery Leggings",
+  "item.pizzacraft.pizza_delivery_boots": "Pizza Delivery Boots",
 
   "information.pizzacraft.hunger": "%s%s Hunger per Slice (%s Total)",
   "information.pizzacraft.saturation": "%f Saturation per Slice (%f Total)",

@@ -44,6 +44,9 @@ public class ModTileEntityTypes
                     ModBlocks.BASALT_BASIN.get(),
                     ModBlocks.BLACKSTONE_BASIN.get()).build(null));
 
+    public static final RegistryObject<TileEntityType<PizzaBagTileEntity>> PIZZA_BAG = TILE_ENTITY_TYPES.register("pizza_bag",
+            () -> TileEntityType.Builder.create(PizzaBagTileEntity::new,
+                    ModBlocks.RED_PIZZA_BAG.get()).build(null));
     //public static final RegistryObject<TileEntityType<OvenTileEntity>> OVEN = TILE_ENTITY_TYPES.register("oven",
     //        () -> TileEntityType.Builder.create(OvenTileEntity::new, ModBlocks.OVEN.get()).build(null));
 }

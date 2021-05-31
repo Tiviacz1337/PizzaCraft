@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 public class ArmorMaterials implements IArmorMaterial
 {
     public static final ArmorMaterials CHEF = new ArmorMaterials("chef", 5, new int[]{1, 2, 3, 1}, 10, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.EMPTY);
+    public static final ArmorMaterials PIZZA_DELIVERY = new ArmorMaterials("pizza_delivery", 5, new int[]{1, 2, 3, 1}, 10, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.EMPTY);
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11};
     private SoundEvent equipSound;
