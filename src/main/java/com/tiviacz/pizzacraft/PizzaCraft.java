@@ -1,24 +1,33 @@
 package com.tiviacz.pizzacraft;
 
 import com.tiviacz.pizzacraft.client.gui.ScreenPizza;
+import com.tiviacz.pizzacraft.client.gui.ScreenPizzaBag;
 import com.tiviacz.pizzacraft.client.renderer.BasinRenderer;
 import com.tiviacz.pizzacraft.client.renderer.ChoppingBoardRenderer;
 import com.tiviacz.pizzacraft.client.renderer.MortarAndPestleRenderer;
 import com.tiviacz.pizzacraft.client.renderer.PizzaRenderer;
 import com.tiviacz.pizzacraft.init.*;
 import com.tiviacz.pizzacraft.recipes.BasinRecipeRegistry;
+import com.tiviacz.pizzacraft.worldgen.TreeGenerator;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotTypeMessage;
+import top.theillusivec4.curios.api.SlotTypePreset;
 
 @Mod("pizzacraft")
 public class PizzaCraft
@@ -43,7 +52,11 @@ public class PizzaCraft
         ModContainerTypes.CONTAINER_TYPES.register(modEventBus);
         ModRecipes.SERIALIZERS.register(modEventBus);
         ModSounds.SOUND_EVENTS.register(modEventBus);
+        ModFeatures.FEATURES.register(modEventBus);
+
         curiosLoaded = ModList.get().isLoaded("curios");
+    }
+
     private void onEnqueueIMC(InterModEnqueueEvent event)
     {
         if(!curiosLoaded) return;
@@ -53,6 +66,7 @@ public class PizzaCraft
     private void setup(final FMLCommonSetupEvent event)
     {
         ModAdvancements.register();
+        TreeGenerator.setup(event);
     }
 
     private void doClientStuff(final FMLClientSetupEvent event)

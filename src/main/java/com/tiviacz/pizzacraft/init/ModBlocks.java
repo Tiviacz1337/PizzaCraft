@@ -4,6 +4,7 @@ import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.blocks.*;
 import com.tiviacz.pizzacraft.blocks.crops.DoubleCropBlock;
 import com.tiviacz.pizzacraft.blocks.crops.SimpleCropBlock;
+import com.tiviacz.pizzacraft.worldgen.trees.OliveTree;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
