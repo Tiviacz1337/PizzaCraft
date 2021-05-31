@@ -5,11 +5,9 @@ import com.tiviacz.pizzacraft.client.renderer.PizzaItemStackRenderer;
 import com.tiviacz.pizzacraft.common.PizzaCraftItemGroup;
 import com.tiviacz.pizzacraft.items.*;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockNamedItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemTier;
+import net.minecraft.item.*;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -83,8 +81,7 @@ public class ModItems
     public static final RegistryObject<Item> PIZZA_SLICE = ITEMS.register("pizza_slice", () -> new PizzaSliceItem(pizzaProperties()));
 
     //Jugs
-    //public static final RegistryObject<Item> GLASS_JUG = ITEMS.register("glass_jug", () -> new Item(pizzaProperties().maxStackSize(16)));
-    public static final RegistryObject<Item> OLIVE_OIL = ITEMS.register("olive_oil", () -> new Item(pizzaProperties().maxStackSize(1)));
+    public static final RegistryObject<Item> OLIVE_OIL = ITEMS.register("olive_oil", () -> new SauceItem(pizzaProperties().maxStackSize(1).food(ModFoods.OLIVE_OIL), SauceType.NONE));
     public static final RegistryObject<Item> TOMATO_SAUCE = ITEMS.register("tomato_sauce", () -> new SauceItem(pizzaProperties().maxStackSize(1).food(ModFoods.TOMATO_SAUCE), SauceType.TOMATO));
 
     //Trees
@@ -124,7 +121,6 @@ public class ModItems
     public static final RegistryObject<Item> PEPPER_SLICE = ITEMS.register("pepper_slice", () -> new Item(pizzaProperties().food(ModFoods.PEPPER_SLICE)));
     public static final RegistryObject<Item> PINEAPPLE_SLICE = ITEMS.register("pineapple_slice", () -> new Item(pizzaProperties().food(ModFoods.PINEAPPLE_SLICE)));
     public static final RegistryObject<Item> TOMATO_SLICE = ITEMS.register("tomato_slice", () -> new Item(pizzaProperties().food(ModFoods.TOMATO_SLICE)));
-    //public static final RegistryObject<Item> CHEESE_SLICE = ITEMS.register("cheese_slice", () -> new Item(pizzaProperties().food(ModFoods.CHEESE_SLICE)));
 
     //Meats
     public static final RegistryObject<Item> HAM = ITEMS.register("ham", () -> new Item(pizzaProperties().food(ModFoods.HAM)));

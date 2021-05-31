@@ -78,14 +78,13 @@ public class ModBlocks
     public static final RegistryObject<Block> OLIVE_BOOKSHELF = registerBlock("olive_bookshelf", new OliveBookshelfBlock(AbstractBlock.Properties.from(Blocks.BOOKSHELF)));
 
     //Crops
-    public static final RegistryObject<Block> BROCCOLI = registerBlock("broccoli", new SimpleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.BROCCOLI_SEED.get()));
+    public static final RegistryObject<Block> BROCCOLI = registerBlock("broccoli", new SimpleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.BROCCOLI_SEEDS.get()));
     public static final RegistryObject<Block> CORNS = registerBlock("corns", new DoubleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.CORN.get()));
-    public static final RegistryObject<Block> CUCUMBERS = registerBlock("cucumbers", new SimpleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.CUCUMBER_SEED.get()));
+    public static final RegistryObject<Block> CUCUMBERS = registerBlock("cucumbers", new SimpleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.CUCUMBER_SEEDS.get()));
     public static final RegistryObject<Block> ONIONS = registerBlock("onions", new SimpleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.ONION.get()));
-    public static final RegistryObject<Block> PEPPERS = registerBlock("peppers", new SimpleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.PEPPER_SEED.get()));
-    public static final RegistryObject<Block> PINEAPPLE = registerBlock("pineapple", new SimpleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.PINEAPPLE_SEED.get()));
-    public static final RegistryObject<Block> TOMATOES = registerBlock("tomatoes", new SimpleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.TOMATO_SEED.get()));
-
+    public static final RegistryObject<Block> PEPPERS = registerBlock("peppers", new SimpleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.PEPPER_SEEDS.get()));
+    public static final RegistryObject<Block> PINEAPPLE = registerBlock("pineapple", new SimpleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.PINEAPPLE_SEEDS.get()));
+    public static final RegistryObject<Block> TOMATOES = registerBlock("tomatoes", new SimpleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.TOMATO_SEEDS.get()));
 
     //public static final RegistryObject<Block> BROCCOLI_CROP = registerBlock("broccoli_crop", new SimpleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.BROCCOLI_SEED.get()));
     //public static final RegistryObject<Block> CORN_CROP = registerBlock("corn_crop", new DoubleCropBlock(AbstractBlock.Properties.from(Blocks.WHEAT), () -> ModItems.CORN_SEED.get()));
