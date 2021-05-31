@@ -51,10 +51,7 @@ public class DoughBlock extends Block
         if(player.getHeldItem(handIn).getItem() == ModItems.ROLLING_PIN.get())
         {
             proceedKneeding(state, worldIn, pos, player);
-            if(!worldIn.isRemote)
-            {
-                stack.damageItem(1, player, e -> e.sendBreakAnimation(handIn));
-            }
+            stack.damageItem(1, player, e -> e.sendBreakAnimation(handIn));
             return ActionResultType.SUCCESS;
         }
         return ActionResultType.PASS;
