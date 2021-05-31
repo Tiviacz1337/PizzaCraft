@@ -84,13 +84,11 @@
 
   "item.pizzacraft.olive": "Olive",
 
-  "item.pizzacraft.broccoli_seed": "Broccoli Seed",
-  "item.pizzacraft.corn_seed": "Corn Seed",
-  "item.pizzacraft.cucumber_seed": "Cucumber Seed",
-  "item.pizzacraft.onion_seed": "Onion Seed",
-  "item.pizzacraft.pepper_seed": "Pepper Seed",
-  "item.pizzacraft.pineapple_seed": "Pineapple Seed",
-  "item.pizzacraft.tomato_seed": "Tomato Seed",
+  "item.pizzacraft.broccoli_seeds": "Broccoli Seeds",
+  "item.pizzacraft.cucumber_seeds": "Cucumber Seeds",
+  "item.pizzacraft.pepper_seeds": "Pepper Seeds",
+  "item.pizzacraft.pineapple_seeds": "Pineapple Seeds",
+  "item.pizzacraft.tomato_seeds": "Tomato Seeds",
 
   "item.pizzacraft.cucumber_slice": "Cucumber Slice",
   "item.pizzacraft.onion_slice": "Onion Slice",

@@ -138,13 +138,13 @@ public class ModItems
     public static final RegistryObject<Item> CHEESE = ITEMS.register("cheese", () -> new Item(pizzaProperties().food(ModFoods.CHEESE)));
 
     //Seeds
-    public static final RegistryObject<Item> BROCCOLI_SEED = ITEMS.register("broccoli_seed", () -> new BlockNamedItem(ModBlocks.BROCCOLI.get(), pizzaProperties()));
+    public static final RegistryObject<Item> BROCCOLI_SEEDS = ITEMS.register("broccoli_seeds", () -> new BlockNamedItem(ModBlocks.BROCCOLI.get(), pizzaProperties()));
     //public static final RegistryObject<Item> CORN_SEED = ITEMS.register("corn_seed", () -> new BlockNamedItem(ModBlocks.CORN_CROP.get(), pizzaProperties()));
-    public static final RegistryObject<Item> CUCUMBER_SEED = ITEMS.register("cucumber_seed", () -> new BlockNamedItem(ModBlocks.CUCUMBERS.get(), pizzaProperties()));
+    public static final RegistryObject<Item> CUCUMBER_SEEDS = ITEMS.register("cucumber_seeds", () -> new BlockNamedItem(ModBlocks.CUCUMBERS.get(), pizzaProperties()));
     //public static final RegistryObject<Item> ONION_SEED = ITEMS.register("onion_seed", () -> new BlockNamedItem(ModBlocks.ONION_CROP.get(), pizzaProperties()));
-    public static final RegistryObject<Item> PEPPER_SEED = ITEMS.register("pepper_seed", () -> new BlockNamedItem(ModBlocks.PEPPERS.get(), pizzaProperties()));
-    public static final RegistryObject<Item> PINEAPPLE_SEED = ITEMS.register("pineapple_seed", () -> new BlockNamedItem(ModBlocks.PINEAPPLE.get(), pizzaProperties()));
-    public static final RegistryObject<Item> TOMATO_SEED = ITEMS.register("tomato_seed", () -> new BlockNamedItem(ModBlocks.TOMATOES.get(), pizzaProperties()));
+    public static final RegistryObject<Item> PEPPER_SEEDS = ITEMS.register("pepper_seeds", () -> new BlockNamedItem(ModBlocks.PEPPERS.get(), pizzaProperties()));
+    public static final RegistryObject<Item> PINEAPPLE_SEEDS = ITEMS.register("pineapple_seeds", () -> new BlockNamedItem(ModBlocks.PINEAPPLE.get(), pizzaProperties()));
+    public static final RegistryObject<Item> TOMATO_SEEDS = ITEMS.register("tomato_seeds", () -> new BlockNamedItem(ModBlocks.TOMATOES.get(), pizzaProperties()));
 
     public static RegistryObject<Item> registerBlockItem(final String name, RegistryObject<Block> block, Item.Properties properties)
     {

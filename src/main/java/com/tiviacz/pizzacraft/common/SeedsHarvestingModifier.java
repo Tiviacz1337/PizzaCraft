@@ -1,6 +1,8 @@
 package com.tiviacz.pizzacraft.common;
 
 import com.google.gson.JsonObject;
+import com.tiviacz.pizzacraft.PizzaCraft;
+import com.tiviacz.pizzacraft.config.PizzaCraftConfig;
 import com.tiviacz.pizzacraft.init.ModItems;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
@@ -32,11 +34,12 @@ public class SeedsHarvestingModifier
 
     public static class SeedsModifier extends LootModifier
     {
-        private final List<ItemStack> possibleDrops = Arrays.asList(ModItems.BROCCOLI_SEED.get().getDefaultInstance(),
-            ModItems.CUCUMBER_SEED.get().getDefaultInstance(),
-            ModItems.PEPPER_SEED.get().getDefaultInstance(),
-            ModItems.PINEAPPLE_SEED.get().getDefaultInstance(),
-            ModItems.TOMATO_SEED.get().getDefaultInstance(),
+        private final List<ItemStack> possibleDrops = Arrays.asList(
+            ModItems.BROCCOLI_SEEDS.get().getDefaultInstance(),
+            ModItems.CUCUMBER_SEEDS.get().getDefaultInstance(),
+            ModItems.PEPPER_SEEDS.get().getDefaultInstance(),
+            ModItems.PINEAPPLE_SEEDS.get().getDefaultInstance(),
+            ModItems.TOMATO_SEEDS.get().getDefaultInstance(),
             ModItems.ONION.get().getDefaultInstance(),
             ModItems.CORN.get().getDefaultInstance());
 
@@ -48,11 +51,11 @@ public class SeedsHarvestingModifier
         @Override
         protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context)
         {
-            if(context.get(LootParameters.BLOCK_STATE).getBlock() == Blocks.JUNGLE_LEAVES)
+            if(PizzaCraftConfig.dropOliveFromJungleLeaves && context.get(LootParameters.BLOCK_STATE).getBlock() == Blocks.JUNGLE_LEAVES)
             {
                 generatedLoot.add(ModItems.OLIVE.get().getDefaultInstance());
             }
-            else
+            else if(PizzaCraftConfig.seedDrops)
             {
                 generatedLoot.add(possibleDrops.get(context.getRandom().nextInt(possibleDrops.size() - 1)));
             }
