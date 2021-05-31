@@ -2,8 +2,12 @@ package com.tiviacz.pizzacraft.blocks;
 
 import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.init.ModSounds;
+import com.tiviacz.pizzacraft.items.PizzaPeelItem;
 import com.tiviacz.pizzacraft.tileentity.PizzaHungerSystem;
 import com.tiviacz.pizzacraft.tileentity.PizzaTileEntity;
+import com.tiviacz.pizzacraft.util.FoodUtils;
+import com.tiviacz.pizzacraft.util.RenderUtils;
+import com.tiviacz.pizzacraft.util.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -70,9 +74,10 @@ public class RawPizzaBlock extends Block
                     worldIn.playSound(pos.getX(), pos.getY(), pos.getZ(), ModSounds.SIZZLING_SOUND.get(), SoundCategory.BLOCKS, 1.0F, 1.0F, false);
                 }
 
-                if(rand.nextInt(100) > 35)
+                if(rand.nextInt(2) == 0)
                 {
-                    worldIn.addParticle(ParticleTypes.POOF, pos.getX() + 0.5D, pos.getY() + 0.4D, pos.getZ() + 0.5D, 0D, 0.025D, 0D);
+                    double[] particlePos = RenderUtils.getPosRandomAboveBlockHorizontal(worldIn, pos);
+                    worldIn.addParticle(ParticleTypes.POOF, particlePos[0], pos.getY() + 0.4D, particlePos[1], 0D, 0.025D, 0D);
                 }
             }
         }
@@ -83,7 +88,7 @@ public class RawPizzaBlock extends Block
     {
         TileEntity tile = worldIn.getTileEntity(pos);
 
-        if(player.getHeldItem(handIn).getItem() == ModItems.PIZZA_PEEL.get() && worldIn.getTileEntity(pos) instanceof PizzaTileEntity)
+        if(player.getHeldItem(handIn).getItem() instanceof PizzaPeelItem && worldIn.getTileEntity(pos) instanceof PizzaTileEntity)
         {
             ItemStack stack = asItem().getDefaultInstance();
             ((PizzaTileEntity)worldIn.getTileEntity(pos)).writeToItemStack(stack);
@@ -108,7 +113,7 @@ public class RawPizzaBlock extends Block
     @Override
     public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid)
     {
-        if(world.getTileEntity(pos) instanceof PizzaTileEntity && !player.isCreative() && player.getHeldItemMainhand().getItem() != ModItems.PIZZA_PEEL.get())
+        if(world.getTileEntity(pos) instanceof PizzaTileEntity && !player.isCreative() && !(player.getHeldItemMainhand().getItem() instanceof PizzaPeelItem))
         {
             PizzaTileEntity tileEntity = (PizzaTileEntity)world.getTileEntity(pos);
 
@@ -116,11 +121,13 @@ public class RawPizzaBlock extends Block
             {
                 if(!tileEntity.getInventory().getStackInSlot(i).isEmpty())
                 {
-                    world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), tileEntity.getInventory().getStackInSlot(i)));
+                    Utils.spawnItemStackInWorld(world, pos, tileEntity.getInventory().getStackInSlot(i));
+                    //world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), tileEntity.getInventory().getStackInSlot(i)));
                 }
             }
 
-            world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.DOUGH.get())));
+            Utils.spawnItemStackInWorld(world, pos, new ItemStack(ModItems.DOUGH.get()));
+           // world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.DOUGH.get())));
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
@@ -130,21 +137,6 @@ public class RawPizzaBlock extends Block
     {
         if(!(newState.getBlock() instanceof PizzaBlock))
         {
-       /*     if(world.getTileEntity(pos) instanceof PizzaTileEntity)
-            {
-                PizzaTileEntity tileEntity = (PizzaTileEntity)world.getTileEntity(pos);
-
-                for(int i = 0; i < tileEntity.getInventory().getSlots(); i++)
-                {
-                    if(!tileEntity.getInventory().getStackInSlot(i).isEmpty())
-                    {
-                        world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), tileEntity.getInventory().getStackInSlot(i)));
-                    }
-                }
-
-                world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.DOUGH.get())));
-            } */
-
             super.onReplaced(state, world, pos, newState, isMoving);
         }
     }
@@ -172,7 +164,6 @@ public class RawPizzaBlock extends Block
         }
         return this.getBlock().getPickBlock(state, target, world, pos, player);
     }
-
 
     @Override
     public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos)
@@ -202,28 +193,23 @@ public class RawPizzaBlock extends Block
     @OnlyIn(Dist.CLIENT)
     public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
     {
-       // if(stack.getTag() != null)
-        //{
-            ItemStackHandler handler = new ItemStackHandler(9);
+        PizzaBlock.addInformationForPizza(stack, tooltip);
+ /*       ItemStackHandler handler = Utils.createHandlerFromStack(stack, 9);
 
-            if(stack.getTag() != null)
+        for(int i = 0; i < handler.getSlots(); i++)
+        {
+            if(!handler.getStackInSlot(i).isEmpty())
             {
-                handler.deserializeNBT(stack.getTag().getCompound("Inventory"));
+                ItemStack stackInSlot = handler.getStackInSlot(i);
+                TranslationTextComponent translatedText = new TranslationTextComponent(stackInSlot.getTranslationKey());
+                StringTextComponent textComponent = new StringTextComponent(stackInSlot.getCount() > 1 ? stackInSlot.getCount() + "x " : "");
+                tooltip.add(textComponent.append(translatedText).mergeStyle(TextFormatting.BLUE));
             }
-
-            for(int i = 0; i < handler.getSlots(); i++)
-            {
-                if(!handler.getStackInSlot(i).isEmpty())
-                {
-                    ItemStack stackInSlot = handler.getStackInSlot(i);
-                    TranslationTextComponent translatedText = new TranslationTextComponent(stackInSlot.getTranslationKey());
-                    StringTextComponent textComponent = new StringTextComponent(stackInSlot.getCount() > 1 ? stackInSlot.getCount() + "x " : "");
-                    tooltip.add(textComponent.append(translatedText).mergeStyle(TextFormatting.BLUE));
-                }
-            }
-
-            PizzaHungerSystem instance = new PizzaHungerSystem(handler);
-            tooltip.add(new StringTextComponent("Restores: " + instance.getHunger() / 6 + " Hunger per Slice").mergeStyle(TextFormatting.BLUE));
-       // }
+        }
+        PizzaHungerSystem instance = new PizzaHungerSystem(handler);
+        tooltip.add(new TranslationTextComponent("information.pizzacraft.hunger", FoodUtils.getHungerForSlice(instance.getHunger(), false), ((instance.getHunger() % 7 != 0) ? "(+" + instance.getHunger() % 7 + ")" : "")).mergeStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("information.pizzacraft.saturation", (float)(Math.round(instance.getSaturation() / 7 * 100.0) / 100.0)).mergeStyle(TextFormatting.BLUE));
+        //tooltip.add(new StringTextComponent("Restores: " + FoodUtils.getHungerForSlice(instance.getHunger(), false) + ((instance.getHunger() % 7 != 0) ? " (+" + instance.getHunger() % 7 + ")" : "") + " Hunger per Slice").mergeStyle(TextFormatting.BLUE));
+        //tooltip.add(new StringTextComponent("Restores: " + (float)(Math.round(instance.getSaturation() / 7 * 100.0) / 100.0) + " Saturation per Slice").mergeStyle(TextFormatting.BLUE)); */
     }
 }

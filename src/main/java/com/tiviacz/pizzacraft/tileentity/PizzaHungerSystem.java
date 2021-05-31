@@ -8,12 +8,16 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemStackHandler;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class PizzaHungerSystem //#TODO needs tweaks
 {
+    public static final int BASE_HUNGER = 7;
+    public static final Float BASE_SATURATION = 2.8F;
+
     private final ItemStackHandler handler;
     private final NonNullList<ItemStack> ingredients;
 
@@ -25,7 +29,7 @@ public class PizzaHungerSystem //#TODO needs tweaks
     {
         this.handler = handler;
         this.ingredients = setupIngredients();
-        this.effects = Collections.emptyList();
+        this.effects = new ArrayList<>();
         execute();
     }
 
@@ -45,9 +49,9 @@ public class PizzaHungerSystem //#TODO needs tweaks
 
     public void execute()
     {
-        int baseHunger = getBaseHungerValue();
-        float baseSaturation = getBaseSaturationValue();
-        this.effects = Collections.emptyList();
+        int baseHunger = BASE_HUNGER;
+        float baseSaturation = BASE_SATURATION;
+        List<Pair<EffectInstance, Float>> effects = new ArrayList<>();
 
         for(ItemStack foodStack : ingredients)
         {
@@ -60,8 +64,8 @@ public class PizzaHungerSystem //#TODO needs tweaks
 
                 if(!food.getEffects().isEmpty())
                 {
-                    List<Pair<EffectInstance, Float>> effects = food.getEffects();
-                    this.effects.addAll(effects);
+                    List<Pair<EffectInstance, Float>> foodEffects = food.getEffects();
+                    effects.addAll(foodEffects);
                 }
             }
         }
@@ -82,11 +86,12 @@ public class PizzaHungerSystem //#TODO needs tweaks
             }
         } */
 
-        baseHunger += 2;
-        baseSaturation += 1.0F;
+        //baseHunger += 2;
+        //baseSaturation += 1.0F;
 
         this.hunger = baseHunger;
         this.saturation = baseSaturation;
+        this.effects = effects;
     }
 
     public int getHunger()
@@ -107,15 +112,5 @@ public class PizzaHungerSystem //#TODO needs tweaks
     public void applyModifiersForIngredients(NonNullList<ItemStack> ingredients)
     {
 
-    }
-
-    public int getBaseHungerValue()
-    {
-        return 6; //3 Shanks
-    }
-
-    public float getBaseSaturationValue()
-    {
-        return 3.0F;
     }
 }

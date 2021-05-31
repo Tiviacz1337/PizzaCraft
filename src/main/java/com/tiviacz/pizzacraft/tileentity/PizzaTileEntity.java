@@ -1,13 +1,14 @@
 package com.tiviacz.pizzacraft.tileentity;
 
-import com.tiviacz.pizzacraft.PizzaCraft;
+import com.mojang.datafixers.util.Pair;
 import com.tiviacz.pizzacraft.blocks.OvenBlock;
 import com.tiviacz.pizzacraft.blocks.PizzaBlock;
 import com.tiviacz.pizzacraft.blocks.RawPizzaBlock;
 import com.tiviacz.pizzacraft.client.PizzaBakedModel;
 import com.tiviacz.pizzacraft.container.PizzaContainer;
 import com.tiviacz.pizzacraft.init.*;
-import com.tiviacz.pizzacraft.items.SauceItem;
+import com.tiviacz.pizzacraft.util.FoodUtils;
+import com.tiviacz.pizzacraft.util.NBTUtils;
 import com.tiviacz.pizzacraft.util.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
@@ -33,7 +34,6 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,13 +48,14 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
     private final int baseFreshTime = 1800;
     private int selectedSlot = 0;
     private Pair<Integer, Float> refillment = Pair.of(0, 0.0F);
+    private List<Pair<EffectInstance, Float>> effects = new ArrayList<>();
     private final LazyOptional<ItemStackHandler> inventoryCapability = LazyOptional.of(() -> this.inventory);
 
     private final String LEFT_BAKING_TIME = "LeftBakingTime";
     private final String LEFT_FRESH_TIME = "LeftFreshTime";
-    //private final String SELECTED_SLOT = "SelectedSlot";
     private final String HUNGER = "Hunger";
     private final String SATURATION = "Saturation";
+    private final String EFFECTS = "Effects";
 
     public PizzaTileEntity()
     {
@@ -68,8 +69,8 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
         this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
         this.leftBakingTime = compound.getInt(LEFT_BAKING_TIME);
         this.leftFreshTime = compound.getInt(LEFT_FRESH_TIME);
-        //this.selectedSlot = compound.getInt(SELECTED_SLOT);
         this.refillment = Pair.of(compound.getInt(HUNGER), compound.getFloat(SATURATION));
+        this.effects = NBTUtils.readEffectsFromTag(compound);
     }
 
     @Override
@@ -79,9 +80,9 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
         compound.put(INVENTORY, this.inventory.serializeNBT());
         compound.putInt(LEFT_BAKING_TIME, this.leftBakingTime);
         compound.putInt(LEFT_FRESH_TIME, this.leftFreshTime);
-        //compound.putInt(SELECTED_SLOT, this.selectedSlot);
-        compound.putInt(HUNGER, this.refillment.getLeft());
-        compound.putFloat(SATURATION, this.refillment.getRight());
+        compound.putInt(HUNGER, this.refillment.getFirst());
+        compound.putFloat(SATURATION, this.refillment.getSecond());
+        compound.put(EFFECTS, NBTUtils.writeEffectsToTag(this.effects));
         return compound;
     }
 
@@ -152,7 +153,12 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
                     {
                         ItemStack firstEmpty = inventory.getStackInSlot(i);
 
-                        if(Utils.checkItemStacksAndCount(firstEmpty, new ItemStack(stack.getItem(), 1), PizzaLayers.getMaxStackSizeMap().get(firstEmpty.getItem()) == null ? 0 : PizzaLayers.getMaxStackSizeMap().get(firstEmpty.getItem())) || firstEmpty.isEmpty())
+                      /*  if(Utils.checkItemStacksAndCount(firstEmpty, new ItemStack(stack.getItem(), 1), PizzaLayers.getMaxStackSizeMap().get(firstEmpty.getItem()) == null ? 0 : PizzaLayers.getMaxStackSizeMap().get(firstEmpty.getItem())) || firstEmpty.isEmpty())
+                        {
+                            this.selectedSlot = i;
+                            break;
+                        } */
+                        if(Utils.checkItemStacksAndCount(firstEmpty, new ItemStack(stack.getItem(), 1), PizzaLayers.getMaxStackSizeForStack(stack)) || firstEmpty.isEmpty())
                         {
                             this.selectedSlot = i;
                             break;
@@ -199,6 +205,22 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
             }
         }
         return ActionResultType.FAIL;
+    }
+
+    public void writeToSliceItemStack(ItemStack stack, int sliceNumber)
+    {
+        CompoundNBT compound = new CompoundNBT();
+        if(isEmpty(inventory))
+        {
+            return;
+        }
+        compound.put(INVENTORY, this.inventory.serializeNBT());
+
+        if(FoodUtils.requiresAddition(this.refillment.getFirst(), sliceNumber))
+        {
+            compound.putBoolean("RequiresAddition", true);
+        }
+        stack.setTag(compound);
     }
 
     public void writeToItemStack(ItemStack stack)
@@ -327,28 +349,19 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
     {
         PizzaHungerSystem instance = new PizzaHungerSystem(this.inventory);
         this.refillment = Pair.of(instance.getHunger(), instance.getSaturation());
-
-    /*    int baseHunger = 6;
-        float baseSaturation = 3.0F;
-
-        for(int i = 0; i < inventory.getSlots(); i++)
-        {
-            ItemStack foodStack = inventory.getStackInSlot(i);
-
-            if(foodStack.getItem().isFood())
-            {
-                Food food = foodStack.getItem().getFood();
-                baseHunger += (food.getHealing() * foodStack.getCount()) + 2;
-                baseSaturation += (food.getSaturation() * foodStack.getCount()) + 1F;
-            }
-        }
-        this.refillment = Pair.of(baseHunger, baseSaturation); */
+        this.effects = instance.getEffects();
     }
 
-    public List<com.mojang.datafixers.util.Pair<EffectInstance, Float>> getEffects()
+   // public List<com.mojang.datafixers.util.Pair<EffectInstance, Float>> getEffects()
+   // {
+   //     PizzaHungerSystem instance = new PizzaHungerSystem(this.inventory);
+    //    this.effects = instance.getEffects();
+        //return instance.getEffects();
+  //  }
+
+    public List<Pair<EffectInstance, Float>> getEffects()
     {
-        PizzaHungerSystem instance = new PizzaHungerSystem(this.inventory);
-        return instance.getEffects();
+        return this.effects;
     }
 
     public Pair<Integer, Float> getRefillmentValues()
@@ -356,14 +369,14 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
         return this.refillment;
     }
 
-    public int getHungerForSlice()
+    public int getHungerForSlice(int slice)
     {
-        return this.refillment.getLeft() / 6;
+        return FoodUtils.getHungerForSlice(this.refillment.getFirst(), slice);
     }
 
     public float getSaturationForSlice()
     {
-        return this.refillment.getRight() / 6;
+        return this.refillment.getSecond() / 7;
     }
 
     // ======== ITEMHANDLER ========
@@ -380,7 +393,14 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
 
     public boolean canAddIngredient(ItemStack stack, int slot)
     {
-        return PizzaLayers.getItemToLayerMap().containsKey(stack.getItem());
+        for(ResourceLocation tagLocation : stack.getItem().getTags())
+        {
+            if(PizzaLayers.VALID_TAGS.contains(tagLocation))
+            {
+                return true;
+            }
+        }
+        return false;
     }
   /*  public boolean canAddIngredient(ItemStack stack, int slot)
     {
@@ -419,15 +439,16 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
     {
         return new ItemStackHandler(9)
         {
+            @Override
             protected int getStackLimit(int slot, @Nonnull ItemStack stack)
             {
-                return Math.min(getSlotLimit(slot), PizzaLayers.getMaxStackSizeMap().get(stack.getItem()) == null ? 0 : PizzaLayers.getMaxStackSizeMap().get(stack.getItem()));
+                return PizzaLayers.getMaxStackSizeForStack(stack);
             }
 
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack)
             {
-                if(isRaw() || !isBaking())
+                if(isRaw() && !isBaking())
                 {
                     return canAddIngredient(stack, slot);
                 }
@@ -437,16 +458,9 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
             @Override
             protected void onContentsChanged(int slot)
             {
-                /*if(getStackInSlot(0).isEmpty())
-                {
-                    for(int i = 1; i < inventory.getSlots(); i++)
-                    {
-                        dropItemStack(i);
-                    }
-                } */
-
                 markDirty();
                 requestModelDataUpdate();
+                setHungerAndSaturationRefillment();
             }
         };
     }
