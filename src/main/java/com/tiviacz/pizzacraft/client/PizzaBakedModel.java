@@ -5,8 +5,10 @@ import com.tiviacz.pizzacraft.init.PizzaLayers;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -169,7 +171,23 @@ public class PizzaBakedModel implements IBakedModel
                 //rotation += 90;
                 for(Direction dir : Direction.values())
                 {
-                    ResourceLocation layerLocation = isRaw ? PizzaLayers.getItemToRawLayerMap().get(inventory.getStackInSlot(i).getItem()) : PizzaLayers.getItemToLayerMap().get(inventory.getStackInSlot(i).getItem());
+                    ResourceLocation layerLocation = null; // = new ResourceLocation("");
+
+                    for(ResourceLocation location : inventory.getStackInSlot(i).getItem().getTags())
+                    {
+                        if(PizzaLayers.VALID_TAGS.contains(location))
+                        {
+                            layerLocation = isRaw ? PizzaLayers.getTagToRawLayer().get(location) : PizzaLayers.getTagToLayer().get(location);
+                        }
+                        //layerLocation = isRaw ? PizzaLayers.TAG_TO_RAW_LAYER.get(location) : PizzaLayers.getTagToLayer().get(location);
+                    }
+
+                    if(layerLocation == null)
+                    {
+                        layerLocation = MissingTextureSprite.getLocation();
+                    }
+
+                    //layerLocation = isRaw ? PizzaLayers.getItemToRawLayerMap().get(inventory.getStackInSlot(i).getItem()) : PizzaLayers.getTagToLayer().get(inventory.getStackInSlot(i).getItem().getTags())//PizzaLayers.getItemToLayerMap().get(inventory.getStackInSlot(i).getItem());
                     builder.add(getQuadForLayer(layerLocation, dir, rotation, UV[(rotation / 90) % 4][integerProperty], VECTORS[integerProperty][0], VECTORS[integerProperty][1], VECTORS[integerProperty][2], VECTORS[7][0], VECTORS[7][1], VECTORS[7][2]));
                 }
             }
