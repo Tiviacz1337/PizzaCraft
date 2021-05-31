@@ -201,6 +201,29 @@ public class PizzaLayers
 
         MAX_STACK_SIZE.put(ModItems.TOMATO_SAUCE.get(), 1);
     }
+
+    public static final List<ResourceLocation> VALID_TAGS = Arrays.asList
+    (
+            createResourceLocation("ingredients/cheese_layer"),
+
+            createResourceLocation("ingredients/vegetables/broccoli_layer"),
+            createResourceLocation("ingredients/vegetables/corn_layer"),
+            createResourceLocation("ingredients/vegetables/cucumber_layer"),
+            createResourceLocation("ingredients/vegetables/onion_layer"),
+            createResourceLocation("ingredients/vegetables/pepper_layer"),
+            createResourceLocation("ingredients/vegetables/tomato_layer"),
+
+            createResourceLocation("ingredients/fruits/pineapple_layer"),
+            createResourceLocation("ingredients/fruits/olive_layer"),
+
+            createResourceLocation("ingredients/mushrooms/mushroom_layer"),
+
+            createResourceLocation("ingredients/meats/ham_layer"),
+            createResourceLocation("ingredients/meats/chicken_layer"),
+
+            createResourceLocation("ingredients/sauces/tomato_sauce_layer")
+    );
+
     public static final List<ResourceLocation> VALID_ITEM_TAGS = Arrays.asList
     (
             createResourceLocation("ingredients/vegetables/broccoli_layer"),

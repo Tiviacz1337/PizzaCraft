@@ -1,0 +1,8 @@
+{
+  "parent": "forge:item/default",
+  "loader": "pizzacraft:pizza_slice_loader",
+  "textures": {
+    "particle": "pizzacraft:item/pizza_slice",
+    "base": "pizzacraft:item/pizza_slice"
+  }
+}
