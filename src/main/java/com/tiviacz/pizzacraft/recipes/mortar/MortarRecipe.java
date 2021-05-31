@@ -57,7 +57,6 @@ public class MortarRecipe implements IRecipe<IInventory>
                 inputs.add(itemstack);
             }
         }
-
         return i == this.inputs.size() && RecipeMatcher.findMatches(inputs, this.inputs) != null;
     }
 
