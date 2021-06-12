@@ -10,6 +10,8 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.FoliageColors;
 import net.minecraft.world.biome.BiomeColors;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
@@ -27,6 +29,7 @@ public class CommonEventHandler
         event.getRegistry().register(new SeedsHarvestingModifier.SeedsHarvestingSerializer().setRegistryName(new ResourceLocation(PizzaCraft.MODID,"seeds_harvesting")));
     }
 
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void registerBlockItemColors(ColorHandlerEvent.Item event)
     {
