@@ -192,10 +192,10 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                     if(!player.isCreative())
                     {
                         itemHeld.shrink(1);
-                        if(player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE, 1)))
-                        {
-                            world.addEntity(new ItemEntity(world, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, new ItemStack(Items.GLASS_BOTTLE, 1)));
-                        }
+                       // if(player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE, 1)))
+                       // {
+                       //     world.addEntity(new ItemEntity(world, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, new ItemStack(Items.GLASS_BOTTLE, 1)));
+                       // }
                     }
                     return ActionResultType.SUCCESS;
                 }
