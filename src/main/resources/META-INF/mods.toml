@@ -1,6 +1,6 @@
 modLoader="javafml"
 
-loaderVersion="[35,)"
+loaderVersion="[36,)"
 
 license="All Rights Reserved"
 
@@ -10,7 +10,7 @@ issueTrackerURL="https://github.com/Tiviacz1337/PizzaCraft/issues"
 
 modId="pizzacraft"
 
-version="3.0.5"
+version="3.0.6"
 
 displayName="PizzaCraft"
 
@@ -21,3 +21,17 @@ displayURL="https://www.curseforge.com/minecraft/mc-mods/pizzacraft"
 authors="Tiviacz1337, SirSquidly"
 
 description='Brings the tasty pizza to Minecraft!'
+
+[[dependencies.pizzacraft]]
+    modId="forge"
+    mandatory=true
+    versionRange="[36.2.2,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.pizzacraft]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.5,)"
+    ordering="NONE"
+    side="BOTH"

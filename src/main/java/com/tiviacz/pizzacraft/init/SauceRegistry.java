@@ -45,7 +45,7 @@ public class SauceRegistry
 
     public BasinContent basinContentFromString(String name)
     {
-        System.out.println(this.basinContents.keySet());
+       // System.out.println(this.basinContents.keySet());
         return this.basinContents.get(name);
     }
 
