@@ -118,6 +118,7 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
             }
 
             getStoredStack().shrink(1);
+            this.markDirty();
         }
     }
 

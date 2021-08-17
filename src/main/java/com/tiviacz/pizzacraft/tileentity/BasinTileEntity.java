@@ -177,6 +177,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
             this.content = BasinContent.AIR;
             this.squashedStack = ItemStack.EMPTY;
             world.playSound(player, pos, SoundEvents.BLOCK_FUNGUS_PLACE, SoundCategory.BLOCKS, 0.8F, 0.9F + world.rand.nextFloat());
+            this.markDirty();
             return ActionResultType.SUCCESS;
         }
         if(hand == Hand.MAIN_HAND)
@@ -197,6 +198,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                        //     world.addEntity(new ItemEntity(world, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, new ItemStack(Items.GLASS_BOTTLE, 1)));
                        // }
                     }
+                    this.markDirty();
                     return ActionResultType.SUCCESS;
                 }
 
@@ -206,12 +208,13 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                     this.content = BasinContent.AIR;
                     itemHeld.shrink(1);
 
-                    if(player.addItemStackToInventory(new ItemStack(Items.MILK_BUCKET)))
+                    if(!player.addItemStackToInventory(new ItemStack(Items.MILK_BUCKET)))
                     {
                         world.addEntity(new ItemEntity(player.world, getPos().getX(), getPos().getY(), getPos().getZ(), new ItemStack(Items.MILK_BUCKET)));
                     }
 
                     world.playSound(player, pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 0.8F, 1.0F);
+                    this.markDirty();
                     return ActionResultType.SUCCESS;
                 }
             }
@@ -231,6 +234,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                         }
 
                         world.playSound(player, pos, SoundEvents.BLOCK_FUNGUS_PLACE, SoundCategory.BLOCKS, 0.8F, 0.9F + world.rand.nextFloat());
+                        this.markDirty();
                         return ActionResultType.SUCCESS;
                     }
 
@@ -245,6 +249,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                         }
 
                         world.playSound(player, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 0.8F, 1.0F);
+                        this.markDirty();
                         return ActionResultType.SUCCESS;
                     }
 
