@@ -20,6 +20,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -157,7 +158,7 @@ public class PizzaBagTileEntity extends BaseTileEntity implements INamedContaine
 
     @Override
     public ITextComponent getDisplayName() {
-        return this.getBlockState().getBlock().getTranslatedName();
+        return new TranslationTextComponent(this.getBlockState().getBlock().getTranslationKey());
     }
 
     @Nullable
