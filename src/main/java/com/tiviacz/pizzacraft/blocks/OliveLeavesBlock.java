@@ -83,6 +83,12 @@ public class OliveLeavesBlock extends LeavesBlock implements IGrowable
     }
 
     @Override
+    public boolean ticksRandomly(BlockState state)
+    {
+        return super.ticksRandomly(state) || this.getAge(state) < this.getMaxAge();
+    }
+
+    @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
     {
         builder.add(AGE);
