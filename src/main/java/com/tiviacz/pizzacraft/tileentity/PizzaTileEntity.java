@@ -26,6 +26,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
@@ -479,7 +480,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
     @Override
     public ITextComponent getDisplayName()
     {
-        return getBlockState().getBlock().getTranslatedName();
+        return new TranslationTextComponent(getBlockState().getBlock().getTranslationKey());
     }
 
     @Nullable
