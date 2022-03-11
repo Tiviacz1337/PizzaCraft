@@ -30,10 +30,10 @@ public class ChefArmor extends ArmorItem
     @Override
     public void onArmorTick(ItemStack stack, World world, PlayerEntity player)
     {
-        if(player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == ModItems.CHEF_HAT.get() && player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == ModItems.CHEF_SHIRT.get()
-                && player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == ModItems.CHEF_LEGGINGS.get() && player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == ModItems.CHEF_BOOTS.get())
+        if(player.getItemBySlot(EquipmentSlotType.HEAD).getItem() == ModItems.CHEF_HAT.get() && player.getItemBySlot(EquipmentSlotType.CHEST).getItem() == ModItems.CHEF_SHIRT.get()
+                && player.getItemBySlot(EquipmentSlotType.LEGS).getItem() == ModItems.CHEF_LEGGINGS.get() && player.getItemBySlot(EquipmentSlotType.FEET).getItem() == ModItems.CHEF_BOOTS.get())
         {
-            player.addPotionEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 1, 0, false, false));
+            player.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 1, 0, false, false));
         }
     }
 
@@ -46,12 +46,12 @@ public class ChefArmor extends ArmorItem
         {
             ChefHatModel hat = new ChefHatModel();
 
-            hat.box1.showModel = armorSlot == EquipmentSlotType.HEAD;
-            hat.box2.showModel = armorSlot == EquipmentSlotType.HEAD;
+            hat.box1.visible = armorSlot == EquipmentSlotType.HEAD;
+            hat.box2.visible = armorSlot == EquipmentSlotType.HEAD;
 
-            hat.isChild = _default.isChild;
-            hat.isSitting = _default.isSitting;
-            hat.isSneak = _default.isSneak;
+            hat.young = _default.young;
+            hat.riding = _default.riding;
+            hat.crouching = _default.crouching;
             hat.rightArmPose = _default.rightArmPose;
             hat.leftArmPose = _default.leftArmPose;
 

@@ -20,7 +20,7 @@ public class SauceItem extends Item
     }
 
     @Override
-    public UseAction getUseAction(ItemStack stack)
+    public UseAction getUseAnimation(ItemStack stack)
     {
         return UseAction.DRINK;
     }

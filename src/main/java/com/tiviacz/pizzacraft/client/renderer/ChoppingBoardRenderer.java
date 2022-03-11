@@ -1,7 +1,6 @@
 package com.tiviacz.pizzacraft.client.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.tiviacz.pizzacraft.blocks.ChoppingBoardBlock;
 import com.tiviacz.pizzacraft.tileentity.ChoppingBoardTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -30,10 +29,10 @@ public class ChoppingBoardRenderer extends TileEntityRenderer<ChoppingBoardTileE
 
         if(!stack.isEmpty())
         {
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
 
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-            boolean blockItem = itemRenderer.getItemModelWithOverrides(stack, tileEntityIn.getWorld(), null).isGui3d();
+            boolean blockItem = itemRenderer.getModel(stack, tileEntityIn.getLevel(), null).isGui3d();
 
             if(tileEntityIn.isItemCarvingBoard())
             {
@@ -45,11 +44,11 @@ public class ChoppingBoardRenderer extends TileEntityRenderer<ChoppingBoardTileE
                 matrixStackIn.translate(x, stack.getItem() instanceof PickaxeItem || stack.getItem() instanceof HoeItem ? 0.225D : 0.25D, z);
 
                 // Rotate item to face the cutting board's front side
-                float f = -direction.getHorizontalAngle();
-                matrixStackIn.rotate(Vector3f.YP.rotationDegrees(f));
+                float f = -direction.toYRot();
+                matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(f));
 
                 // Rotate item to be carved on the surface, A little less so for hoes and pickaxes.
-                matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(stack.getItem() instanceof PickaxeItem || stack.getItem() instanceof HoeItem ? 225.0F : 180.0F));
+                matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(stack.getItem() instanceof PickaxeItem || stack.getItem() instanceof HoeItem ? 225.0F : 180.0F));
 
                 // Resize the item
                 matrixStackIn.scale(0.6F, 0.6F, 0.6F);
@@ -60,8 +59,8 @@ public class ChoppingBoardRenderer extends TileEntityRenderer<ChoppingBoardTileE
                 matrixStackIn.translate(0.5D, 0.25D, 0.5D);
 
                 // Rotate block to face the cutting board's front side
-                float f = -direction.getHorizontalAngle();
-                matrixStackIn.rotate(Vector3f.YP.rotationDegrees(f));
+                float f = -direction.toYRot();
+                matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(f));
 
                 // Resize the block
                 matrixStackIn.scale(0.75F, 0.75F, 0.75F);
@@ -72,18 +71,18 @@ public class ChoppingBoardRenderer extends TileEntityRenderer<ChoppingBoardTileE
                 matrixStackIn.translate(0.5D, 0.075D, 0.5D);
 
                 // Rotate item to face the cutting board's front side
-                float f = -direction.getHorizontalAngle();
-                matrixStackIn.rotate(Vector3f.YP.rotationDegrees(f));
+                float f = -direction.toYRot();
+                matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(f));
 
                 // Rotate item flat on the cutting board. Use X and Y from now on
-                matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90.0F));
+                matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(90.0F));
 
                 // Resize the item
                 matrixStackIn.scale(0.6F, 0.6F, 0.6F);
             }
 
-            itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
-            matrixStackIn.pop();
+            itemRenderer.renderStatic(stack, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+            matrixStackIn.popPose();
         }
     }
 }

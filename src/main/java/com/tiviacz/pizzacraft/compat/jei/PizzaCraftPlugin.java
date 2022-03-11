@@ -8,7 +8,6 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -24,7 +23,7 @@ public class PizzaCraftPlugin implements IModPlugin
 {
     private static List<IRecipe<?>> findRecipes(IRecipeSerializer<?> serializer)
     {
-        return Minecraft.getInstance().world.getRecipeManager().getRecipes().stream().filter(r -> r.getSerializer() == serializer).collect(Collectors.toList());
+        return Minecraft.getInstance().level.getRecipeManager().getRecipes().stream().filter(r -> r.getSerializer() == serializer).collect(Collectors.toList());
     }
 
     @Override

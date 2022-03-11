@@ -30,7 +30,7 @@ public class PizzaRenderer extends TileEntityRenderer<PizzaTileEntity>
 
     public void renderPizzaBakingProcess(PizzaTileEntity tileEntity, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer)
     {
-        matrixStack.push();
+        matrixStack.pushPose();
 
         //Translate and scale renderer to avoid z-fighting
         matrixStack.translate(-0.0025D, 0D, -0.0025D);
@@ -41,8 +41,8 @@ public class PizzaRenderer extends TileEntityRenderer<PizzaTileEntity>
         modelData.setData(PizzaBakedModel.IS_RAW, Optional.of(false));
 
         //Custom implementation of BlockModelRenderer with accessible alpha value (Thanks Commoble!)
-        BlockAlphaRenderer.renderBlockAlpha(tileEntity.getPos(), ModBlocks.PIZZA.get().getDefaultState(), tileEntity.getWorld(), matrixStack, renderTypeBuffer, modelData);
-        matrixStack.pop();
+        BlockAlphaRenderer.renderBlockAlpha(tileEntity.getBlockPos(), ModBlocks.PIZZA.get().defaultBlockState(), tileEntity.getLevel(), matrixStack, renderTypeBuffer, modelData);
+        matrixStack.popPose();
     }
 
  /*   public static void render(PizzaTileEntity tile, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn)

@@ -11,7 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.BarrelTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -39,19 +38,19 @@ public class PizzaBagBlock extends Block
     public PizzaBagBlock(Properties properties)
     {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(PROPERTY_OPEN, false));
+        this.registerDefaultState(getStateDefinition().any().setValue(PROPERTY_OPEN, false));
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
     {
-        return makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 5.0D, 16.0D);
+        return box(0.0D, 0.0D, 0.0D, 16.0D, 5.0D, 16.0D);
     }
 
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand)
     {
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        TileEntity tileentity = worldIn.getBlockEntity(pos);
         if(tileentity instanceof PizzaBagTileEntity)
         {
             ((PizzaBagTileEntity)tileentity).pizzaBagTick();
@@ -60,24 +59,24 @@ public class PizzaBagBlock extends Block
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
     {
-        if(worldIn.getTileEntity(pos) instanceof PizzaBagTileEntity)
+        if(worldIn.getBlockEntity(pos) instanceof PizzaBagTileEntity)
         {
-            ((PizzaBagTileEntity)worldIn.getTileEntity(pos)).openGUI(player, (PizzaBagTileEntity)worldIn.getTileEntity(pos), pos);
+            ((PizzaBagTileEntity)worldIn.getBlockEntity(pos)).openGUI(player, (PizzaBagTileEntity)worldIn.getBlockEntity(pos), pos);
             return ActionResultType.SUCCESS;
         }
         return ActionResultType.PASS;
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
     {
-        if(worldIn.getTileEntity(pos) instanceof PizzaBagTileEntity)
+        if(worldIn.getBlockEntity(pos) instanceof PizzaBagTileEntity)
         {
             if(stack.getTag() != null)
             {
-                ((PizzaBagTileEntity)worldIn.getTileEntity(pos)).readFromStack(stack);
+                ((PizzaBagTileEntity)worldIn.getBlockEntity(pos)).readFromStack(stack);
             }
         }
     }
@@ -85,10 +84,10 @@ public class PizzaBagBlock extends Block
     @Override
     public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
     {
-        if(world.getTileEntity(pos) instanceof PizzaBagTileEntity)
+        if(world.getBlockEntity(pos) instanceof PizzaBagTileEntity)
         {
-            ItemStack stack = this.getBlock().getItem(world, pos, state);
-            ((PizzaBagTileEntity)world.getTileEntity(pos)).writeToItemStack(stack);
+            ItemStack stack = this.getBlock().getCloneItemStack(world, pos, state);
+            ((PizzaBagTileEntity)world.getBlockEntity(pos)).writeToItemStack(stack);
             return stack;
         }
         return this.getBlock().getPickBlock(state, target, world, pos, player);
@@ -96,7 +95,7 @@ public class PizzaBagBlock extends Block
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
     {
         if(stack.getTag() != null)
         {
@@ -113,7 +112,7 @@ public class PizzaBagBlock extends Block
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
     {
         builder.add(PROPERTY_OPEN);
     }

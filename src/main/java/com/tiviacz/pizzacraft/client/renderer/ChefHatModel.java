@@ -16,38 +16,38 @@ public class ChefHatModel extends BipedModel
         super(1.0F, 0.0F, 128, 64);
 
         box1 = new ModelRenderer(this, 0, 51);
-        box1.setRotationPoint(0.0F, 24.0F, 0.0F);
+        box1.setPos(0.0F, 24.0F, 0.0F);
         box1.addBox(-4.0F, -33.0F, -4.0F, 8, 4, 8, 0.25F);
 
         box2 = new ModelRenderer(this, 33, 49);
-        box2.setRotationPoint(0.0F, 24.0F, 0.0F);
+        box2.setPos(0.0F, 24.0F, 0.0F);
         setRotateAngle(box2, 0.0F, 0.0F, -0.0873F);
         box2.addBox(-2.25F, -38.0F, -5.0F, 10, 5, 10, 0.25F);
 
-        this.bipedHeadwear.addChild(box1);
-        this.bipedHeadwear.addChild(box2);
+        this.hat.addChild(box1);
+        this.hat.addChild(box2);
     }
 
     @Override
-    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha)
+    public void renderToBuffer(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha)
     {
-        super.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        super.renderToBuffer(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public void setRotationAngles(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setupAnim(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
     {
-        super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        this.box1.copyModelAngles(this.bipedHeadwear);
-        this.box2.copyModelAngles(this.bipedHeadwear);
+        super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+        this.box1.copyFrom(this.hat);
+        this.box2.copyFrom(this.hat);
     }
 
     public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z)
     {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
+        modelRenderer.xRot = x;
+        modelRenderer.yRot = y;
+        modelRenderer.zRot = z;
     }
 
 /*    @Override

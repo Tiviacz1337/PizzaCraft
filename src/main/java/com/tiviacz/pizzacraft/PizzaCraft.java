@@ -77,8 +77,8 @@ public class PizzaCraft
     private void doClientStuff(final FMLClientSetupEvent event)
     {
         //Screens
-        ScreenManager.registerFactory(ModContainerTypes.PIZZA.get(), ScreenPizza::new);
-        ScreenManager.registerFactory(ModContainerTypes.PIZZA_BAG.get(), ScreenPizzaBag::new);
+        ScreenManager.register(ModContainerTypes.PIZZA.get(), ScreenPizza::new);
+        ScreenManager.register(ModContainerTypes.PIZZA_BAG.get(), ScreenPizzaBag::new);
         //ScreenManager.registerFactory(ModContainerTypes.OVEN.get(), ScreenOven::new);
 
         //TESRs
@@ -88,25 +88,25 @@ public class PizzaCraft
         ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.PIZZA.get(), PizzaRenderer::new);
 
         //RenderTypes
-        RenderTypeLookup.setRenderLayer(ModBlocks.PIZZA.get(), RenderType.getCutoutMipped());
-        RenderTypeLookup.setRenderLayer(ModBlocks.RAW_PIZZA.get(), RenderType.getCutoutMipped());
-        RenderTypeLookup.setRenderLayer(ModBlocks.OVEN.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.RED_PIZZA_BAG.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.PIZZA.get(), RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(ModBlocks.RAW_PIZZA.get(), RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(ModBlocks.OVEN.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.RED_PIZZA_BAG.get(), RenderType.cutout());
 
         //Trees
-        RenderTypeLookup.setRenderLayer(ModBlocks.OLIVE_SAPLING.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.OLIVE_LEAVES.get(), RenderType.getCutoutMipped());
-        RenderTypeLookup.setRenderLayer(ModBlocks.FRUIT_OLIVE_LEAVES.get(), RenderType.getCutoutMipped());
-        RenderTypeLookup.setRenderLayer(ModBlocks.OLIVE_TRAPDOOR.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.OLIVE_SAPLING.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.OLIVE_LEAVES.get(), RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(ModBlocks.FRUIT_OLIVE_LEAVES.get(), RenderType.cutoutMipped());
+        RenderTypeLookup.setRenderLayer(ModBlocks.OLIVE_TRAPDOOR.get(), RenderType.cutout());
 
         //Crops
-        RenderTypeLookup.setRenderLayer(ModBlocks.BROCCOLI.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.CORNS.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.CUCUMBERS.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.ONIONS.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.PEPPERS.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.PINEAPPLE.get(), RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.TOMATOES.get(), RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.BROCCOLI.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.CORNS.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.CUCUMBERS.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.ONIONS.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.PEPPERS.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.PINEAPPLE.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.TOMATOES.get(), RenderType.cutout());
     }
 
     private void onFinish(final FMLLoadCompleteEvent event)

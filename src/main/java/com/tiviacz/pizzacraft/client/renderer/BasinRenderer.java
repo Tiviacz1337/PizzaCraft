@@ -53,19 +53,19 @@ public class BasinRenderer extends TileEntityRenderer<BasinTileEntity>
        //     renderContentsList(tileEntityIn.getTextComponentsForRenderer(), renderDispatcher.fontRenderer, matrixStackIn, bufferIn, combinedLightIn);
        // }
 
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
 
         if(basinContent.getContentType() == BasinContentType.SAUCE)
         {
             SauceModel model = new SauceModel(64, 32, tileEntityIn.getAmount());
             float[] rgb = basinContent.getSauceType().getRGB();
-            model.render(matrixStackIn, bufferIn.getBuffer(RenderType.getEntitySolid(tex)), combinedLightIn, combinedOverlayIn, rgb[0], rgb[1], rgb[2], 1.0F);
+            model.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entitySolid(tex)), combinedLightIn, combinedOverlayIn, rgb[0], rgb[1], rgb[2], 1.0F);
         }
 
         if(basinContent.getContentType() == BasinContentType.OIL)
         {
             SauceModel model = new SauceModel(64, 32, tileEntityIn.getAmount());
-            model.render(matrixStackIn, bufferIn.getBuffer(RenderType.getEntitySolid(tex)), combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
+            model.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entitySolid(tex)), combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
         }
 
         else if(basinContent.getContentType() != BasinContentType.EMPTY)
@@ -76,24 +76,24 @@ public class BasinRenderer extends TileEntityRenderer<BasinTileEntity>
                 ContentModel milk = new ContentModel(64, 32);
 
                 float progressToFloatInv = 1.0F - (float)tileEntityIn.getFermentProgress() / tileEntityIn.getDefaultFermentTime();
-                cheese.render(matrixStackIn, bufferIn.getBuffer(RenderType.getEntitySolid(CHEESE_TEX)), combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
-                milk.render(matrixStackIn, bufferIn.getBuffer(RenderType.getEntityTranslucent(MILK_TEX)), combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, progressToFloatInv);
+                cheese.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entitySolid(CHEESE_TEX)), combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
+                milk.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entityTranslucent(MILK_TEX)), combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, progressToFloatInv);
             }
             if(basinContent.getContentType() == BasinContentType.CHEESE)
             {
                 //ContentModel model = new ContentModel(64, 32, basinContent == BasinContent.MILK ? RenderType::getEntityTranslucent : RenderType::getEntitySolid);
                 ContentModel model = new ContentModel(64, 32);
-                model.render(matrixStackIn, bufferIn.getBuffer(RenderType.getEntitySolid(tex)), combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
+                model.renderToBuffer(matrixStackIn, bufferIn.getBuffer(RenderType.entitySolid(tex)), combinedLightIn, combinedOverlayIn, 1.0F, 1.0F, 1.0F, 1.0F);
             }
         }
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
 
         if(!squashedStack.isEmpty())
         {
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-            boolean blockItem = itemRenderer.getItemModelWithOverrides(squashedStack, tileEntityIn.getWorld(), null).isGui3d();
+            boolean blockItem = itemRenderer.getModel(squashedStack, tileEntityIn.getLevel(), null).isGui3d();
 
             if(blockItem)
             {
@@ -109,7 +109,7 @@ public class BasinRenderer extends TileEntityRenderer<BasinTileEntity>
                 matrixStackIn.translate(0.5D, 0.1D, 0.5D);
 
                 // Rotate item flat in the basin. Use X and Y from now on
-                matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90.0F));
+                matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(90.0F));
 
                 // Resize the item
                 matrixStackIn.scale(0.6F, 0.6F, 0.6F);
@@ -119,41 +119,41 @@ public class BasinRenderer extends TileEntityRenderer<BasinTileEntity>
             {
                 for(int i = 0; i < squashedStack.getCount(); i++)
                 {
-                    itemRenderer.renderItem(squashedStack, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+                    itemRenderer.renderStatic(squashedStack, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
                     matrixStackIn.translate(0.0D, 0.0D, -0.065D);
-                    matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(360.0F * rand.nextFloat()));
+                    matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(360.0F * rand.nextFloat()));
                 }
             }
             else //If not normal item, just render block, to avoid any glitches and complications, just don't use blockItems here :-)
             {
-                itemRenderer.renderItem(squashedStack, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+                itemRenderer.renderStatic(squashedStack, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
             }
-            matrixStackIn.pop();
+            matrixStackIn.popPose();
         }
     }
 
     private void renderContentsList(List<ITextComponent> components, FontRenderer fontrenderer, MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int packedLightIn)
     {
-            matrixStack.push();
+            matrixStack.pushPose();
 
             matrixStack.translate(0.5D, 2.0, 0.5D);
-            Matrix4f matrix4f = matrixStack.getLast().getMatrix();
+            Matrix4f matrix4f = matrixStack.last().pose();
 
             //float f1 = Minecraft.getInstance().gameSettings.getTextBackgroundOpacity(0.25F);
             //int j = (int) (f1 * 255.0F) << 24;
 
-            matrixStack.rotate(renderDispatcher.renderInfo.getRotation());
+            matrixStack.mulPose(renderer.camera.rotation());
 
             matrixStack.scale(-0.025F, -0.025F, -0.025F);
 
             for(ITextComponent text : components)
             {
                 matrixStack.translate(0.0D, 15, 0.0D);
-                float f2 = (float) (-fontrenderer.getStringPropertyWidth(text) / 2);
+                float f2 = (float) (-fontrenderer.width(text) / 2);
                 //fontrenderer.func_243247_a(text, f2, 0, 553648127, false, matrix4f, bufferIn, false, j, packedLightIn);
-                fontrenderer.func_243247_a(text, f2, 0, -1, false, matrix4f, bufferIn, false, 0, packedLightIn);
+                fontrenderer.drawInBatch(text, f2, 0, -1, false, matrix4f, bufferIn, false, 0, packedLightIn);
             }
-            matrixStack.pop();
+            matrixStack.popPose();
 
     }
 
@@ -185,15 +185,15 @@ public class BasinRenderer extends TileEntityRenderer<BasinTileEntity>
 
         public ContentModel(int width, int height)
         {
-            super(RenderType::getEntitySolid);
-            this.textureHeight = height;
-            this.textureWidth = width;
+            super(RenderType::entitySolid);
+            this.texHeight = height;
+            this.texWidth = width;
             this.content = new ModelRenderer(this);
             this.content.addBox(2.0F, 1.0F, 2.0F, 12.0F, 6.0F, 12.0F);
         }
 
         @Override
-        public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha)
+        public void renderToBuffer(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha)
         {
             this.content.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
         }
@@ -205,15 +205,15 @@ public class BasinRenderer extends TileEntityRenderer<BasinTileEntity>
 
         public SauceModel(int width, int height, float size)
         {
-            super(RenderType::getEntitySolid);
-            this.textureHeight = height;
-            this.textureWidth = width;
+            super(RenderType::entitySolid);
+            this.texHeight = height;
+            this.texWidth = width;
             this.sauce = new ModelRenderer(this);
             this.sauce.addBox(2.0F, 1.0F, 2.0F, 12.0F, size, 12.0F);
         }
 
         @Override
-        public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha)
+        public void renderToBuffer(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha)
         {
             this.sauce.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
         }

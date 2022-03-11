@@ -28,7 +28,7 @@ public class ChoppingRecipe implements IRecipe<RecipeWrapper>
     }
 
     @Override
-    public ItemStack getRecipeOutput()
+    public ItemStack getResultItem()
     {
         return this.output;
     }
@@ -36,17 +36,17 @@ public class ChoppingRecipe implements IRecipe<RecipeWrapper>
     @Override
     public boolean matches(RecipeWrapper recipeWrapper, World world)
     {
-        return input.test(recipeWrapper.getStackInSlot(0));
+        return input.test(recipeWrapper.getItem(0));
     }
 
     @Override
-    public ItemStack getCraftingResult(RecipeWrapper recipeWrapper)
+    public ItemStack assemble(RecipeWrapper recipeWrapper)
     {
-        return getRecipeOutput();
+        return getResultItem();
     }
 
     @Override
-    public boolean canFit(int width, int height)
+    public boolean canCraftInDimensions(int width, int height)
     {
         return false;
     }

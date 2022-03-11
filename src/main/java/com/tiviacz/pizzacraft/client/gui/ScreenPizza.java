@@ -5,20 +5,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.container.PizzaContainer;
-import com.tiviacz.pizzacraft.tileentity.PizzaHungerSystem;
 import com.tiviacz.pizzacraft.tileentity.PizzaTileEntity;
 import com.tiviacz.pizzacraft.util.FoodUtils;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldVertexBufferUploader;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,34 +35,34 @@ public class ScreenPizza extends ContainerScreen<PizzaContainer>
 
         this.tileEntity = screenContainer.tileEntity;
 
-        this.guiLeft = 0;
-        this.guiTop = 0;
+        this.leftPos = 0;
+        this.topPos = 0;
 
-        this.xSize = 176;
-        this.ySize = 158;
+        this.imageWidth = 176;
+        this.imageHeight = 158;
 
-        this.playerInventoryTitleY -= 6;
+        this.inventoryLabelY -= 6;
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY)
+    protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY)
     {
-        this.font.func_243248_b(matrixStack, this.playerInventory.getDisplayName(), (float)this.playerInventoryTitleX, (float)this.playerInventoryTitleY, 4210752);
+        this.font.draw(matrixStack, this.inventory.getDisplayName(), (float)this.inventoryLabelX, (float)this.inventoryLabelY, 4210752);
     }
 
     public List<ITextComponent> getTooltip()
     {
         List<ITextComponent> components = new ArrayList<>();
-        components.add(new TranslationTextComponent("information.pizzacraft.hunger", FoodUtils.getHungerForSlice(tileEntity.getRefillmentValues().getFirst(), false), ((tileEntity.getRefillmentValues().getFirst() % 7 != 0) ? " (+" + tileEntity.getRefillmentValues().getFirst() % 7 + ")" : ""), tileEntity.getRefillmentValues().getFirst()).mergeStyle(TextFormatting.BLUE));
-        components.add(new TranslationTextComponent("information.pizzacraft.saturation", (float)(Math.round(tileEntity.getRefillmentValues().getSecond() / 7 * 100.0) / 100.0), (float)(Math.round(tileEntity.getRefillmentValues().getSecond() * 100.0) / 100.0)).mergeStyle(TextFormatting.BLUE));
+        components.add(new TranslationTextComponent("information.pizzacraft.hunger", FoodUtils.getHungerForSlice(tileEntity.getRefillmentValues().getFirst(), false), ((tileEntity.getRefillmentValues().getFirst() % 7 != 0) ? " (+" + tileEntity.getRefillmentValues().getFirst() % 7 + ")" : ""), tileEntity.getRefillmentValues().getFirst()).withStyle(TextFormatting.BLUE));
+        components.add(new TranslationTextComponent("information.pizzacraft.saturation", (float)(Math.round(tileEntity.getRefillmentValues().getSecond() / 7 * 100.0) / 100.0), (float)(Math.round(tileEntity.getRefillmentValues().getSecond() * 100.0) / 100.0)).withStyle(TextFormatting.BLUE));
 
         if(!tileEntity.getEffects().isEmpty())
         {
-            components.add(new TranslationTextComponent("information.pizzacraft.effects").mergeStyle(TextFormatting.GOLD));
+            components.add(new TranslationTextComponent("information.pizzacraft.effects").withStyle(TextFormatting.GOLD));
 
             for(Pair<EffectInstance, Float> pair : tileEntity.getEffects())
             {
-                components.add(new TranslationTextComponent(pair.getFirst().getEffectName()).mergeStyle(pair.getFirst().getPotion().getEffectType().getColor()));
+                components.add(new TranslationTextComponent(pair.getFirst().getDescriptionId()).withStyle(pair.getFirst().getEffect().getCategory().getTooltipFormatting()));
             }
         }
 
@@ -81,22 +74,22 @@ public class ScreenPizza extends ContainerScreen<PizzaContainer>
     {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        this.renderTooltip(matrixStack, mouseX, mouseY);
 
         if(this.HUNGER_INFO.inButton(this, mouseX, mouseY))
         {
-            this.func_243308_b(matrixStack, getTooltip(), mouseX, mouseY);
+            this.renderComponentTooltip(matrixStack, getTooltip(), mouseX, mouseY);
         }
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY)
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY)
     {
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
-        this.minecraft.getTextureManager().bindTexture(SCREEN_PIZZA);
-        int x = (this.width - this.xSize) / 2;
-        int y = (this.height - this.ySize) / 2;
-        this.blit(matrixStack, x, y, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bind(SCREEN_PIZZA);
+        int x = (this.width - this.imageWidth) / 2;
+        int y = (this.height - this.imageHeight) / 2;
+        this.blit(matrixStack, x, y, 0, 0, this.imageWidth, this.imageHeight);
 
         PIZZA_IMAGE.draw(matrixStack, this, tileEntity.isRaw() ? 1 : 112, 159);
         PIZZA_PATTERN.draw(matrixStack, this, tileEntity.isRaw() ? 56 : 167, 158);

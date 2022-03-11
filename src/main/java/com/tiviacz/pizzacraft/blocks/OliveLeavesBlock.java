@@ -9,7 +9,6 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.conditions.BlockStateProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -26,28 +25,28 @@ import java.util.Random;
 
 public class OliveLeavesBlock extends LeavesBlock implements IGrowable
 {
-    public static final IntegerProperty AGE = BlockStateProperties.AGE_0_3;
+    public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
 
     public OliveLeavesBlock(Properties properties)
     {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(DISTANCE, 7).with(PERSISTENT, Boolean.FALSE).with(AGE, 3));
+        this.registerDefaultState(getStateDefinition().any().setValue(DISTANCE, 7).setValue(PERSISTENT, Boolean.FALSE).setValue(AGE, 3));
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
     {
-        if(state.get(AGE) == getMaxAge())
+        if(state.getValue(AGE) == getMaxAge())
         {
-            ItemStack stack = new ItemStack(ModItems.OLIVE.get(), worldIn.rand.nextInt(2) + 1);
+            ItemStack stack = new ItemStack(ModItems.OLIVE.get(), worldIn.random.nextInt(2) + 1);
 
-            if(!player.addItemStackToInventory(stack))
+            if(!player.addItem(stack))
             {
                 ItemEntity entity = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY() + 0.2, pos.getZ() + 0.5, stack);
-                worldIn.addEntity(entity);
+                worldIn.addFreshEntity(entity);
             }
 
-            worldIn.setBlockState(pos, state.with(AGE, 0));
+            worldIn.setBlockAndUpdate(pos, state.setValue(AGE, 0));
 
             return ActionResultType.SUCCESS;
         }
@@ -59,7 +58,7 @@ public class OliveLeavesBlock extends LeavesBlock implements IGrowable
     {
         if(!worldIn.isAreaLoaded(pos, 1)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light
 
-        if(worldIn.getLightSubtracted(pos, 0) >= 9 && random.nextInt(5) == 0)
+        if(worldIn.getRawBrightness(pos, 0) >= 9 && random.nextInt(5) == 0)
         {
             int i = this.getAge(state);
 
@@ -69,40 +68,40 @@ public class OliveLeavesBlock extends LeavesBlock implements IGrowable
 
                // if(ForgeHooks.onCropsGrowPre(worldIn, pos, state, random.nextInt((int)(25.0F / f) + 1) == 0))
                // {
-                    worldIn.setBlockState(pos, this.withAge(state, i + 1), 2);
+                    worldIn.setBlock(pos, this.withAge(state, i + 1), 2);
                 //    ForgeHooks.onCropsGrowPost(worldIn, pos, state);
                // }
             }
         }
 
-        if(!state.get(PERSISTENT) && state.get(DISTANCE) == 7)
+        if(!state.getValue(PERSISTENT) && state.getValue(DISTANCE) == 7)
         {
-            spawnDrops(state, worldIn, pos);
+            dropResources(state, worldIn, pos);
             worldIn.removeBlock(pos, false);
         }
     }
 
     @Override
-    public boolean ticksRandomly(BlockState state)
+    public boolean isRandomlyTicking(BlockState state)
     {
-        return super.ticksRandomly(state) || this.getAge(state) < this.getMaxAge();
+        return super.isRandomlyTicking(state) || this.getAge(state) < this.getMaxAge();
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
     {
         builder.add(AGE);
-        super.fillStateContainer(builder);
+        super.createBlockStateDefinition(builder);
     }
 
     public BlockState getStateForPlacement(BlockItemUseContext context)
     {
-        return super.getStateForPlacement(context).with(AGE, 3);
+        return super.getStateForPlacement(context).setValue(AGE, 3);
     }
 
     public int getAge(BlockState state)
     {
-        return state.get(AGE);
+        return state.getValue(AGE);
     }
 
     public int getMaxAge()
@@ -112,23 +111,23 @@ public class OliveLeavesBlock extends LeavesBlock implements IGrowable
 
     public BlockState withAge(BlockState state, int age)
     {
-        return state.with(AGE, age);
+        return state.setValue(AGE, age);
     }
 
     @Override
-    public boolean canGrow(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient)
+    public boolean isValidBonemealTarget(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient)
     {
-        return state.get(AGE) < getMaxAge();
+        return state.getValue(AGE) < getMaxAge();
     }
 
     @Override
-    public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, BlockState state)
+    public boolean isBonemealSuccess(World worldIn, Random rand, BlockPos pos, BlockState state)
     {
-        return state.get(AGE) < getMaxAge();
+        return state.getValue(AGE) < getMaxAge();
     }
 
     @Override
-    public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state)
+    public void performBonemeal(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state)
     {
         int i = this.getAge(state) + this.getBonemealAgeIncrease(worldIn);
         int j = this.getMaxAge();
@@ -136,11 +135,11 @@ public class OliveLeavesBlock extends LeavesBlock implements IGrowable
             i = j;
         }
 
-        worldIn.setBlockState(pos, this.withAge(state, i), 2);
+        worldIn.setBlock(pos, this.withAge(state, i), 2);
     }
 
     protected int getBonemealAgeIncrease(World worldIn)
     {
-        return MathHelper.nextInt(worldIn.rand, 1, 2);
+        return MathHelper.nextInt(worldIn.random, 1, 2);
     }
 }

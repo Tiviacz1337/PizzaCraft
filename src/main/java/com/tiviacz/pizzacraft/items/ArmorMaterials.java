@@ -12,58 +12,58 @@ import java.util.function.Supplier;
 
 public class ArmorMaterials implements IArmorMaterial
 {
-    public static final ArmorMaterials CHEF = new ArmorMaterials("chef", 5, new int[]{1, 2, 3, 1}, 10, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.EMPTY);
-    public static final ArmorMaterials PIZZA_DELIVERY = new ArmorMaterials("pizza_delivery", 5, new int[]{1, 2, 3, 1}, 10, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.EMPTY);
+    public static final ArmorMaterials CHEF = new ArmorMaterials("chef", 5, new int[]{1, 2, 3, 1}, 10, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.EMPTY);
+    public static final ArmorMaterials PIZZA_DELIVERY = new ArmorMaterials("pizza_delivery", 5, new int[]{1, 2, 3, 1}, 10, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.EMPTY);
 
     private static final int[] MAX_DAMAGE_ARRAY = new int[]{13, 15, 16, 11};
     private SoundEvent equipSound;
     private String name;
     private int durability, enchantability;
-    private final int[] damageReduction;
+    private final int[] defense;
     private float toughness;
     private float knockbackResistance;
-    private LazyValue<Ingredient> repairMaterial;
+    private LazyValue<Ingredient> material;
 
-    private ArmorMaterials(String name, int durability, int[] damageReduction, int enchantability, SoundEvent equipSound, float toughness, float knockbackResistance, Supplier<Ingredient> repairMaterial)
+    private ArmorMaterials(String name, int durability, int[] defense, int enchantability, SoundEvent equipSound, float toughness, float knockbackResistance, Supplier<Ingredient> material)
     {
         this.name = name;
         this.equipSound = equipSound;
         this.durability = durability;
         this.enchantability = enchantability;
-        this.damageReduction = damageReduction;
+        this.defense = defense;
         this.toughness = toughness;
         this.knockbackResistance = knockbackResistance;
-        this.repairMaterial = new LazyValue<>(repairMaterial);
+        this.material = new LazyValue<>(material);
     }
 
     @Override
-    public int getDurability(EquipmentSlotType slotIn)
+    public int getDurabilityForSlot(EquipmentSlotType slotIn)
     {
         return MAX_DAMAGE_ARRAY[slotIn.getIndex()] * this.durability;
     }
 
     @Override
-    public int getDamageReductionAmount(EquipmentSlotType slotIn)
+    public int getDefenseForSlot(EquipmentSlotType slotIn)
     {
-        return this.damageReduction[slotIn.getIndex()];
+        return this.defense[slotIn.getIndex()];
     }
 
     @Override
-    public int getEnchantability()
+    public int getEnchantmentValue()
     {
         return this.enchantability;
     }
 
     @Override
-    public SoundEvent getSoundEvent()
+    public SoundEvent getEquipSound()
     {
         return this.equipSound;
     }
 
     @Override
-    public Ingredient getRepairMaterial()
+    public Ingredient getRepairIngredient()
     {
-        return this.repairMaterial.getValue();
+        return this.material.get();
     }
 
     @Override

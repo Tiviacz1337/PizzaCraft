@@ -41,14 +41,14 @@ public class PizzaBagTileEntity extends BaseTileEntity implements INamedContaine
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
         compound.put(INVENTORY, this.inventory.serializeNBT());
         return compound;
     }
@@ -76,10 +76,10 @@ public class PizzaBagTileEntity extends BaseTileEntity implements INamedContaine
 
             ++this.numPlayersUsing;
             BlockState blockstate = this.getBlockState();
-            boolean flag = blockstate.get(PizzaBagBlock.PROPERTY_OPEN);
+            boolean flag = blockstate.getValue(PizzaBagBlock.PROPERTY_OPEN);
 
             if (!flag) {
-                this.playSound(SoundEvents.BLOCK_WOOL_PLACE);
+                this.playSound(SoundEvents.WOOL_PLACE);
                 this.setOpenProperty(blockstate, true);
             }
 
@@ -95,37 +95,37 @@ public class PizzaBagTileEntity extends BaseTileEntity implements INamedContaine
     }
 
     private void scheduleTick() {
-        this.world.getPendingBlockTicks().scheduleTick(this.getPos(), this.getBlockState().getBlock(), 5);
+        this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
     }
 
     public void pizzaBagTick() {
-        int i = this.pos.getX();
-        int j = this.pos.getY();
-        int k = this.pos.getZ();
+        int i = this.getBlockPos().getX();
+        int j = this.getBlockPos().getY();
+        int k = this.getBlockPos().getZ();
 
-        int numPlayersUsing = Utils.calculatePlayersUsing(this.world, this, i, j, k);
+        int numPlayersUsing = Utils.calculatePlayersUsing(this.level, this, i, j, k);
         if (numPlayersUsing > 0) {
             this.scheduleTick();
         } else {
             BlockState blockstate = this.getBlockState();
 
-            boolean flag = blockstate.get(PizzaBagBlock.PROPERTY_OPEN);
+            boolean flag = blockstate.getValue(PizzaBagBlock.PROPERTY_OPEN);
             if (flag) {
-                this.playSound(SoundEvents.BLOCK_WOOL_PLACE);
+                this.playSound(SoundEvents.WOOL_PLACE);
                 this.setOpenProperty(blockstate, false);
             }
         }
     }
 
     private void setOpenProperty(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(BarrelBlock.PROPERTY_OPEN, open), 3);
+        this.level.setBlock(this.getBlockPos(), state.setValue(BarrelBlock.OPEN, open), 3);
     }
 
     private void playSound(SoundEvent sound) {
-        double d0 = (double) this.pos.getX() + 0.5D;
-        double d1 = (double) this.pos.getY() + 0.5D;
-        double d2 = (double) this.pos.getZ() + 0.5D;
-        this.world.playSound(null, d0, d1, d2, sound, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+        double d0 = (double) this.getBlockPos().getX() + 0.5D;
+        double d1 = (double) this.getBlockPos().getY() + 0.5D;
+        double d2 = (double) this.getBlockPos().getZ() + 0.5D;
+        this.level.playSound(null, d0, d1, d2, sound, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
     }
 
     // ======== ITEMHANDLER ========
@@ -139,7 +139,7 @@ public class PizzaBagTileEntity extends BaseTileEntity implements INamedContaine
 
             @Override
             protected void onContentsChanged(int slot) {
-                markDirty();
+                setChanged();
             }
         };
     }
@@ -158,7 +158,7 @@ public class PizzaBagTileEntity extends BaseTileEntity implements INamedContaine
 
     @Override
     public ITextComponent getDisplayName() {
-        return new TranslationTextComponent(this.getBlockState().getBlock().getTranslationKey());
+        return new TranslationTextComponent(this.getBlockState().getBlock().getDescriptionId());
     }
 
     @Nullable
@@ -168,7 +168,7 @@ public class PizzaBagTileEntity extends BaseTileEntity implements INamedContaine
     }
 
     public void openGUI(PlayerEntity player, INamedContainerProvider containerSupplier, BlockPos pos) {
-        if (!player.world.isRemote) {
+        if (!player.level.isClientSide) {
             NetworkHooks.openGui((ServerPlayerEntity) player, containerSupplier, pos);
         }
     }

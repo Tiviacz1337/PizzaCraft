@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.tiviacz.pizzacraft.PizzaCraft;
-import com.tiviacz.pizzacraft.recipes.chopping.ChoppingRecipe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
@@ -25,10 +24,10 @@ public class MortarRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
     public static final ResourceLocation ID = new ResourceLocation(PizzaCraft.MODID, "mortar_recipe");
 
     @Override
-    public MortarRecipe read(ResourceLocation id, JsonObject json)
+    public MortarRecipe fromJson(ResourceLocation id, JsonObject json)
     {
-        int duration = JSONUtils.getInt(json, "duration", 20);
-        NonNullList<Ingredient> nonnulllist = readIngredients(JSONUtils.getJsonArray(json, "ingredients"));
+        int duration = JSONUtils.getAsInt(json, "duration", 20);
+        NonNullList<Ingredient> nonnulllist = readIngredients(JSONUtils.getAsJsonArray(json, "ingredients"));
 
         if(nonnulllist.isEmpty())
         {
@@ -40,14 +39,14 @@ public class MortarRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
         }
         else
         {
-            ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+            ItemStack itemstack = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
             return new MortarRecipe(nonnulllist, itemstack, duration, id);
         }
     }
 
     @Nullable
     @Override
-    public MortarRecipe read(ResourceLocation id, PacketBuffer buffer)
+    public MortarRecipe fromNetwork(ResourceLocation id, PacketBuffer buffer)
     {
         int d = buffer.readInt();
         int i = buffer.readVarInt();
@@ -55,10 +54,10 @@ public class MortarRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
 
         for(int j = 0; j < nonnulllist.size(); ++j)
         {
-            nonnulllist.set(j, Ingredient.read(buffer));
+            nonnulllist.set(j, Ingredient.fromNetwork(buffer));
         }
 
-        ItemStack itemstack = buffer.readItemStack();
+        ItemStack itemstack = buffer.readItem();
         return new MortarRecipe(nonnulllist, itemstack, d, id);
     }
 
@@ -68,8 +67,8 @@ public class MortarRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
 
         for(int i = 0; i < ingredientArray.size(); ++i)
         {
-            Ingredient ingredient = Ingredient.deserialize(ingredientArray.get(i));
-            if(!ingredient.hasNoMatchingItems())
+            Ingredient ingredient = Ingredient.fromJson(ingredientArray.get(i));
+            if(!ingredient.isEmpty())
             {
                 nonnulllist.add(ingredient);
             }
@@ -78,16 +77,16 @@ public class MortarRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
     }
 
     @Override
-    public void write(PacketBuffer buffer, MortarRecipe recipe)
+    public void toNetwork(PacketBuffer buffer, MortarRecipe recipe)
     {
         buffer.writeInt(recipe.getDuration());
         buffer.writeVarInt(recipe.getInputs().size());
 
         for(Ingredient ingredient : recipe.getInputs())
         {
-            ingredient.write(buffer);
+            ingredient.toNetwork(buffer);
         }
 
-        buffer.writeItemStack(recipe.getRecipeOutput());
+        buffer.writeItem(recipe.getResultItem());
     }
 }

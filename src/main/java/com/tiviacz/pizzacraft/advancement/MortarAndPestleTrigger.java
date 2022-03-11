@@ -18,11 +18,11 @@ public class MortarAndPestleTrigger extends AbstractCriterionTrigger<MortarAndPe
     }
 
     public void trigger(ServerPlayerEntity player) {
-        this.triggerListeners(player, Instance::test);
+        this.trigger(player, Instance::test);
     }
 
     @Override
-    protected Instance deserializeTrigger(JsonObject json, EntityPredicate.AndPredicate player, ConditionArrayParser conditionsParser) {
+    protected Instance createInstance(JsonObject json, EntityPredicate.AndPredicate player, ConditionArrayParser conditionsParser) {
         return new MortarAndPestleTrigger.Instance(player);
     }
 
@@ -33,7 +33,7 @@ public class MortarAndPestleTrigger extends AbstractCriterionTrigger<MortarAndPe
         }
 
         public static MortarAndPestleTrigger.Instance simple() {
-            return new MortarAndPestleTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND);
+            return new MortarAndPestleTrigger.Instance(EntityPredicate.AndPredicate.ANY);
         }
 
         public boolean test() {

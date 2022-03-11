@@ -19,7 +19,7 @@ public class PizzaPeelItem extends ShovelItem
     {
         super(tier, attackDamageIn, attackSpeedIn, builderIn);
 
-        Multimap<Attribute, AttributeModifier> attributeMap = getAttributeModifiers(EquipmentSlotType.MAINHAND);
+        Multimap<Attribute, AttributeModifier> attributeMap = getDefaultAttributeModifiers(EquipmentSlotType.MAINHAND);
         ImmutableMultimap.Builder<Attribute, AttributeModifier> modifierBuilder = ImmutableMultimap.builder();
         modifierBuilder.putAll(attributeMap);
         modifierBuilder.put(Attributes.ATTACK_KNOCKBACK, new AttributeModifier("PeelAttackKnockbackModifier", 0.25D, AttributeModifier.Operation.ADDITION));
@@ -33,9 +33,9 @@ public class PizzaPeelItem extends ShovelItem
     }
 
     @Override
-    public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker)
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker)
     {
-        stack.damageItem(1, attacker, (entity) -> entity.sendBreakAnimation(EquipmentSlotType.MAINHAND));
+        stack.hurtAndBreak(1, attacker, (entity) -> entity.broadcastBreakEvent(EquipmentSlotType.MAINHAND));
         return true;
     }
 }

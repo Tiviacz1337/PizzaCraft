@@ -33,7 +33,7 @@ public class MortarRecipeCategory implements IRecipeCategory<MortarRecipe>
     {
         background = guiHelper.createDrawable(new ResourceLocation(PizzaCraft.MODID, "textures/gui/mortar_recipe.png"), -9, -9, 128, 96);
         icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.MORTAR_AND_PESTLE.get()));
-        title = I18n.format("recipecategory." + PizzaCraft.MODID + ".mortar");
+        title = I18n.get("recipecategory." + PizzaCraft.MODID + ".mortar");
     }
 
     @Override
@@ -71,7 +71,7 @@ public class MortarRecipeCategory implements IRecipeCategory<MortarRecipe>
     {
         List<Ingredient> ingredients = mortarRecipe.getInputs();
         iIngredients.setInputIngredients(ingredients);
-        iIngredients.setOutput(VanillaTypes.ITEM, mortarRecipe.getRecipeOutput());
+        iIngredients.setOutput(VanillaTypes.ITEM, mortarRecipe.getResultItem());
     }
 
     @Override
@@ -80,20 +80,20 @@ public class MortarRecipeCategory implements IRecipeCategory<MortarRecipe>
         IGuiItemStackGroup stacks = iRecipeLayout.getItemStacks();
 
         stacks.init(4, true, 97, 39);
-        stacks.set(4, mortarRecipe.getRecipeOutput());
+        stacks.set(4, mortarRecipe.getResultItem());
 
         for(int i = 0; i < mortarRecipe.getInputs().size(); i++)
         {
             stacks.init(i, true, 9, 69 - ((18 * i) + (i * 2)));
-            stacks.set(i, Arrays.asList(mortarRecipe.getInputs().get(i).getMatchingStacks()));
+            stacks.set(i, Arrays.asList(mortarRecipe.getInputs().get(i).getItems()));
         }
     }
 
     @Override
     public void draw(MortarRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY)
     {
-        FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
+        FontRenderer fontRenderer = Minecraft.getInstance().font;
         String duration = recipe.getDuration() + "x";
-        fontRenderer.drawString(matrixStack, duration, 44 - fontRenderer.getStringWidth(duration) / 2F, 27, 0xff404040);
+        fontRenderer.draw(matrixStack, duration, 44 - fontRenderer.width(duration) / 2F, 27, 0xff404040);
     }
 }

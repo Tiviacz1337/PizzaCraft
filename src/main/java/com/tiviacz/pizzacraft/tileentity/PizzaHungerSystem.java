@@ -4,13 +4,10 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.item.Food;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class PizzaHungerSystem //#TODO needs tweaks
@@ -55,12 +52,12 @@ public class PizzaHungerSystem //#TODO needs tweaks
 
         for(ItemStack foodStack : ingredients)
         {
-            if(foodStack.isFood())
+            if(foodStack.isEdible())
             {
-                Food food = foodStack.getItem().getFood();
+                Food food = foodStack.getItem().getFoodProperties();
 
-                baseHunger += (food.getHealing() * foodStack.getCount());
-                baseSaturation += (food.getSaturation() * foodStack.getCount());
+                baseHunger += (food.getNutrition() * foodStack.getCount());
+                baseSaturation += (food.getSaturationModifier() * foodStack.getCount());
 
                 if(!food.getEffects().isEmpty())
                 {

@@ -22,36 +22,36 @@ import net.minecraft.world.World;
 
 public class DoughBlock extends Block
 {
-    public static final IntegerProperty KNEEDING = BlockStateProperties.AGE_0_5;
+    public static final IntegerProperty KNEEDING = BlockStateProperties.AGE_5;
     private static final VoxelShape[] SHAPES = new VoxelShape[]{
-            Block.makeCuboidShape(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D),
-            Block.makeCuboidShape(3.0D, 0.0D, 4.0D, 11.0D, 4.0D, 11.0D),
-            Block.makeCuboidShape(4.0D, 0.0D, 5.0D, 10.0D, 5.0D, 12.0D),
-            Block.makeCuboidShape(5.0D, 0.0D, 2.0D, 13.0D, 3.0D, 11.0D),
-            Block.makeCuboidShape(3.0D, 0.0D, 5.0D, 11.0D, 4.0D, 11.0D),
-            Block.makeCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 2.0D, 13.0D)};
+            Block.box(5.0D, 0.0D, 5.0D, 11.0D, 6.0D, 11.0D),
+            Block.box(3.0D, 0.0D, 4.0D, 11.0D, 4.0D, 11.0D),
+            Block.box(4.0D, 0.0D, 5.0D, 10.0D, 5.0D, 12.0D),
+            Block.box(5.0D, 0.0D, 2.0D, 13.0D, 3.0D, 11.0D),
+            Block.box(3.0D, 0.0D, 5.0D, 11.0D, 4.0D, 11.0D),
+            Block.box(3.0D, 0.0D, 3.0D, 13.0D, 2.0D, 13.0D)};
 
     public DoughBlock(Properties properties)
     {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(KNEEDING, 0));
+        this.registerDefaultState(getStateDefinition().any().setValue(KNEEDING, 0));
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
     {
-        return SHAPES[state.get(KNEEDING)];
+        return SHAPES[state.getValue(KNEEDING)];
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
     {
-        ItemStack stack = player.getHeldItem(handIn);
+        ItemStack stack = player.getItemInHand(handIn);
 
-        if(player.getHeldItem(handIn).getItem() == ModItems.ROLLING_PIN.get())
+        if(player.getItemInHand(handIn).getItem() == ModItems.ROLLING_PIN.get())
         {
             proceedKneeding(state, worldIn, pos, player);
-            stack.damageItem(1, player, e -> e.sendBreakAnimation(handIn));
+            stack.hurtAndBreak(1, player, e -> e.broadcastBreakEvent(handIn));
             return ActionResultType.SUCCESS;
         }
         return ActionResultType.PASS;
@@ -59,43 +59,43 @@ public class DoughBlock extends Block
 
     public void proceedKneeding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player)
     {
-        int i = state.get(KNEEDING);
+        int i = state.getValue(KNEEDING);
 
         if(i < 5)
         {
-            worldIn.setBlockState(pos, state.with(KNEEDING, i + 1), 3);
+            worldIn.setBlock(pos, state.setValue(KNEEDING, i + 1), 3);
         }
         else
         {
-            worldIn.setBlockState(pos, ModBlocks.RAW_PIZZA.get().getDefaultState(), 3);
+            worldIn.setBlock(pos, ModBlocks.RAW_PIZZA.get().defaultBlockState(), 3);
         }
-        worldIn.playSound(player, pos, SoundEvents.ENTITY_PLAYER_ATTACK_SWEEP, SoundCategory.BLOCKS, 0.7F, 0.8F + worldIn.rand.nextFloat());
+        worldIn.playSound(player, pos, SoundEvents.PLAYER_ATTACK_SWEEP, SoundCategory.BLOCKS, 0.7F, 0.8F + worldIn.random.nextFloat());
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos)
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos)
     {
-        return facing == Direction.DOWN && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return facing == Direction.DOWN && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos)
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos)
     {
-        return worldIn.getBlockState(pos.down()).getMaterial().isSolid();
+        return worldIn.getBlockState(pos.below()).getMaterial().isSolid();
     }
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(KNEEDING);
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos)
+    public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side)
     {
-        return (blockState.get(KNEEDING) + 1) * 2;
+        return (blockState.getValue(KNEEDING) + 1) * 2;
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
 

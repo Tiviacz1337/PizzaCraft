@@ -30,7 +30,7 @@ public class ChoppingRecipeCategory implements IRecipeCategory<ChoppingRecipe>
     {
         background = guiHelper.createDrawable(new ResourceLocation(PizzaCraft.MODID, "textures/gui/chopping_recipe.png"), -14, -5, 95, 31);
         icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.OAK_CHOPPING_BOARD.get()));
-        title = I18n.format("recipecategory." + PizzaCraft.MODID + ".chopping");
+        title = I18n.get("recipecategory." + PizzaCraft.MODID + ".chopping");
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ChoppingRecipeCategory implements IRecipeCategory<ChoppingRecipe>
     {
         List<Ingredient> ingredients = choppingRecipe.getIngredients();
         iIngredients.setInputIngredients(ingredients);
-        iIngredients.setOutput(VanillaTypes.ITEM, choppingRecipe.getRecipeOutput());
+        iIngredients.setOutput(VanillaTypes.ITEM, choppingRecipe.getResultItem());
     }
 
     @Override
@@ -77,9 +77,9 @@ public class ChoppingRecipeCategory implements IRecipeCategory<ChoppingRecipe>
         IGuiItemStackGroup stacks = iRecipeLayout.getItemStacks();
 
         stacks.init(0, true, 14, 6);
-        stacks.set(0, Arrays.asList(choppingRecipe.getInput().getMatchingStacks()));
+        stacks.set(0, Arrays.asList(choppingRecipe.getInput().getItems()));
 
         stacks.init(1, true, 63, 6);
-        stacks.set(1, choppingRecipe.getRecipeOutput());
+        stacks.set(1, choppingRecipe.getResultItem());
     }
 }

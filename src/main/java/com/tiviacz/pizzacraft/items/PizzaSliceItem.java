@@ -10,12 +10,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -37,7 +33,7 @@ public class PizzaSliceItem extends Item
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
     {
         int hunger = PizzaHungerSystem.BASE_HUNGER / 7;
         float saturation = PizzaHungerSystem.BASE_SATURATION / 7;
@@ -57,16 +53,16 @@ public class PizzaSliceItem extends Item
             effects = instance.getEffects();
         }
         //TranslationTextComponent translation = new TranslationTextComponent("information.pizzacraft.hunger", hunger).mergeStyle(TextFormatting.BLUE);
-        tooltip.add(new TranslationTextComponent("information.pizzacraft.hunger_slice", hunger).mergeStyle(TextFormatting.BLUE));
-        tooltip.add(new TranslationTextComponent("information.pizzacraft.saturation_slice", saturation).mergeStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("information.pizzacraft.hunger_slice", hunger).withStyle(TextFormatting.BLUE));
+        tooltip.add(new TranslationTextComponent("information.pizzacraft.saturation_slice", saturation).withStyle(TextFormatting.BLUE));
 
         if(!effects.isEmpty())
         {
-            tooltip.add(new TranslationTextComponent("information.pizzacraft.effects").mergeStyle(TextFormatting.GOLD));
+            tooltip.add(new TranslationTextComponent("information.pizzacraft.effects").withStyle(TextFormatting.GOLD));
 
             for(Pair<EffectInstance, Float> pair : effects)
             {
-                tooltip.add(new TranslationTextComponent(pair.getFirst().getEffectName()).mergeStyle(pair.getFirst().getPotion().getEffectType().getColor()));
+                tooltip.add(new TranslationTextComponent(pair.getFirst().getDescriptionId()).withStyle(pair.getFirst().getEffect().getCategory().getTooltipFormatting()));
             }
         }
         //tooltip.add(new StringTextComponent("Restores: " + hunger + " Hunger").mergeStyle(TextFormatting.BLUE));
@@ -75,7 +71,7 @@ public class PizzaSliceItem extends Item
 
     @Nonnull
     @Override
-    public ItemStack onItemUseFinish(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull LivingEntity livingEntity)
+    public ItemStack finishUsingItem(@Nonnull ItemStack stack, @Nonnull World worldIn, @Nonnull LivingEntity livingEntity)
     {
         if(livingEntity instanceof PlayerEntity)
         {
@@ -93,23 +89,23 @@ public class PizzaSliceItem extends Item
                 PizzaHungerSystem instance = new PizzaHungerSystem(tempHandler);
 
                 PlayerEntity player = (PlayerEntity)livingEntity;
-                player.getFoodStats().addStats(FoodUtils.getHungerForSlice(instance.getHunger(), requiresAddition), instance.getSaturation() / 7);
+                player.getFoodData().eat(FoodUtils.getHungerForSlice(instance.getHunger(), requiresAddition), instance.getSaturation() / 7);
 
                 for(int i = 0; i < tempHandler.getSlots(); i++)
                 {
                     if(!tempHandler.getStackInSlot(i).isEmpty())
                     {
-                        if(tempHandler.getStackInSlot(i).isFood())
+                        if(tempHandler.getStackInSlot(i).isEdible())
                         {
-                            Food food = tempHandler.getStackInSlot(i).getItem().getFood();
+                            Food food = tempHandler.getStackInSlot(i).getItem().getFoodProperties();
 
                             if(!food.getEffects().isEmpty())
                             {
                                 food.getEffects().forEach(e ->
                                 {
-                                    if(worldIn.rand.nextFloat() < e.getSecond())
+                                    if(worldIn.random.nextFloat() < e.getSecond())
                                     {
-                                        player.addPotionEffect(e.getFirst());
+                                        player.addEffect(e.getFirst());
                                     }
                                 });
                             }
@@ -118,6 +114,6 @@ public class PizzaSliceItem extends Item
                 }
             }
         }
-        return livingEntity.onFoodEaten(worldIn, stack);
+        return livingEntity.eat(worldIn, stack);
     }
 }

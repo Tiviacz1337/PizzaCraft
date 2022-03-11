@@ -41,7 +41,7 @@ public class KnifeItem extends SwordItem
     {
         super(tier, attackDamageIn, attackSpeedIn, builderIn);
 
-        Multimap<Attribute, AttributeModifier> attributeMap = getAttributeModifiers(EquipmentSlotType.MAINHAND);
+        Multimap<Attribute, AttributeModifier> attributeMap = getDefaultAttributeModifiers(EquipmentSlotType.MAINHAND);
         ImmutableMultimap.Builder<Attribute, AttributeModifier> modifierBuilder = ImmutableMultimap.builder();
         modifierBuilder.putAll(attributeMap);
         modifierBuilder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier("KnifeMovementSpeedModifier", 0.1D, AttributeModifier.Operation.MULTIPLY_BASE));
@@ -57,19 +57,19 @@ public class KnifeItem extends SwordItem
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
     {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
-        tooltip.add(new TranslationTextComponent("description.pizzacraft.backstab.title").mergeStyle(TextFormatting.RED));
+        tooltip.add(new TranslationTextComponent("description.pizzacraft.backstab.title").withStyle(TextFormatting.RED));
 
-        if(InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) || InputMappings.isKeyDown(Minecraft.getInstance().getMainWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT))
+        if(InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) || InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_RIGHT_SHIFT))
         {
-            tooltip.add(new TranslationTextComponent("description.pizzacraft.backstab.description").mergeStyle(TextFormatting.BLUE));
+            tooltip.add(new TranslationTextComponent("description.pizzacraft.backstab.description").withStyle(TextFormatting.BLUE));
         }
         else
         {
-            tooltip.add(new TranslationTextComponent("description.pizzacraft.hold_shift.title").mergeStyle(TextFormatting.BLUE));
+            tooltip.add(new TranslationTextComponent("description.pizzacraft.hold_shift.title").withStyle(TextFormatting.BLUE));
         }
     }
 
@@ -80,26 +80,26 @@ public class KnifeItem extends SwordItem
         public static void onKnifeBackstab(LivingHurtEvent event)
         {
             LivingEntity victim = event.getEntityLiving();
-            Entity attacker = event.getSource().getTrueSource();
+            Entity attacker = event.getSource().getEntity();
 
             if(victim != null && attacker != null)
             {
                 if(attacker instanceof LivingEntity)
                 {
-                    if(compareRotations(attacker.rotationYaw, victim.rotationYaw, 50.0D))
+                    if(compareRotations(attacker.yRot, victim.yRot, 50.0D))
                     {
-                        Hand activeHand = ((LivingEntity)attacker).getActiveHand();
+                        Hand activeHand = ((LivingEntity)attacker).getUsedItemHand();
 
                         if(activeHand == Hand.MAIN_HAND)
                         {
-                            ItemStack stack = ((LivingEntity)attacker).getHeldItem(activeHand);
+                            ItemStack stack = ((LivingEntity)attacker).getItemInHand(activeHand);
 
                             if(stack.getItem() instanceof KnifeItem)
                             {
                                 float newDamage = event.getAmount() * 1.25F;
                                 event.setAmount(newDamage);
-                                attacker.world.playSound(null, attacker.getPosX(), attacker.getPosY(), attacker.getPosZ(), SoundEvents.ENTITY_PLAYER_ATTACK_CRIT, attacker.getSoundCategory(), 1.0F, 1.2F);
-                                Minecraft.getInstance().particles.emitParticleAtEntity(victim, ParticleTypes.CRIT, 10);
+                                attacker.level.playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(), SoundEvents.PLAYER_ATTACK_CRIT, attacker.getSoundSource(), 1.0F, 1.2F);
+                                Minecraft.getInstance().particleEngine.createTrackingEmitter(victim, ParticleTypes.CRIT, 10);
                             }
                         }
                     }

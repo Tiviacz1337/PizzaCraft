@@ -1,8 +1,6 @@
 package com.tiviacz.pizzacraft.util;
 
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
@@ -17,17 +15,17 @@ public class RenderUtils
     {
         double d0 = 0.5D;
         double d5 = 0.5D - d0;
-        double d6 = (double)pos.getX() + d5 + world.rand.nextDouble() * d0 * 2.0D;
+        double d6 = (double)pos.getX() + d5 + world.random.nextDouble() * d0 * 2.0D;
         //double d7 = (double)pos.getY() + world.rand.nextDouble() * y;
-        double d8 = (double)pos.getZ() + d5 + world.rand.nextDouble() * d0 * 2.0D;
+        double d8 = (double)pos.getZ() + d5 + world.random.nextDouble() * d0 * 2.0D;
 
         return new double[] {d6, d8};
     }
 
     public static BlockRayTraceResult getBlockRayTraceResult(PlayerEntity player, World world)
     {
-        float f = player.rotationPitch;
-        float f1 = player.rotationYaw;
+        float f = player.xRot;
+        float f1 = player.yRot;
         Vector3d vector3d = player.getEyePosition(1.0F);
         float f2 = MathHelper.cos(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
         float f3 = MathHelper.sin(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
@@ -38,6 +36,6 @@ public class RenderUtils
         double d0 = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
         Vector3d vector3d1 = vector3d.add((double)f6 * d0, (double)f5 * d0, (double)f7 * d0);
 
-        return world.rayTraceBlocks(new RayTraceContext(vector3d, vector3d1, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player));
+        return world.clip(new RayTraceContext(vector3d, vector3d1, RayTraceContext.BlockMode.OUTLINE, RayTraceContext.FluidMode.NONE, player));
     }
 }

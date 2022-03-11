@@ -49,23 +49,23 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound)
+    public void load(BlockState state, CompoundNBT compound)
     {
-        super.read(state, compound);
+        super.load(state, compound);
         this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
         this.content = SauceRegistry.INSTANCE.basinContentFromString(compound.getString(BASIN_CONTENT));
-        this.squashedStack = ItemStack.read(compound.getCompound(SQUASHED_STACK));
+        this.squashedStack = ItemStack.of(compound.getCompound(SQUASHED_STACK));
         if(this.getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK) this.fermentProgress = compound.getInt(FERMENT_PROGRESS);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound)
+    public CompoundNBT save(CompoundNBT compound)
     {
-        super.write(compound);
+        super.save(compound);
         compound.put(INVENTORY, this.inventory.serializeNBT());
         compound.putString(BASIN_CONTENT, content.toString());
         CompoundNBT squashedStack = new CompoundNBT();
-        this.squashedStack.write(squashedStack);
+        this.squashedStack.save(squashedStack);
         compound.put(SQUASHED_STACK, squashedStack);
         if(this.getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK) compound.putInt(FERMENT_PROGRESS, this.fermentProgress);
         return compound;
@@ -135,7 +135,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
             this.squashedStack = ItemStack.EMPTY;
             this.content = BasinContent.AIR;
         }
-        markDirty();
+        setChanged();
     }
 
     public static Map<BasinContent, ItemStack> basinContentToItemStack()
@@ -166,18 +166,18 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
 
     public ActionResultType onBlockActivated(PlayerEntity player, Hand hand)
     {
-        ItemStack itemHeld = player.getHeldItem(hand);
+        ItemStack itemHeld = player.getItemInHand(hand);
         BasinContentType basinContentType = getBasinContent().getContentType();
         ItemStack stackInSlot = getInventory().getStackInSlot(0);
 
         //If cheese, just extract
         if(basinContentType == BasinContentType.CHEESE)
         {
-            world.addEntity(new ItemEntity(world, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, new ItemStack(ModBlocks.CHEESE_BLOCK.get())));
+            level.addFreshEntity(new ItemEntity(level, getBlockPos().getX() + 0.5D, getBlockPos().getY() + 0.5D, getBlockPos().getZ() + 0.5D, new ItemStack(ModBlocks.CHEESE_BLOCK.get())));
             this.content = BasinContent.AIR;
             this.squashedStack = ItemStack.EMPTY;
-            world.playSound(player, pos, SoundEvents.BLOCK_FUNGUS_PLACE, SoundCategory.BLOCKS, 0.8F, 0.9F + world.rand.nextFloat());
-            this.markDirty();
+            level.playSound(player, getBlockPos(), SoundEvents.FUNGUS_PLACE, SoundCategory.BLOCKS, 0.8F, 0.9F + level.random.nextFloat());
+            this.setChanged();
             return ActionResultType.SUCCESS;
         }
         if(hand == Hand.MAIN_HAND)
@@ -185,10 +185,10 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
             if(basinContentType == BasinContentType.MILK)
             {
                 //Check if player holds acceptable fermenting item, if so start fermenting process.
-                if(itemHeld.getItem().isIn(ItemTags.getCollection().getTagByID(FERMENTING_ITEMS_TAG)))
+                if(itemHeld.getItem().is(ItemTags.getAllTags().getTag(FERMENTING_ITEMS_TAG)))
                 {
                     this.content = BasinContent.FERMENTING_MILK;
-                    world.playSound(player, pos, SoundEvents.BLOCK_COMPOSTER_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    level.playSound(player, getBlockPos(), SoundEvents.COMPOSTER_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
                     if(!player.isCreative())
                     {
@@ -198,7 +198,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                        //     world.addEntity(new ItemEntity(world, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, new ItemStack(Items.GLASS_BOTTLE, 1)));
                        // }
                     }
-                    this.markDirty();
+                    this.setChanged();
                     return ActionResultType.SUCCESS;
                 }
 
@@ -208,13 +208,13 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                     this.content = BasinContent.AIR;
                     itemHeld.shrink(1);
 
-                    if(!player.addItemStackToInventory(new ItemStack(Items.MILK_BUCKET)))
+                    if(!player.addItem(new ItemStack(Items.MILK_BUCKET)))
                     {
-                        world.addEntity(new ItemEntity(player.world, getPos().getX(), getPos().getY(), getPos().getZ(), new ItemStack(Items.MILK_BUCKET)));
+                        level.addFreshEntity(new ItemEntity(player.level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), new ItemStack(Items.MILK_BUCKET)));
                     }
 
-                    world.playSound(player, pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 0.8F, 1.0F);
-                    this.markDirty();
+                    level.playSound(player, getBlockPos(), SoundEvents.BUCKET_FILL, SoundCategory.BLOCKS, 0.8F, 1.0F);
+                    this.setChanged();
                     return ActionResultType.SUCCESS;
                 }
             }
@@ -233,8 +233,8 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                             itemHeld.shrink(2);
                         }
 
-                        world.playSound(player, pos, SoundEvents.BLOCK_FUNGUS_PLACE, SoundCategory.BLOCKS, 0.8F, 0.9F + world.rand.nextFloat());
-                        this.markDirty();
+                        level.playSound(player, getBlockPos(), SoundEvents.FUNGUS_PLACE, SoundCategory.BLOCKS, 0.8F, 0.9F + level.random.nextFloat());
+                        this.setChanged();
                         return ActionResultType.SUCCESS;
                     }
 
@@ -245,11 +245,11 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
 
                         if(!player.isCreative())
                         {
-                            player.setHeldItem(hand, new ItemStack(Items.BUCKET));
+                            player.setItemInHand(hand, new ItemStack(Items.BUCKET));
                         }
 
-                        world.playSound(player, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 0.8F, 1.0F);
-                        this.markDirty();
+                        level.playSound(player, getBlockPos(), SoundEvents.BUCKET_EMPTY, SoundCategory.BLOCKS, 0.8F, 1.0F);
+                        this.setChanged();
                         return ActionResultType.SUCCESS;
                     }
 
@@ -273,11 +273,11 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                             //itemHeld.shrink(1);
                             ItemStack result = basinContentToItemStack().get(getBasinContent());
 
-                            if(!player.inventory.addItemStackToInventory(result))
+                            if(!player.inventory.add(result))
                             {
-                                world.addEntity(new ItemEntity(player.world, getPos().getX(), getPos().getY(), getPos().getZ(), result));
+                                level.addFreshEntity(new ItemEntity(player.level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), result));
                             }
-                            world.playSound(player, pos, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.BLOCKS, 0.7F, 0.9F + world.rand.nextFloat());
+                            level.playSound(player, getBlockPos(), SoundEvents.BOTTLE_FILL, SoundCategory.BLOCKS, 0.7F, 0.9F + level.random.nextFloat());
                             setSquashedStackCount(getSquashedStackCount() - basinContentExtractSize().get(getBasinContent()));
                             return ActionResultType.SUCCESS;
                         }
@@ -327,7 +327,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
         {
             ItemStack stack = getInventory().getStackInSlot(0);
 
-            Optional<CrushingRecipe> match = world.getRecipeManager().getRecipe(CrushingRecipe.Type.CRUSHING_RECIPE_TYPE, new RecipeWrapper(getInventory()), world);
+            Optional<CrushingRecipe> match = level.getRecipeManager().getRecipeFor(CrushingRecipe.Type.CRUSHING_RECIPE_TYPE, new RecipeWrapper(getInventory()), level);
 
             if(match.isPresent())
             {
@@ -349,7 +349,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
 
                     this.content = SauceRegistry.INSTANCE.basinContentFromString(match.get().getContentOutput());
                     decrStackSize(inventory, 0, 1);
-                    world.playSound(player, pos, SoundEvents.BLOCK_SLIME_BLOCK_FALL, SoundCategory.BLOCKS, 0.7F, 0.9F + (0.1F * world.rand.nextFloat()));
+                    level.playSound(player, getBlockPos(), SoundEvents.SLIME_BLOCK_FALL, SoundCategory.BLOCKS, 0.7F, 0.9F + (0.1F * level.random.nextFloat()));
                 }
             }
             //Check for possible recipes
@@ -438,7 +438,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
             this.fermentProgress = 0;
             this.content = BasinContent.CHEESE;
         }
-        markDirty();
+        setChanged();
     }
 
     private int tick = 0;
@@ -453,7 +453,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
             if(fermentProgress % 60 == 0) {
                 //if(tick == 59)
                 //{
-                world.playSound(null, pos, SoundEvents.BLOCK_FUNGUS_PLACE, SoundCategory.BLOCKS, 0.8F, 0.9F + world.rand.nextFloat());
+                level.playSound(null, getBlockPos(), SoundEvents.FUNGUS_PLACE, SoundCategory.BLOCKS, 0.8F, 0.9F + level.random.nextFloat());
                 //}
             }
         }
@@ -481,9 +481,9 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
 
     private void createCheeseParticle()
     {
-        double x = ((double)world.rand.nextInt(12) / 16);
-        double z = ((double)world.rand.nextInt(12) / 16);
-        world.addParticle(new RedstoneParticleData(0.91F, 0.76F, 0.31F, 1.0F), pos.getX() + x + 0.2D, pos.getY() + 0.6D, pos.getZ() + z + 0.2D, 0.0D, 0.09D, 0.0D);
+        double x = ((double)level.random.nextInt(12) / 16);
+        double z = ((double)level.random.nextInt(12) / 16);
+        level.addParticle(new RedstoneParticleData(0.91F, 0.76F, 0.31F, 1.0F), getBlockPos().getX() + x + 0.2D, getBlockPos().getY() + 0.6D, getBlockPos().getZ() + z + 0.2D, 0.0D, 0.09D, 0.0D);
     }
 
     // ======== ITEMHANDLER ========
@@ -500,33 +500,33 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
 
     public boolean canExtract(PlayerEntity player, Hand handIn)
     {
-        return player.getHeldItem(handIn).isEmpty() && !isEmpty();
+        return player.getItemInHand(handIn).isEmpty() && !isEmpty();
     }
 
     public void insertStack(PlayerEntity player, Hand hand)
     {
         if(!player.isCreative())
         {
-            player.setHeldItem(hand, getInventory().insertItem(0, player.getHeldItem(hand), false));
+            player.setItemInHand(hand, getInventory().insertItem(0, player.getItemInHand(hand), false));
         }
         else
         {
-            getInventory().insertItem(0, player.getHeldItem(hand).copy(), false);
+            getInventory().insertItem(0, player.getItemInHand(hand).copy(), false);
         }
-        world.playSound(player, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
+        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
     }
 
     public void extractStack(PlayerEntity player)
     {
         if(!player.isCreative())
         {
-            InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), getInventory().extractItem(0, 64, false));
+            InventoryHelper.dropItemStack(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), getInventory().extractItem(0, 64, false));
         }
         else
         {
             getInventory().extractItem(0, 64, false);
         }
-        world.playSound(player, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
+        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
     }
 
     public IItemHandlerModifiable getInventory()
@@ -548,7 +548,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
             protected void onContentsChanged(int slot)
             {
                 super.onContentsChanged(slot);
-                markDirty();
+                setChanged();
             }
         };
     }

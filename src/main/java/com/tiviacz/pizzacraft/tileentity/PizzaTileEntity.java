@@ -6,7 +6,10 @@ import com.tiviacz.pizzacraft.blocks.PizzaBlock;
 import com.tiviacz.pizzacraft.blocks.RawPizzaBlock;
 import com.tiviacz.pizzacraft.client.PizzaBakedModel;
 import com.tiviacz.pizzacraft.container.PizzaContainer;
-import com.tiviacz.pizzacraft.init.*;
+import com.tiviacz.pizzacraft.init.ModBlocks;
+import com.tiviacz.pizzacraft.init.ModItems;
+import com.tiviacz.pizzacraft.init.ModTileEntityTypes;
+import com.tiviacz.pizzacraft.init.PizzaLayers;
 import com.tiviacz.pizzacraft.util.FoodUtils;
 import com.tiviacz.pizzacraft.util.NBTUtils;
 import com.tiviacz.pizzacraft.util.Utils;
@@ -26,6 +29,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
@@ -63,9 +67,9 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound)
+    public void load(BlockState state, CompoundNBT compound)
     {
-        super.read(state, compound);
+        super.load(state, compound);
         this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
         this.leftBakingTime = compound.getInt(LEFT_BAKING_TIME);
         this.leftFreshTime = compound.getInt(LEFT_FRESH_TIME);
@@ -74,9 +78,9 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound)
+    public CompoundNBT save(CompoundNBT compound)
     {
-        super.write(compound);
+        super.save(compound);
         compound.put(INVENTORY, this.inventory.serializeNBT());
         compound.putInt(LEFT_BAKING_TIME, this.leftBakingTime);
         compound.putInt(LEFT_FRESH_TIME, this.leftFreshTime);
@@ -95,16 +99,16 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
     {
         if(hand == Hand.MAIN_HAND)
         {
-            ItemStack stack = player.getHeldItem(hand);
+            ItemStack stack = player.getItemInHand(hand);
 
             if(isRaw() && !isBaking())
             {
                 if(stack.isEmpty())
                 {
                     //Open GUI here
-                    if(player.isSneaking())
+                    if(player.isCrouching())
                     {
-                        openGUI(player, this, pos);
+                        openGUI(player, this, getBlockPos());
                         return ActionResultType.SUCCESS;
                     }
                     else
@@ -127,13 +131,13 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
                             ItemStack modifiedCopy = inventory.getStackInSlot(this.selectedSlot).copy();
                             modifiedCopy.setCount(1);
 
-                            if(!player.inventory.addItemStackToInventory(modifiedCopy))
+                            if(!player.inventory.add(modifiedCopy))
                             {
-                                world.addEntity(new ItemEntity(player.world, getPos().getX(), getPos().getY(), getPos().getZ(), modifiedCopy));
+                                level.addFreshEntity(new ItemEntity(player.level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), modifiedCopy));
                             }
-                            world.playSound(player, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
+                            level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
                             decreaseInSlot(this.selectedSlot, 1);
-                            this.markDirty();
+                            this.setChanged();
                             return ActionResultType.SUCCESS;
                         }
                     }
@@ -181,7 +185,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
                             inventory.setStackInSlot(this.selectedSlot, modifiedCopy);
                         }
                         stack.shrink(1);
-                        world.playSound(player, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
+                        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
                         return ActionResultType.SUCCESS;
                     }
                 }
@@ -191,10 +195,10 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
             {
                 if(stack.isEmpty())
                 {
-                    if(player.isSneaking())
+                    if(player.isCrouching())
                     {
                         //Open Gui
-                        openGUI(player, this, pos);
+                        openGUI(player, this, getBlockPos());
                         return ActionResultType.SUCCESS;
                     }
                     else
@@ -277,11 +281,11 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
 
     public boolean isRaw()
     {
-        if(world == null)
+        if(level == null)
         {
             return true;
         }
-        return this.world.getBlockState(pos).getBlock() instanceof RawPizzaBlock;
+        return this.level.getBlockState(getBlockPos()).getBlock() instanceof RawPizzaBlock;
     }
 
     /**
@@ -321,13 +325,13 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
 
                 this.leftBakingTime--;
 
-                if(this.leftBakingTime == 0 || !(world.getBlockState(pos.down()).getBlock() instanceof OvenBlock))
+                if(this.leftBakingTime == 0 || !(level.getBlockState(getBlockPos().below()).getBlock() instanceof OvenBlock))
                 {
                     if(this.leftBakingTime == 0)
                     {
-                        if(!world.isRemote)
+                        if(!level.isClientSide)
                         {
-                            world.setBlockState(pos, ModBlocks.PIZZA.get().getDefaultState());
+                            level.setBlockAndUpdate(getBlockPos(), ModBlocks.PIZZA.get().defaultBlockState());
                         }
                         this.leftFreshTime = this.baseFreshTime;
                     }
@@ -335,7 +339,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
                 }
             }
 
-            else if(!isBaking() && world.getBlockState(pos.down()).getBlock() instanceof OvenBlock)
+            else if(!isBaking() && level.getBlockState(getBlockPos().below()).getBlock() instanceof OvenBlock)
             {
                 this.leftBakingTime = this.getBakingTime();
             }
@@ -388,7 +392,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
 
     public void dropItemStack(int slot)
     {
-        InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(slot));
+        InventoryHelper.dropItemStack(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), inventory.getStackInSlot(slot));
     }
 
     public boolean canAddIngredient(ItemStack stack, int slot)
@@ -458,7 +462,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
             @Override
             protected void onContentsChanged(int slot)
             {
-                markDirty();
+                setChanged();
                 requestModelDataUpdate();
                 setHungerAndSaturationRefillment();
             }
@@ -479,7 +483,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
     @Override
     public ITextComponent getDisplayName()
     {
-        return getBlockState().getBlock().getTranslatedName();
+        return new TranslationTextComponent(getBlockState().getBlock().getDescriptionId());
     }
 
     @Nullable
@@ -491,7 +495,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
 
     public void openGUI(PlayerEntity player, INamedContainerProvider containerSupplier, BlockPos pos)
     {
-        if(!player.world.isRemote)
+        if(!player.level.isClientSide)
         {
             NetworkHooks.openGui((ServerPlayerEntity)player, containerSupplier, pos);
         }
@@ -505,7 +509,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
     {
         ModelDataMap modelDataMap = PizzaBakedModel.getEmptyIModelData();
         modelDataMap.setData(PizzaBakedModel.LAYER_PROVIDERS, Optional.of(getInventory()));
-        modelDataMap.setData(PizzaBakedModel.INTEGER_PROPERTY, Optional.of(getBlockState().getBlock() == ModBlocks.PIZZA.get() ? getBlockState().get(PizzaBlock.BITES) : 0));
+        modelDataMap.setData(PizzaBakedModel.INTEGER_PROPERTY, Optional.of(getBlockState().getBlock() == ModBlocks.PIZZA.get() ? getBlockState().getValue(PizzaBlock.BITES) : 0));
         modelDataMap.setData(PizzaBakedModel.IS_RAW, Optional.of(isRaw()));
         return modelDataMap;
     }

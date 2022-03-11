@@ -33,7 +33,7 @@ public class MortarAndPestleRenderer extends TileEntityRenderer<MortarAndPestleT
             rand.setSeed(Reference.CONSTANT_RENDERING_LONG);
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
-            matrixStackIn.push();
+            matrixStackIn.pushPose();
 
             //Set proper translations
             setTranslations(matrixStackIn);
@@ -45,12 +45,12 @@ public class MortarAndPestleRenderer extends TileEntityRenderer<MortarAndPestleT
                 if(!stackToRender.isEmpty())
                 {
                     //boolean blockItem = itemRenderer.getItemModelWithOverrides(stackToRender, tileEntityIn.getWorld(), null).isGui3d();
-                    itemRenderer.renderItem(stackToRender, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
+                    itemRenderer.renderStatic(stackToRender, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
                     matrixStackIn.translate(0.0D, 0.0D, -0.065D);
-                    matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(360.0F * rand.nextFloat()));
+                    matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(360.0F * rand.nextFloat()));
                 }
             }
-            matrixStackIn.pop();
+            matrixStackIn.popPose();
         }
     }
 
@@ -70,7 +70,7 @@ public class MortarAndPestleRenderer extends TileEntityRenderer<MortarAndPestleT
             matrixStackIn.translate(0.5D, 0.1D, 0.5D);
 
             // Rotate item flat in the basin. Use X and Y from now on
-            matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90.0F));
+            matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(90.0F));
 
             // Resize the item
             matrixStackIn.scale(0.375F, 0.375F, 0.375F);
@@ -82,8 +82,8 @@ public class MortarAndPestleRenderer extends TileEntityRenderer<MortarAndPestleT
         double tx = -0.5D;
         double tz = -0.5D;
 
-        matrixStackIn.rotate(Vector3f.XN.rotationDegrees(90.0F));
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180.0F));
+        matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90.0F));
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180.0F));
         matrixStackIn.translate(tx, tz, -0.1D);
         matrixStackIn.scale(0.375F, 0.375F, 0.375F);
     }

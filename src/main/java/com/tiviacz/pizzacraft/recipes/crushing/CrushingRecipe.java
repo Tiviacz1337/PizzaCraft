@@ -1,7 +1,5 @@
 package com.tiviacz.pizzacraft.recipes.crushing;
 
-import com.tiviacz.pizzacraft.recipes.chopping.ChoppingRecipe;
-import com.tiviacz.pizzacraft.tileentity.BasinContent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -31,17 +29,17 @@ public class CrushingRecipe implements IRecipe<RecipeWrapper>
     @Override
     public boolean matches(RecipeWrapper inv, World worldIn)
     {
-        return input.test(inv.getStackInSlot(0));
+        return input.test(inv.getItem(0));
     }
 
     @Override
-    public ItemStack getCraftingResult(RecipeWrapper inv)
+    public ItemStack assemble(RecipeWrapper inv)
     {
-        return getRecipeOutput();
+        return getResultItem();
     }
 
     @Override
-    public boolean canFit(int width, int height)
+    public boolean canCraftInDimensions(int width, int height)
     {
         return false;
     }
@@ -62,7 +60,7 @@ public class CrushingRecipe implements IRecipe<RecipeWrapper>
     }
 
     @Override
-    public ItemStack getRecipeOutput()
+    public ItemStack getResultItem()
     {
         return this.stackOutput;
     }

@@ -55,18 +55,18 @@ public class ModVanillaCompat
 
     public static void registerStrippable(Block log, Block strippedLog)
     {
-        AxeItem.BLOCK_STRIPPING_MAP = Maps.newHashMap(AxeItem.BLOCK_STRIPPING_MAP);
-        AxeItem.BLOCK_STRIPPING_MAP.put(log, strippedLog);
+        AxeItem.STRIPABLES = Maps.newHashMap(AxeItem.STRIPABLES);
+        AxeItem.STRIPABLES.put(log, strippedLog);
     }
 
     public static void registerFlammable(Block blockIn, int encouragement, int flammability)
     {
         FireBlock fireblock = (FireBlock)Blocks.FIRE;
-        fireblock.setFireInfo(blockIn, encouragement, flammability);
+        fireblock.setFlammable(blockIn, encouragement, flammability);
     }
 
     public static void registerCompostable(float chance, IItemProvider itemIn)
     {
-        ComposterBlock.CHANCES.put(itemIn.asItem(), chance);
+        ComposterBlock.COMPOSTABLES.put(itemIn.asItem(), chance);
     }
 }

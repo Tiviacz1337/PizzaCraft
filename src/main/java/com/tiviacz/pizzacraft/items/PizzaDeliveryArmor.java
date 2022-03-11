@@ -1,7 +1,6 @@
 package com.tiviacz.pizzacraft.items;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
-import com.tiviacz.pizzacraft.client.renderer.ChefHatModel;
 import com.tiviacz.pizzacraft.client.renderer.PizzaDeliveryCapModel;
 import com.tiviacz.pizzacraft.init.ModItems;
 import net.minecraft.client.renderer.entity.model.BipedModel;
@@ -31,10 +30,10 @@ public class PizzaDeliveryArmor extends ArmorItem
     @Override
     public void onArmorTick(ItemStack stack, World world, PlayerEntity player)
     {
-        if(player.getItemStackFromSlot(EquipmentSlotType.HEAD).getItem() == ModItems.PIZZA_DELIVERY_CAP.get() && player.getItemStackFromSlot(EquipmentSlotType.CHEST).getItem() == ModItems.PIZZA_DELIVERY_SHIRT.get()
-                && player.getItemStackFromSlot(EquipmentSlotType.LEGS).getItem() == ModItems.PIZZA_DELIVERY_LEGGINGS.get() && player.getItemStackFromSlot(EquipmentSlotType.FEET).getItem() == ModItems.PIZZA_DELIVERY_BOOTS.get())
+        if(player.getItemBySlot(EquipmentSlotType.HEAD).getItem() == ModItems.PIZZA_DELIVERY_CAP.get() && player.getItemBySlot(EquipmentSlotType.CHEST).getItem() == ModItems.PIZZA_DELIVERY_SHIRT.get()
+                && player.getItemBySlot(EquipmentSlotType.LEGS).getItem() == ModItems.PIZZA_DELIVERY_LEGGINGS.get() && player.getItemBySlot(EquipmentSlotType.FEET).getItem() == ModItems.PIZZA_DELIVERY_BOOTS.get())
         {
-            player.addPotionEffect(new EffectInstance(Effects.SPEED, 1, 0, false, false));
+            player.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 1, 0, false, false));
         }
     }
 
@@ -47,12 +46,12 @@ public class PizzaDeliveryArmor extends ArmorItem
         {
             PizzaDeliveryCapModel hat = new PizzaDeliveryCapModel();
 
-            hat.box1.showModel = armorSlot == EquipmentSlotType.HEAD;
-            hat.box2.showModel = armorSlot == EquipmentSlotType.HEAD;
+            hat.box1.visible = armorSlot == EquipmentSlotType.HEAD;
+            hat.box2.visible = armorSlot == EquipmentSlotType.HEAD;
 
-            hat.isChild = _default.isChild;
-            hat.isSitting = _default.isSitting;
-            hat.isSneak = _default.isSneak;
+            hat.young = _default.young;
+            hat.riding = _default.riding;
+            hat.crouching = _default.crouching;
             hat.rightArmPose = _default.rightArmPose;
             hat.leftArmPose = _default.leftArmPose;
 

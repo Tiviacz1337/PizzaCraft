@@ -37,42 +37,42 @@ public class BaseTileEntity extends TileEntity
 
         if(!itemstack.isEmpty())
         {
-            this.markDirty();
+            this.setChanged();
         }
 
         return itemstack;
     }
 
     @Override
-    public void markDirty()
+    public void setChanged()
     {
-        super.markDirty();
+        super.setChanged();
         notifyBlockUpdate();
     }
 
     private void notifyBlockUpdate()
     {
-        BlockState blockstate = getWorld().getBlockState(pos);
-        world.markBlockRangeForRenderUpdate(pos, blockstate, blockstate);
-        world.notifyBlockUpdate(pos, blockstate, blockstate, Constants.BlockFlags.BLOCK_UPDATE);
+        BlockState blockstate = getLevel().getBlockState(getBlockPos());
+        level.setBlocksDirty(getBlockPos(), blockstate, blockstate);
+        level.sendBlockUpdated(getBlockPos(), blockstate, blockstate, Constants.BlockFlags.BLOCK_UPDATE);
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket()
     {
-        return new SUpdateTileEntityPacket(this.getPos(), 3, getUpdateTag());
+        return new SUpdateTileEntityPacket(this.getBlockPos(), 3, getUpdateTag());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
     {
         super.onDataPacket(net, pkt);
-        this.handleUpdateTag(world.getBlockState(pkt.getPos()), pkt.getNbtCompound());
+        this.handleUpdateTag(level.getBlockState(pkt.getPos()), pkt.getTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag()
     {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 }

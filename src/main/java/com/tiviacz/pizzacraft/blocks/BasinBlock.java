@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -20,7 +21,7 @@ import net.minecraftforge.items.IItemHandler;
 public class BasinBlock extends Block
 {
     //private static final VoxelShape INSIDE = makeCuboidShape(2.0D, 1.0D, 2.0D, 14.0D, 7.0D, 14.0D);
-    private static final VoxelShape SHAPE = makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D);
+    private static final VoxelShape SHAPE = box(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D);
     //protected static final VoxelShape SHAPE = VoxelShapes.combineAndSimplify(makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D), INSIDE, IBooleanFunction.ONLY_FIRST);
 
     public BasinBlock(Properties properties)
@@ -35,57 +36,57 @@ public class BasinBlock extends Block
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
     {
-        if(worldIn.getTileEntity(pos) instanceof BasinTileEntity)
+        if(worldIn.getBlockEntity(pos) instanceof BasinTileEntity)
         {
-            return ((BasinTileEntity)worldIn.getTileEntity(pos)).onBlockActivated(player, handIn);
+            return ((BasinTileEntity)worldIn.getBlockEntity(pos)).onBlockActivated(player, handIn);
         }
         return ActionResultType.FAIL;
     }
 
     @Override
-    public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)
+    public void fallOn(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)
     {
-        if(worldIn.getTileEntity(pos) instanceof BasinTileEntity && entityIn instanceof PlayerEntity)
+        if(worldIn.getBlockEntity(pos) instanceof BasinTileEntity && entityIn instanceof PlayerEntity)
         {
-            ((BasinTileEntity)worldIn.getTileEntity(pos)).crush((PlayerEntity)entityIn);
+            ((BasinTileEntity)worldIn.getBlockEntity(pos)).crush((PlayerEntity)entityIn);
         }
-        super.onFallenUpon(worldIn, pos, entityIn, fallDistance);
+        super.fallOn(worldIn, pos, entityIn, fallDistance);
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving)
     {
         if(state.getBlock() != newState.getBlock())
         {
-            if(world.getTileEntity(pos) instanceof BasinTileEntity)
+            if(world.getBlockEntity(pos) instanceof BasinTileEntity)
             {
-                IItemHandler inventory = ((BasinTileEntity)world.getTileEntity(pos)).getInventory();
+                IItemHandler inventory = ((BasinTileEntity)world.getBlockEntity(pos)).getInventory();
 
                 for(int i = 0; i < inventory.getSlots(); i++)
                 {
-                    InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(i));
+                    InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(i));
                 }
-                ((BasinTileEntity)world.getTileEntity(pos)).setSquashedStackCount(0);
-                world.updateComparatorOutputLevel(pos, this);
+                ((BasinTileEntity)world.getBlockEntity(pos)).setSquashedStackCount(0);
+                world.updateNeighbourForOutputSignal(pos, this);
             }
-            super.onReplaced(state, world, pos, newState, isMoving);
+            super.onRemove(state, world, pos, newState, isMoving);
         }
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos)
+    public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side)
     {
-        if(worldIn.getTileEntity(pos) instanceof BasinTileEntity)
+        if(blockAccess.getBlockEntity(pos) instanceof BasinTileEntity)
         {
-            return ((BasinTileEntity)worldIn.getTileEntity(pos)).getComparatorOutput();
+            return ((BasinTileEntity)blockAccess.getBlockEntity(pos)).getComparatorOutput();
         }
         return 0;
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
 

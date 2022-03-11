@@ -4,12 +4,7 @@ import com.tiviacz.pizzacraft.container.PizzaBagContainer;
 import com.tiviacz.pizzacraft.tileentity.PizzaBagTileEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.DoubleSidedInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -46,17 +41,17 @@ public class Utils
     public static void spawnItemStackInWorld(World world, BlockPos pos, ItemStack stack)
     {
         ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
-        itemEntity.setDefaultPickupDelay();
-        world.addEntity(itemEntity);
+        itemEntity.setDefaultPickUpDelay();
+        world.addFreshEntity(itemEntity);
     }
 
     public static int calculatePlayersUsing(World world, PizzaBagTileEntity tile, int p_213976_2_, int p_213976_3_, int p_213976_4_)
     {
         int i = 0;
 
-        for(PlayerEntity playerentity : world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB((double)((float)p_213976_2_ - 5.0F), (double)((float)p_213976_3_ - 5.0F), (double)((float)p_213976_4_ - 5.0F), (double)((float)(p_213976_2_ + 1) + 5.0F), (double)((float)(p_213976_3_ + 1) + 5.0F), (double)((float)(p_213976_4_ + 1) + 5.0F))))
+        for(PlayerEntity playerentity : world.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB((double)((float)p_213976_2_ - 5.0F), (double)((float)p_213976_3_ - 5.0F), (double)((float)p_213976_4_ - 5.0F), (double)((float)(p_213976_2_ + 1) + 5.0F), (double)((float)(p_213976_3_ + 1) + 5.0F), (double)((float)(p_213976_4_ + 1) + 5.0F))))
         {
-            if(playerentity.openContainer instanceof PizzaBagContainer)
+            if(playerentity.containerMenu instanceof PizzaBagContainer)
             {
                 ++i;
             }

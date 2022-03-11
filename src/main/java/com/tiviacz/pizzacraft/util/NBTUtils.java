@@ -4,7 +4,6 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.text.ITextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public class NBTUtils
             for(Pair<EffectInstance, Float> pair : effects)
             {
                 CompoundNBT effect = new CompoundNBT();
-                pair.getFirst().write(effect);
+                pair.getFirst().writeCurativeItems(effect);
                 effect.putFloat(PROBABILITY, pair.getSecond());
                 compound.put(String.valueOf(i), effect);
                 i++;
@@ -44,7 +43,7 @@ public class NBTUtils
                 CompoundNBT effect = effectsNBT.getCompound(String.valueOf(i));
                 if(!effect.isEmpty())
                 {
-                    Pair<EffectInstance, Float> effectPair = Pair.of(EffectInstance.read(effect), effect.getFloat(PROBABILITY));
+                    Pair<EffectInstance, Float> effectPair = Pair.of(EffectInstance.load(effect), effect.getFloat(PROBABILITY));
                     effects.add(effectPair);
                 }
             }

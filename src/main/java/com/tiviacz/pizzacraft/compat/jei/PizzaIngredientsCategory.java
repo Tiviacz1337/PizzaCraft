@@ -1,30 +1,5 @@
 package com.tiviacz.pizzacraft.compat.jei;
 
-import com.tiviacz.pizzacraft.PizzaCraft;
-import com.tiviacz.pizzacraft.init.ModBlocks;
-import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.init.PizzaLayers;
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.ITickTimer;
-import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
-import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
-import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagRegistry;
-import net.minecraft.util.ResourceLocation;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
 public class PizzaIngredientsCategory// implements IRecipeCategory<PizzaIngredientsType>
 {
 

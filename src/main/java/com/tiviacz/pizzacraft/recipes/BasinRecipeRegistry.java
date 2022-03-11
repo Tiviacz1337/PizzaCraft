@@ -2,8 +2,6 @@ package com.tiviacz.pizzacraft.recipes;
 
 import com.tiviacz.pizzacraft.init.ModItems;
 import net.minecraft.item.Item;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;

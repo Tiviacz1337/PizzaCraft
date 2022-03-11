@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.MissingTextureSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.tags.ITag;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -203,7 +202,7 @@ public class PizzaBakedModel implements IBakedModel
         BlockFaceUV blockFaceUV = new BlockFaceUV(uvArray, rotation);
         BlockPartFace blockPartFace = new BlockPartFace(face, -1, "",  blockFaceUV);
 
-        AtlasTexture blocksStitchedTextures = ModelLoader.instance().getSpriteMap().getAtlasTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
+        AtlasTexture blocksStitchedTextures = ModelLoader.instance().getSpriteMap().getAtlas(PlayerContainer.BLOCK_ATLAS);
         TextureAtlasSprite layersTextures = blocksStitchedTextures.getSprite(layerLocation);
 
         final ResourceLocation DUMMY_RL = new ResourceLocation("dummy_name");
@@ -212,9 +211,9 @@ public class PizzaBakedModel implements IBakedModel
     }
 
     @Override
-    public boolean isAmbientOcclusion()
+    public boolean useAmbientOcclusion()
     {
-        return baseModel.isAmbientOcclusion();
+        return baseModel.useAmbientOcclusion();
     }
 
     @Override
@@ -224,21 +223,21 @@ public class PizzaBakedModel implements IBakedModel
     }
 
     @Override
-    public boolean isSideLit()
+    public boolean usesBlockLight()
     {
-        return baseModel.isSideLit();
+        return baseModel.usesBlockLight();
     }
 
     @Override
-    public boolean isBuiltInRenderer()
+    public boolean isCustomRenderer()
     {
-        return baseModel.isBuiltInRenderer();
+        return baseModel.isCustomRenderer();
     }
 
     @Override
-    public TextureAtlasSprite getParticleTexture()
+    public TextureAtlasSprite getParticleIcon()
     {
-        return baseModel.getParticleTexture();
+        return baseModel.getParticleIcon();
     }
 
     @Override

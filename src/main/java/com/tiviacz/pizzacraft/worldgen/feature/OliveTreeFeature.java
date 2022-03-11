@@ -8,8 +8,6 @@ import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.WeightedBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
-import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
-import net.minecraft.world.gen.placement.Placement;
 import net.minecraft.world.gen.treedecorator.BeehiveTreeDecorator;
 import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 
@@ -23,16 +21,16 @@ public class OliveTreeFeature extends TreeFeature
     public ConfiguredFeature<BaseTreeFeatureConfig, ?> setConfiguration()
     {
         WeightedBlockStateProvider weightedBlockStateProvider = new WeightedBlockStateProvider();
-        weightedBlockStateProvider.addWeightedBlockstate(ModBlocks.OLIVE_LEAVES.get().getDefaultState(), 85);
-        weightedBlockStateProvider.addWeightedBlockstate(ModBlocks.FRUIT_OLIVE_LEAVES.get().getDefaultState().with(OliveLeavesBlock.AGE, 1), 15);
+        weightedBlockStateProvider.add(ModBlocks.OLIVE_LEAVES.get().defaultBlockState(), 85);
+        weightedBlockStateProvider.add(ModBlocks.FRUIT_OLIVE_LEAVES.get().defaultBlockState().setValue(OliveLeavesBlock.AGE, 1), 15);
 
-        return this.withConfiguration(
+        return this.configured(
                 new BaseTreeFeatureConfig.Builder(
-                        new SimpleBlockStateProvider(ModBlocks.OLIVE_LOG.get().getDefaultState()),
+                        new SimpleBlockStateProvider(ModBlocks.OLIVE_LOG.get().defaultBlockState()),
                         weightedBlockStateProvider,
-                        new BlobFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0), 3),
+                        new BlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3),
                         new StraightTrunkPlacer(4, 2, 0),
                         new TwoLayerFeature(1, 0, 1)
-                ).setIgnoreVines().setDecorators(ImmutableList.of(new BeehiveTreeDecorator(0.002F))).build());
+                ).ignoreVines().decorators(ImmutableList.of(new BeehiveTreeDecorator(0.002F))).build());
     }
 }

@@ -22,29 +22,29 @@ import java.util.function.Supplier;
 
 public class SimpleCropBlock extends CropsBlock
 {
-    public static final IntegerProperty AGE = BlockStateProperties.AGE_0_3;
+    public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
     private static final VoxelShape[] SHAPE_BY_AGE = new VoxelShape[]{
-            Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D),
-            Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 9.0D, 16.0D),
-            Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D),
-            Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D)};
+            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D),
+            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 9.0D, 16.0D),
+            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D),
+            Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D)};
     private final Supplier<Item> seedItemSupplier;
 
     public SimpleCropBlock(Properties builder, Supplier<Item> seedItemSupplier)
     {
         super(builder);
         this.seedItemSupplier = seedItemSupplier;
-        this.setDefaultState(this.stateContainer.getBaseState().with(this.getAgeProperty(), 0));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(this.getAgeProperty(), 0));
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
     {
-        return SHAPE_BY_AGE[state.get(this.getAgeProperty())];
+        return SHAPE_BY_AGE[state.getValue(this.getAgeProperty())];
     }
 
     @Override
-    protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos)
+    protected boolean mayPlaceOn(BlockState state, IBlockReader worldIn, BlockPos pos)
     {
         return state.getBlock() instanceof FarmlandBlock;
     }
@@ -73,17 +73,17 @@ public class SimpleCropBlock extends CropsBlock
     @Override
     protected int getBonemealAgeIncrease(World worldIn)
     {
-        return MathHelper.nextInt(worldIn.rand, 1, 2);
+        return MathHelper.nextInt(worldIn.random, 1, 2);
     }
 
     @Override
-    protected IItemProvider getSeedsItem()
+    protected IItemProvider getBaseSeedId()
     {
         return seedItemSupplier.get();
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
     {
         builder.add(AGE);
     }

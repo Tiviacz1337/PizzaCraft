@@ -43,17 +43,17 @@ public class MortarAndPestleTileEntity extends BaseTileEntity
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound)
+    public void load(BlockState state, CompoundNBT compound)
     {
-        super.read(state, compound);
+        super.load(state, compound);
         this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
         this.craftingProgress = compound.getInt(CRAFTING_PROGRESS);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound)
+    public CompoundNBT save(CompoundNBT compound)
     {
-        super.write(compound);
+        super.save(compound);
         compound.put(INVENTORY, this.inventory.serializeNBT());
         compound.putInt(CRAFTING_PROGRESS, this.craftingProgress);
         return compound;
@@ -68,17 +68,17 @@ public class MortarAndPestleTileEntity extends BaseTileEntity
         if(craftingProgress % 2 == 0)
         {
             //world.playSound(player, pos.getX() + 0.5D, pos.getY() + 0.3D, pos.getZ() + 0.5D, SoundEvents.BLOCK_STONE_STEP, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
-            world.playSound(player, pos, SoundEvents.BLOCK_STONE_STEP, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
+            level.playSound(player, getBlockPos(), SoundEvents.STONE_STEP, SoundCategory.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
         }
 
         if(craftingProgress >= 50) resetProgress();
 
-        return world.getRecipeManager().getRecipe(MortarRecipe.Type.MORTAR_AND_PESTLE_RECIPE_TYPE, new RecipeWrapper(getInventory()), world).isPresent();
+        return level.getRecipeManager().getRecipeFor(MortarRecipe.Type.MORTAR_AND_PESTLE_RECIPE_TYPE, new RecipeWrapper(getInventory()), level).isPresent();
     }
 
     public void mix(World world, PlayerEntity player)
     {
-        Optional<MortarRecipe> match = world.getRecipeManager().getRecipe(MortarRecipe.Type.MORTAR_AND_PESTLE_RECIPE_TYPE, new RecipeWrapper(getInventory()), world);
+        Optional<MortarRecipe> match = world.getRecipeManager().getRecipeFor(MortarRecipe.Type.MORTAR_AND_PESTLE_RECIPE_TYPE, new RecipeWrapper(getInventory()), world);
 
         if(match.isPresent())
         {
@@ -86,19 +86,19 @@ public class MortarAndPestleTileEntity extends BaseTileEntity
 
             if(this.craftingProgress == duration)
             {
-                ItemStack result = match.get().getRecipeOutput().copy();
-                world.addParticle(new ItemParticleData(ParticleTypes.ITEM, getInventory().getStackInSlot(0)), pos.getX() + 0.5D, pos.getY() + 0.3D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
+                ItemStack result = match.get().getResultItem().copy();
+                world.addParticle(new ItemParticleData(ParticleTypes.ITEM, getInventory().getStackInSlot(0)), getBlockPos().getX() + 0.5D, getBlockPos().getY() + 0.3D, getBlockPos().getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
 
                 for(int i = 0; i < match.get().getInputs().size(); i++)
                 {
                     decrStackSize(getInventory(), i, 1);  //¯\_( ͡° ͜ʖ ͡°)_/¯
                 }
                 //world.playSound(player, pos.getX() + 0.5D, pos.getY() + 0.3D, pos.getZ() + 0.5D, SoundEvents.BLOCK_PUMPKIN_CARVE, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
-                world.playSound(player, pos, SoundEvents.BLOCK_PUMPKIN_CARVE, SoundCategory.BLOCKS, 0.7F, 0.8F); // + world.rand.nextFloat());
+                world.playSound(player, getBlockPos(), SoundEvents.PUMPKIN_CARVE, SoundCategory.BLOCKS, 0.7F, 0.8F); // + world.rand.nextFloat());
                 //world.addEntity(new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, result));
-                ItemEntity entity = new ItemEntity(world, pos.getX() + 0.5 + (Direction.NORTH.getXOffset() * 0.2), pos.getY() + 0.2, pos.getZ() + 0.5 + (Direction.NORTH.getZOffset() * 0.2), result.copy());
-                entity.setMotion(Direction.NORTH.getXOffset() * 0.2F, 0.0F, Direction.NORTH.getZOffset() * 0.2F);
-                world.addEntity(entity);
+                ItemEntity entity = new ItemEntity(world, getBlockPos().getX() + 0.5 + (Direction.NORTH.getStepX() * 0.2), getBlockPos().getY() + 0.2, getBlockPos().getZ() + 0.5 + (Direction.NORTH.getStepZ() * 0.2), result.copy());
+                entity.setDeltaMovement(Direction.NORTH.getStepX() * 0.2F, 0.0F, Direction.NORTH.getStepZ() * 0.2F);
+                world.addFreshEntity(entity);
 
                 if(player instanceof ServerPlayerEntity)
                 {
@@ -126,26 +126,26 @@ public class MortarAndPestleTileEntity extends BaseTileEntity
     {
         if(!player.isCreative())
         {
-            player.setHeldItem(hand, getInventory().insertItem(slot, player.getHeldItem(hand), false));
+            player.setItemInHand(hand, getInventory().insertItem(slot, player.getItemInHand(hand), false));
         }
         else
         {
-            getInventory().insertItem(slot, player.getHeldItem(hand).copy(), false);
+            getInventory().insertItem(slot, player.getItemInHand(hand).copy(), false);
         }
-        world.playSound(player, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
+        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
     }
 
     public void extractStack(int slot, PlayerEntity player)
     {
         if(!player.isCreative())
         {
-            InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), getInventory().extractItem(slot, 64, false));
+            InventoryHelper.dropItemStack(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), getInventory().extractItem(slot, 64, false));
         }
         else
         {
             getInventory().extractItem(slot, 64, false);
         }
-        world.playSound(player, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
+        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
     }
 
     private ItemStackHandler createHandler()

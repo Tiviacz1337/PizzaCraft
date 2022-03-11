@@ -24,9 +24,9 @@ public class PizzaItemStackRenderer extends ItemStackTileEntityRenderer
     public PizzaItemStackRenderer() {}
 
     @Override
-    public void func_239207_a_(ItemStack stack, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay)
+    public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay)
     {
-        Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(stack.getItem() == ModItems.RAW_PIZZA.get() ? ModBlocks.RAW_PIZZA.get().getDefaultState() : ModBlocks.PIZZA.get().getDefaultState(), matrixStack, buffer, combinedLight, combinedOverlay, getModelData(stack));
+        Minecraft.getInstance().getBlockRenderer().renderBlock(stack.getItem() == ModItems.RAW_PIZZA.get() ? ModBlocks.RAW_PIZZA.get().defaultBlockState() : ModBlocks.PIZZA.get().defaultBlockState(), matrixStack, buffer, combinedLight, combinedOverlay, getModelData(stack));
     }
 
     public IModelData getModelData(ItemStack stack)

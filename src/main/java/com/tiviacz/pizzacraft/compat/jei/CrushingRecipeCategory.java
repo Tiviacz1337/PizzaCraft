@@ -1,38 +1,23 @@
 package com.tiviacz.pizzacraft.compat.jei;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.ModBlocks;
-import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.recipes.crushing.CrushingRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Quaternion;
 
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipe>
 {
@@ -47,7 +32,7 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipe>
     {
         background = guiHelper.createDrawable(new ResourceLocation(PizzaCraft.MODID, "textures/gui/crushing_recipe.png"), -5, -5, 96, 36);
         icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.GRANITE_BASIN.get()));
-        title = I18n.format("recipecategory." + PizzaCraft.MODID + ".crushing");
+        title = I18n.get("recipecategory." + PizzaCraft.MODID + ".crushing");
         //timer = guiHelper.createTickTimer(60, 320, false);
     }
 
@@ -94,7 +79,7 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipe>
     {
         List<Ingredient> ingredients = Collections.singletonList(crushingRecipe.getInput());
         iIngredients.setInputIngredients(ingredients);
-        iIngredients.setOutput(VanillaTypes.ITEM, crushingRecipe.getRecipeOutput());
+        iIngredients.setOutput(VanillaTypes.ITEM, crushingRecipe.getResultItem());
     }
 
     @Override
@@ -105,11 +90,11 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipe>
         guiItemStacks.init(0, false, 5, 9);
         guiItemStacks.init(1, false, 68, 9);
 
-        List<ItemStack> inputs = Arrays.asList(crushingRecipe.getInput().getMatchingStacks());
+        List<ItemStack> inputs = Arrays.asList(crushingRecipe.getInput().getItems());
         inputs.forEach(s -> s.setCount(crushingRecipe.getInputCount()));
 
         guiItemStacks.set(0, inputs);
-        guiItemStacks.set(1, crushingRecipe.getRecipeOutput());
+        guiItemStacks.set(1, crushingRecipe.getResultItem());
     }
 
   //  @Override

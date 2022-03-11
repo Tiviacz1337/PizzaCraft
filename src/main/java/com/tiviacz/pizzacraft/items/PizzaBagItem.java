@@ -27,9 +27,9 @@ public class PizzaBagItem extends BlockItem
     }
 
     @Override
-    public ITextComponent getDisplayName(ItemStack stack)
+    public ITextComponent getName(ItemStack stack)
     {
-        return new TranslationTextComponent(this.getTranslationKey(stack)).mergeStyle(TextFormatting.RED);
+        return new TranslationTextComponent(this.getDescriptionId(stack)).withStyle(TextFormatting.RED);
     }
 
     @Nullable

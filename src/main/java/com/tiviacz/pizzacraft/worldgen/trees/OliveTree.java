@@ -12,7 +12,7 @@ import java.util.Random;
 public class OliveTree extends Tree
 {
     @Nullable
-    protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getTreeFeature(Random randomIn, boolean p_225546_2_)
+    protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getConfiguredFeature(Random randomIn, boolean p_225546_2_)
     {
         return ((OliveTreeFeature) ModFeatures.OLIVE_TREE.get()).setConfiguration();
     }

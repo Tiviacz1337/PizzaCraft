@@ -1,15 +1,5 @@
 package com.tiviacz.pizzacraft.util;
 
-import com.tiviacz.pizzacraft.tileentity.PizzaHungerSystem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.items.ItemStackHandler;
-
-import java.util.List;
-
 public class FoodUtils
 {
     public static boolean requiresAddition(int totalHunger, int slice)

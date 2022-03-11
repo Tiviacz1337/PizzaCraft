@@ -31,9 +31,9 @@ public class ClientEventHandler
     @SubscribeEvent
     public static void onModelBakeEvent(ModelBakeEvent event)
     {
-        for(BlockState blockState : ModBlocks.PIZZA.get().getStateContainer().getValidStates())
+        for(BlockState blockState : ModBlocks.PIZZA.get().getStateDefinition().getPossibleStates())
         {
-            ModelResourceLocation variantMRL = BlockModelShapes.getModelLocation(blockState);
+            ModelResourceLocation variantMRL = BlockModelShapes.stateToModelLocation(blockState);
             IBakedModel existingModel = event.getModelRegistry().get(variantMRL);
             if(existingModel == null)
             {
@@ -50,9 +50,9 @@ public class ClientEventHandler
             }
         }
 
-        for(BlockState blockState : ModBlocks.RAW_PIZZA.get().getStateContainer().getValidStates())
+        for(BlockState blockState : ModBlocks.RAW_PIZZA.get().getStateDefinition().getPossibleStates())
         {
-            ModelResourceLocation variantMRL = BlockModelShapes.getModelLocation(blockState);
+            ModelResourceLocation variantMRL = BlockModelShapes.stateToModelLocation(blockState);
             IBakedModel existingModel = event.getModelRegistry().get(variantMRL);
             if(existingModel == null)
             {
@@ -73,7 +73,7 @@ public class ClientEventHandler
     @SubscribeEvent
     public static void stitcherEventPre(TextureStitchEvent.Pre event)
     {
-        if(event.getMap().getTextureLocation() == PlayerContainer.LOCATION_BLOCKS_TEXTURE)
+        if(event.getMap().location() == PlayerContainer.BLOCK_ATLAS)
         {
             event.addSprite(PizzaLayers.PIZZA_SLICE);
 

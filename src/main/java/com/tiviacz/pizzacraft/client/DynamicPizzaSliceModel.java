@@ -7,32 +7,21 @@ import com.google.common.collect.Sets;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
-import com.tiviacz.pizzacraft.PizzaCraft;
-import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.init.PizzaLayers;
 import com.tiviacz.pizzacraft.util.Utils;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.TransformationMatrix;
-import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.*;
 import net.minecraftforge.client.model.geometry.IModelGeometry;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.resource.IResourceType;
-import net.minecraftforge.resource.VanillaResourceType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,7 +29,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceModel>
 {
@@ -83,7 +71,7 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
             {
                 if(PizzaLayers.VALID_ITEM_TAGS.contains(location))
                 {
-                    layersLocations.add(new RenderMaterial(PlayerContainer.LOCATION_BLOCKS_TEXTURE, PizzaLayers.getTagToItemLayer().get(location)));
+                    layersLocations.add(new RenderMaterial(PlayerContainer.BLOCK_ATLAS, PizzaLayers.getTagToItemLayer().get(location)));
                 }
             }
         }
@@ -175,9 +163,9 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
         }
 
         @Override
-        public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity)
+        public IBakedModel resolve(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity)
         {
-            IBakedModel overriden = nested.getOverrideModel(originalModel, stack, world, entity);
+            IBakedModel overriden = nested.resolve(originalModel, stack, world, entity);
             if(overriden != originalModel) return overriden;
             if(stack.getTag() != null)
             {

@@ -20,17 +20,17 @@ public class ScreenPizzaBag extends ContainerScreen<PizzaBagContainer>
 
         this.tileEntity = screenContainer.tileEntity;
 
-        this.guiLeft = 0;
-        this.guiTop = 0;
+        this.leftPos = 0;
+        this.topPos = 0;
 
-        this.ySize = 133;
+        this.imageHeight = 133;
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY)
+    protected void renderLabels(MatrixStack matrixStack, int mouseX, int mouseY)
     {
-        this.font.func_243248_b(matrixStack, this.tileEntity.getDisplayName(), (float)8, (float)6, 4210752);
-        this.font.func_243248_b(matrixStack, this.playerInventory.getDisplayName(), (float)8, (float)(this.ySize - 92), 4210752);
+        this.font.draw(matrixStack, this.tileEntity.getDisplayName(), (float)8, (float)6, 4210752);
+        this.font.draw(matrixStack, this.inventory.getDisplayName(), (float)8, (float)(this.imageHeight - 92), 4210752);
     }
 
     @Override
@@ -38,17 +38,17 @@ public class ScreenPizzaBag extends ContainerScreen<PizzaBagContainer>
     {
         this.renderBackground(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
+        this.renderTooltip(matrixStack, mouseX, mouseY);
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY)
+    protected void renderBg(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY)
     {
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
-        this.minecraft.getTextureManager().bindTexture(SCREEN_PIZZA_BAG);
-        int x = (this.width - this.xSize) / 2;
-        int y = (this.height - this.ySize) / 2;
-        this.blit(matrixStack, x, y, 0, 0, this.xSize, this.ySize);
+        this.minecraft.getTextureManager().bind(SCREEN_PIZZA_BAG);
+        int x = (this.width - this.imageWidth) / 2;
+        int y = (this.height - this.imageHeight) / 2;
+        this.blit(matrixStack, x, y, 0, 0, this.imageWidth, this.imageHeight);
     }
 }
 

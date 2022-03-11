@@ -2,7 +2,10 @@ package com.tiviacz.pizzacraft.recipes.mortar;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -37,7 +40,7 @@ public class MortarRecipe implements IRecipe<IInventory>
     }
 
     @Override
-    public ItemStack getRecipeOutput()
+    public ItemStack getResultItem()
     {
         return this.output;
     }
@@ -48,9 +51,9 @@ public class MortarRecipe implements IRecipe<IInventory>
         List<ItemStack> inputs = new ArrayList<>();
         int i = 0;
 
-        for(int j = 0; j < inv.getSizeInventory(); ++j)
+        for(int j = 0; j < inv.getContainerSize(); ++j)
         {
-            ItemStack itemstack = inv.getStackInSlot(j);
+            ItemStack itemstack = inv.getItem(j);
             if(!itemstack.isEmpty())
             {
                 ++i;
@@ -61,13 +64,13 @@ public class MortarRecipe implements IRecipe<IInventory>
     }
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv)
+    public ItemStack assemble(IInventory inv)
     {
-        return getRecipeOutput();
+        return getResultItem();
     }
 
     @Override
-    public boolean canFit(int width, int height)
+    public boolean canCraftInDimensions(int width, int height)
     {
         return false;
     }

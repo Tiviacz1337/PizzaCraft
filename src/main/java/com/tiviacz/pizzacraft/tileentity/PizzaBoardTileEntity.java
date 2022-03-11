@@ -14,7 +14,7 @@ import net.minecraft.util.Hand;
 
 public class PizzaBoardTileEntity extends BaseTileEntity
 {
-    private BlockState storedBlockState = Blocks.AIR.getDefaultState();
+    private BlockState storedBlockState = Blocks.AIR.defaultBlockState();
     private final String STORED_BLOCKSTATE = "StoredBlockState";
 
     public PizzaBoardTileEntity()
@@ -23,42 +23,42 @@ public class PizzaBoardTileEntity extends BaseTileEntity
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound)
+    public void load(BlockState state, CompoundNBT compound)
     {
-        super.read(state, compound);
+        super.load(state, compound);
         this.storedBlockState = NBTUtil.readBlockState(compound);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound)
+    public CompoundNBT save(CompoundNBT compound)
     {
-        super.write(compound);
+        super.save(compound);
         compound.put(STORED_BLOCKSTATE, NBTUtil.writeBlockState(storedBlockState));
         return compound;
     }
 
-    public void onBlockActivated(PlayerEntity player, Hand hand)
+    public void use(PlayerEntity player, Hand hand)
     {
         if(hand == Hand.MAIN_HAND)
         {
-            ItemStack stack = player.getHeldItem(hand);
+            ItemStack stack = player.getItemInHand(hand);
 
-            if(!stack.isEmpty() && player.isSneaking())
+            if(!stack.isEmpty() && player.isCrouching())
             {
-                if(this.storedBlockState != Blocks.AIR.getDefaultState())
+                if(this.storedBlockState != Blocks.AIR.defaultBlockState())
                 {
-                    world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(this.storedBlockState.getBlock())));
-                    this.storedBlockState = Blocks.AIR.getDefaultState();
+                    level.addFreshEntity(new ItemEntity(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), new ItemStack(this.storedBlockState.getBlock())));
+                    this.storedBlockState = Blocks.AIR.defaultBlockState();
                 }
             }
             else if(stack.getItem() == ModItems.RAW_PIZZA.get())
             {
-                this.storedBlockState = ModBlocks.RAW_PIZZA.get().getDefaultState();
+                this.storedBlockState = ModBlocks.RAW_PIZZA.get().defaultBlockState();
                 stack.shrink(1);
             }
             else if(stack.getItem() == ModItems.PIZZA.get())
             {
-                this.storedBlockState = ModBlocks.RAW_PIZZA.get().getDefaultState();
+                this.storedBlockState = ModBlocks.RAW_PIZZA.get().defaultBlockState();
                 stack.shrink(1);
             }
         }

@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 public class PizzaCraftItemGroup extends ItemGroup
 {
-    public static final ItemGroup PIZZACRAFT = new PizzaCraftItemGroup(ItemGroup.GROUPS.length, PizzaCraft.MODID);
+    public static final ItemGroup PIZZACRAFT = new PizzaCraftItemGroup(ItemGroup.TABS.length, PizzaCraft.MODID);
 
     private PizzaCraftItemGroup(int index, String label)
     {
@@ -15,7 +15,7 @@ public class PizzaCraftItemGroup extends ItemGroup
     }
 
     @Override
-    public ItemStack createIcon()
+    public ItemStack makeIcon()
     {
         return new ItemStack(ModBlocks.PIZZA.get());
     }

@@ -2,15 +2,9 @@ package com.tiviacz.pizzacraft.init;
 
 import com.google.common.collect.Maps;
 import com.tiviacz.pizzacraft.PizzaCraft;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.tags.ITag;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

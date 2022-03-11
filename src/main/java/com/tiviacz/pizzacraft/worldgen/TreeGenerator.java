@@ -32,19 +32,19 @@ public class TreeGenerator
     public static void setup(final FMLCommonSetupEvent event)
     {
         WeightedBlockStateProvider weightedBlockStateProvider = new WeightedBlockStateProvider();
-        weightedBlockStateProvider.addWeightedBlockstate(ModBlocks.OLIVE_LEAVES.get().getDefaultState(), 85);
-        weightedBlockStateProvider.addWeightedBlockstate(ModBlocks.FRUIT_OLIVE_LEAVES.get().getDefaultState().with(OliveLeavesBlock.AGE, 1), 15);
+        weightedBlockStateProvider.add(ModBlocks.OLIVE_LEAVES.get().defaultBlockState(), 85);
+        weightedBlockStateProvider.add(ModBlocks.FRUIT_OLIVE_LEAVES.get().defaultBlockState().setValue(OliveLeavesBlock.AGE, 1), 15);
 
 
         event.enqueueWork(() -> {
-            CONFIGURED_OLIVE_TREE = Feature.TREE.withConfiguration(
+            CONFIGURED_OLIVE_TREE = Feature.TREE.configured(
                     new BaseTreeFeatureConfig.Builder(
-                            new SimpleBlockStateProvider(ModBlocks.OLIVE_LOG.get().getDefaultState()),
+                            new SimpleBlockStateProvider(ModBlocks.OLIVE_LOG.get().defaultBlockState()),
                             weightedBlockStateProvider,
-                            new BlobFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0), 3),
+                            new BlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3),
                             new StraightTrunkPlacer(4, 2, 0),
                             new TwoLayerFeature(1, 0, 1)
-                    ).setIgnoreVines().setDecorators(ImmutableList.of(new BeehiveTreeDecorator(0.002F))).build());
+                    ).ignoreVines().decorators(ImmutableList.of(new BeehiveTreeDecorator(0.002F))).build());
 
             Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(PizzaCraft.MODID, "olive_tree"), CONFIGURED_OLIVE_TREE);
         });
@@ -61,7 +61,7 @@ public class TreeGenerator
             {
                 if(event.getCategory() == Biome.Category.SAVANNA)
                 {
-                    generation.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> CONFIGURED_OLIVE_TREE.withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(1, 0.1F, 1)).square()));
+                    generation.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> CONFIGURED_OLIVE_TREE.decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(1, 0.1F, 1)).squared()));
                 }
             }
         }

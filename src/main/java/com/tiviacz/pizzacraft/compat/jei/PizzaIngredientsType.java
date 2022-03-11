@@ -1,7 +1,6 @@
 package com.tiviacz.pizzacraft.compat.jei;
 
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
 
 public class PizzaIngredientsType
 {

@@ -25,14 +25,14 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 public class MortarAndPestleBlock extends Block
 {
-    public static final IntegerProperty PESTLE = BlockStateProperties.AGE_0_3;
-    private static final VoxelShape INSIDE = makeCuboidShape(5.0D, 1.0D, 5.0D, 11.0D, 4.0D, 11.0D);
-    protected static final VoxelShape SHAPE = VoxelShapes.combineAndSimplify(makeCuboidShape(4.0D, 0.0D, 4.0D, 12.0D, 4.0D, 12.0D), INSIDE, IBooleanFunction.ONLY_FIRST);
+    public static final IntegerProperty PESTLE = BlockStateProperties.AGE_3;
+    private static final VoxelShape INSIDE = box(5.0D, 1.0D, 5.0D, 11.0D, 4.0D, 11.0D);
+    protected static final VoxelShape SHAPE = VoxelShapes.join(box(4.0D, 0.0D, 4.0D, 12.0D, 4.0D, 12.0D), INSIDE, IBooleanFunction.ONLY_FIRST);
 
     public MortarAndPestleBlock(Properties properties)
     {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(PESTLE, 0));
+        this.registerDefaultState(getStateDefinition().any().setValue(PESTLE, 0));
     }
 
     @Override
@@ -42,16 +42,16 @@ public class MortarAndPestleBlock extends Block
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
     {
-        if(worldIn.getTileEntity(pos) instanceof MortarAndPestleTileEntity)
+        if(worldIn.getBlockEntity(pos) instanceof MortarAndPestleTileEntity)
         {
-            MortarAndPestleTileEntity mortarTile = (MortarAndPestleTileEntity)worldIn.getTileEntity(pos);
-            ItemStack itemHeld = player.getHeldItem(handIn);
+            MortarAndPestleTileEntity mortarTile = (MortarAndPestleTileEntity)worldIn.getBlockEntity(pos);
+            ItemStack itemHeld = player.getItemInHand(handIn);
 
             if(itemHeld.isEmpty())
             {
-                if(player.isSneaking())
+                if(player.isCrouching())
                 {
                     movePestle(worldIn, pos, state);
 
@@ -80,29 +80,29 @@ public class MortarAndPestleBlock extends Block
     private void movePestle(World worldIn, BlockPos pos, BlockState state)
     {
         // Cycle property
-        worldIn.setBlockState(pos, state.func_235896_a_(PESTLE));
+        worldIn.setBlockAndUpdate(pos, state.cycle(PESTLE));
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving)
     {
         if(state.getBlock() != newState.getBlock())
         {
-            if(world.getTileEntity(pos) instanceof MortarAndPestleTileEntity)
+            if(world.getBlockEntity(pos) instanceof MortarAndPestleTileEntity)
             {
-                IItemHandlerModifiable inventory = ((MortarAndPestleTileEntity)world.getTileEntity(pos)).getInventory();
+                IItemHandlerModifiable inventory = ((MortarAndPestleTileEntity)world.getBlockEntity(pos)).getInventory();
 
                 for(int i = 0; i < inventory.getSlots(); i++)
                 {
-                    InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(i));
+                    InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(i));
                 }
             }
-            super.onReplaced(state, world, pos, newState, isMoving);
+            super.onRemove(state, world, pos, newState, isMoving);
         }
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
     {
         builder.add(PESTLE);
     }

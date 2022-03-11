@@ -48,33 +48,33 @@ public class BlockAlphaRenderer extends BlockModelRenderer
 
     public static void renderBlockAlpha(BlockPos pos, BlockState state, World world, MatrixStack matrix, IRenderTypeBuffer renderTypeBuffer, IModelData data)
     {
-        matrix.push();
+        matrix.pushPose();
 
-        BlockRendererDispatcher blockDispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
-        BlockModelRenderer renderer = getInstance(blockDispatcher.getBlockModelRenderer());
+        BlockRendererDispatcher blockDispatcher = Minecraft.getInstance().getBlockRenderer();
+        BlockModelRenderer renderer = getInstance(blockDispatcher.getModelRenderer());
         renderer.renderModel(
                 world,
-                blockDispatcher.getModelForState(state),
+                blockDispatcher.getBlockModel(state),
                 state,
                 pos,
                 matrix,
-                renderTypeBuffer.getBuffer(RenderType.getTranslucent()),
+                renderTypeBuffer.getBuffer(RenderType.translucent()),
                 false,
-                world.rand,
-                state.getPositionRandom(pos),
+                world.random,
+                state.getSeed(pos),
                 OverlayTexture.NO_OVERLAY,
                 data);
 
-        matrix.pop();
+        matrix.popPose();
     }
 
     @Override
-    public void renderQuadSmooth(IBlockDisplayReader world, BlockState state, BlockPos pos, IVertexBuilder buffer, MatrixStack.Entry matrixEntry, BakedQuad quadIn, float tintA, float tintB, float tintC, float tintD, int brightness0, int brightness1, int brightness2, int brightness3, int combinedOverlayIn)
+    public void putQuadData(IBlockDisplayReader world, BlockState state, BlockPos pos, IVertexBuilder buffer, MatrixStack.Entry matrixEntry, BakedQuad quadIn, float tintA, float tintB, float tintC, float tintD, int brightness0, int brightness1, int brightness2, int brightness3, int combinedOverlayIn)
     {
         float r=1F;
         float g=1F;
         float b=1F;
-        if (quadIn.hasTintIndex())
+        if (quadIn.isTinted())
         {
             int i = Minecraft.getInstance().getBlockColors().getColor(state, world, pos, quadIn.getTintIndex());
             r = (i >> 16 & 255) / 255.0F;
@@ -82,10 +82,10 @@ public class BlockAlphaRenderer extends BlockModelRenderer
             b = (i & 255) / 255.0F;
         }
         // FORGE: Apply diffuse lighting at render-time instead of baking it in
-        if (quadIn.applyDiffuseLighting()) // better name: shouldApplyDiffuseLighting
+        if (quadIn.isShade()) // better name: shouldApplyDiffuseLighting
         {
             // TODO this should be handled by the forge lighting pipeline
-            float forgeLighting = net.minecraftforge.client.model.pipeline.LightUtil.diffuseLight(quadIn.getFace());
+            float forgeLighting = net.minecraftforge.client.model.pipeline.LightUtil.diffuseLight(quadIn.getDirection());
             r *= forgeLighting;
             g *= forgeLighting;
             b *= forgeLighting;
@@ -93,10 +93,10 @@ public class BlockAlphaRenderer extends BlockModelRenderer
 
         float alpha = 1.0F;
 
-        if(world.getTileEntity(pos) instanceof PizzaTileEntity)
+        if(world.getBlockEntity(pos) instanceof PizzaTileEntity)
         {
             //Fetch the leftBakingTime and convert it to float value to represent smooth transition of baking
-            PizzaTileEntity tileEntity = (PizzaTileEntity)world.getTileEntity(pos);
+            PizzaTileEntity tileEntity = (PizzaTileEntity)world.getBlockEntity(pos);
             alpha = 1.0F - (float)tileEntity.getLeftBakingTime() / tileEntity.getBakingTime();
         }
 
@@ -109,17 +109,17 @@ public class BlockAlphaRenderer extends BlockModelRenderer
     public static void addTransparentQuad(MatrixStack.Entry matrixEntry, BakedQuad quad, float[] colorMuls, float r, float g, float b, int[] vertexLights,
                                           int combinedOverlayIn, boolean mulColor, IVertexBuilder buffer, float alpha)
     {
-        int[] vertexData = quad.getVertexData();
-        Vector3i faceVector3i = quad.getFace().getDirectionVec();
+        int[] vertexData = quad.getVertices();
+        Vector3i faceVector3i = quad.getDirection().getNormal();
         Vector3f faceVector = new Vector3f(faceVector3i.getX(), faceVector3i.getY(), faceVector3i.getZ());
-        Matrix4f matrix = matrixEntry.getMatrix();
-        faceVector.transform(matrixEntry.getNormal());
+        Matrix4f matrix = matrixEntry.pose();
+        faceVector.transform(matrixEntry.normal());
 
         int vertexDataEntries = vertexData.length / 8;
 
         try(MemoryStack memorystack = MemoryStack.stackPush())
         {
-            ByteBuffer bytebuffer = memorystack.malloc(DefaultVertexFormats.BLOCK.getSize());
+            ByteBuffer bytebuffer = memorystack.malloc(DefaultVertexFormats.BLOCK.getVertexSize());
             IntBuffer intbuffer = bytebuffer.asIntBuffer();
 
             for (int vertexIndex = 0; vertexIndex < vertexDataEntries; ++vertexIndex)
@@ -149,9 +149,9 @@ public class BlockAlphaRenderer extends BlockModelRenderer
                 float texV = bytebuffer.getFloat(20);
                 Vector4f posVector = new Vector4f(x, y, z, 1.0F);
                 posVector.transform(matrix);
-                buffer.applyBakedNormals(faceVector, bytebuffer, matrixEntry.getNormal());
-                buffer.addVertex(posVector.getX(), posVector.getY(), posVector.getZ(), red, green, blue, alpha, texU, texV,
-                        combinedOverlayIn, light, faceVector.getX(), faceVector.getY(), faceVector.getZ());
+                buffer.applyBakedNormals(faceVector, bytebuffer, matrixEntry.normal());
+                buffer.vertex(posVector.x(), posVector.y(), posVector.z(), red, green, blue, alpha, texU, texV,
+                        combinedOverlayIn, light, faceVector.x(), faceVector.y(), faceVector.z());
             }
         }
     }

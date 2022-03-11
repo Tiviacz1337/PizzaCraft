@@ -1,8 +1,6 @@
 package com.tiviacz.pizzacraft.tileentity;
 
-import com.tiviacz.pizzacraft.blocks.ChoppingBoardBlock;
 import com.tiviacz.pizzacraft.init.ModAdvancements;
-import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.init.ModTileEntityTypes;
 import com.tiviacz.pizzacraft.items.KnifeItem;
 import com.tiviacz.pizzacraft.recipes.chopping.ChoppingRecipe;
@@ -48,20 +46,20 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound)
+    public void load(BlockState state, CompoundNBT compound)
     {
-        super.read(state, compound);
+        super.load(state, compound);
         this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
-        this.facing = Direction.byHorizontalIndex(compound.getInt(FACING));
+        this.facing = Direction.from2DDataValue(compound.getInt(FACING));
         this.isItemCarvingBoard = compound.getBoolean(IS_ITEM_CARVING_BOARD);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound)
+    public CompoundNBT save(CompoundNBT compound)
     {
-        super.write(compound);
+        super.save(compound);
         compound.put(INVENTORY, this.inventory.serializeNBT());
-        compound.putInt(FACING, this.facing.getHorizontalIndex());
+        compound.putInt(FACING, this.facing.get2DDataValue());
         compound.putBoolean(IS_ITEM_CARVING_BOARD, this.isItemCarvingBoard);
         return compound;
     }
@@ -80,33 +78,33 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
 
     public boolean canChop(ItemStack stack)
     {
-        Optional<ChoppingRecipe> match = world.getRecipeManager().getRecipe(ChoppingRecipe.Type.CHOPPING_BOARD_RECIPE_TYPE, new RecipeWrapper(getInventory()), world);
+        Optional<ChoppingRecipe> match = level.getRecipeManager().getRecipeFor(ChoppingRecipe.Type.CHOPPING_BOARD_RECIPE_TYPE, new RecipeWrapper(getInventory()), level);
         boolean matchTool = stack.getItem() instanceof KnifeItem || stack.getItem() instanceof TieredItem || stack.getItem() instanceof TridentItem || stack.getItem() instanceof ShearsItem;
         return matchTool && match.isPresent();
     }
 
     public void chop(ItemStack stack, @Nullable PlayerEntity player)
     {
-        Optional<ChoppingRecipe> match = world.getRecipeManager().getRecipe(ChoppingRecipe.Type.CHOPPING_BOARD_RECIPE_TYPE, new RecipeWrapper(getInventory()), world);
+        Optional<ChoppingRecipe> match = level.getRecipeManager().getRecipeFor(ChoppingRecipe.Type.CHOPPING_BOARD_RECIPE_TYPE, new RecipeWrapper(getInventory()), level);
 
         if(match.isPresent())
         {
-            ItemStack result = match.get().getRecipeOutput().copy();
-            world.addParticle(new ItemParticleData(ParticleTypes.ITEM, getStoredStack()), pos.getX() + 0.5D, pos.getY() + 0.3D, pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
-            world.playSound(player, pos, SoundEvents.BLOCK_PUMPKIN_CARVE, SoundCategory.BLOCKS, 0.7F, 0.8F);
+            ItemStack result = match.get().getResultItem().copy();
+            level.addParticle(new ItemParticleData(ParticleTypes.ITEM, getStoredStack()), getBlockPos().getX() + 0.5D, getBlockPos().getY() + 0.3D, getBlockPos().getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
+            level.playSound(player, getBlockPos(), SoundEvents.PUMPKIN_CARVE, SoundCategory.BLOCKS, 0.7F, 0.8F);
 
-            Direction direction = facing.rotateYCCW(); //#TODO
-            ItemEntity entity = new ItemEntity(world, pos.getX() + 0.5 + (direction.getXOffset() * 0.2), pos.getY() + 0.2, pos.getZ() + 0.5 + (direction.getZOffset() * 0.2), result.copy());
-            entity.setMotion(direction.getXOffset() * 0.2F, 0.0F, direction.getZOffset() * 0.2F);
-            world.addEntity(entity);
+            Direction direction = facing.getCounterClockWise(); //#TODO
+            ItemEntity entity = new ItemEntity(level, getBlockPos().getX() + 0.5 + (direction.getStepX() * 0.2), getBlockPos().getY() + 0.2, getBlockPos().getZ() + 0.5 + (direction.getStepZ() * 0.2), result.copy());
+            entity.setDeltaMovement(direction.getStepX() * 0.2F, 0.0F, direction.getStepZ() * 0.2F);
+            level.addFreshEntity(entity);
 
             if(player != null)
             {
-                stack.damageItem(1, player, (user) -> user.sendBreakAnimation(Hand.MAIN_HAND));
+                stack.hurtAndBreak(1, player, (user) -> user.broadcastBreakEvent(Hand.MAIN_HAND));
             }
             else
             {
-                if(stack.attemptDamageItem(1, world.rand, null))
+                if(stack.hurt(1, level.random, null))
                 {
                     stack.setCount(0);
                 }
@@ -118,7 +116,7 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
             }
 
             getStoredStack().shrink(1);
-            this.markDirty();
+            this.setChanged();
         }
     }
 
@@ -160,7 +158,7 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
         if(this.isEmpty() && !stack.isEmpty())
         {
             this.isItemCarvingBoard = false;
-            this.markDirty();
+            this.setChanged();
             return true;
         }
         return false;
@@ -172,7 +170,7 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
         {
             this.isItemCarvingBoard = false;
             ItemStack item = this.getStoredStack();
-            this.markDirty();
+            this.setChanged();
             return item;
         }
         return ItemStack.EMPTY;
@@ -191,7 +189,7 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
             @Override
             protected void onContentsChanged(int slot)
             {
-                markDirty();
+                setChanged();
             }
         };
     }

@@ -1,23 +1,16 @@
 package com.tiviacz.pizzacraft.recipes.chopping;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
 import com.tiviacz.pizzacraft.PizzaCraft;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
 import net.minecraftforge.registries.ForgeRegistryEntry;
-
-import javax.annotation.Nullable;
 
 public class ChoppingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ChoppingRecipe>
 {
@@ -27,19 +20,19 @@ public class ChoppingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
     public static final ResourceLocation ID = new ResourceLocation(PizzaCraft.MODID, "chopping_recipe");
 
     @Override
-    public ChoppingRecipe read(ResourceLocation id, JsonObject json)
+    public ChoppingRecipe fromJson(ResourceLocation id, JsonObject json)
     {
         //ChoppingRecipeJSON recipeJson = new Gson().fromJson(json, ChoppingRecipeJSON.class);
 
-        Ingredient input = Ingredient.deserialize(JSONUtils.getJsonObject(json, "input"));
+        Ingredient input = Ingredient.fromJson(JSONUtils.getAsJsonObject(json, "input"));
 
-        if(input.hasNoMatchingItems())
+        if(input.isEmpty())
         {
             throw new JsonParseException("Missing Input in Chopping Recipe!");
         }
         else
         {
-            ItemStack outputStack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+            ItemStack outputStack = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
             return new ChoppingRecipe(input, outputStack, id);
         }
         //if(recipeJson.input == null || recipeJson.outputItem == null)
@@ -61,18 +54,18 @@ public class ChoppingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
     }
 
     @Override
-    public ChoppingRecipe read(ResourceLocation id, PacketBuffer buf)
+    public ChoppingRecipe fromNetwork(ResourceLocation id, PacketBuffer buf)
     {
-        Ingredient input = Ingredient.read(buf);
-        ItemStack output = buf.readItemStack();
+        Ingredient input = Ingredient.fromNetwork(buf);
+        ItemStack output = buf.readItem();
 
         return new ChoppingRecipe(input, output, id);
     }
 
     @Override
-    public void write(PacketBuffer buf, ChoppingRecipe recipe)
+    public void toNetwork(PacketBuffer buf, ChoppingRecipe recipe)
     {
-        recipe.getInput().write(buf);
-        buf.writeItemStack(recipe.getRecipeOutput());
+        recipe.getInput().toNetwork(buf);
+        buf.writeItem(recipe.getResultItem());
     }
 }

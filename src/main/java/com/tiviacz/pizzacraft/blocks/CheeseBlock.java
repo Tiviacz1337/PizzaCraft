@@ -5,7 +5,6 @@ import com.tiviacz.pizzacraft.items.KnifeItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.CakeBlock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -16,7 +15,6 @@ import net.minecraft.item.TridentItem;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -26,36 +24,35 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.core.jmx.Server;
 
 public class CheeseBlock extends Block
 {
-    private static final IntegerProperty BITES = BlockStateProperties.AGE_0_2;
+    private static final IntegerProperty BITES = BlockStateProperties.AGE_2;
     private static final VoxelShape[] SHAPES = new VoxelShape[]{
-            Block.makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 6.0D, 14.0D),
-            Block.makeCuboidShape(6.0D, 0.0D, 2.0D, 14.0D, 6.0D, 14.0D),
-            Block.makeCuboidShape(10.0D, 0.0D, 2.0D, 14.0D, 6.0D, 14.0D)};
+            Block.box(2.0D, 0.0D, 2.0D, 14.0D, 6.0D, 14.0D),
+            Block.box(6.0D, 0.0D, 2.0D, 14.0D, 6.0D, 14.0D),
+            Block.box(10.0D, 0.0D, 2.0D, 14.0D, 6.0D, 14.0D)};
 
     public CheeseBlock(Properties properties)
     {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(BITES, 0));
+        this.registerDefaultState(getStateDefinition().any().setValue(BITES, 0));
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
     {
-        return SHAPES[state.get(BITES)];
+        return SHAPES[state.getValue(BITES)];
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
     {
-        ItemStack itemstack = player.getHeldItem(handIn);
+        ItemStack itemstack = player.getItemInHand(handIn);
 
-        if(worldIn.isRemote)
+        if(worldIn.isClientSide)
         {
-            if(this.eatSlice(worldIn, pos, state, player).isSuccessOrConsume())
+            if(this.eatSlice(worldIn, pos, state, player).consumesAction())
             {
                 return ActionResultType.SUCCESS;
             }
@@ -68,18 +65,18 @@ public class CheeseBlock extends Block
 
         if(itemstack.getItem() instanceof KnifeItem || itemstack.getItem() instanceof TieredItem || itemstack.getItem() instanceof TridentItem || itemstack.getItem() instanceof ShearsItem)
         {
-            worldIn.addEntity(new ItemEntity(worldIn, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModItems.CHEESE.get().getDefaultInstance()));
-            worldIn.playSound(null, pos, SoundEvents.BLOCK_FUNGUS_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModItems.CHEESE.get().getDefaultInstance()));
+            worldIn.playSound(null, pos, SoundEvents.FUNGUS_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
-            if(itemstack.attemptDamageItem(1, worldIn.rand, player instanceof ServerPlayerEntity ? (ServerPlayerEntity)player : null))
+            if(itemstack.hurt(1, worldIn.random, player instanceof ServerPlayerEntity ? (ServerPlayerEntity)player : null))
             {
-                player.getHeldItem(handIn).shrink(1);
+                player.getItemInHand(handIn).shrink(1);
             }
 
-            int i = state.get(BITES);
+            int i = state.getValue(BITES);
             if(i < 2)
             {
-                worldIn.setBlockState(pos, state.with(BITES, i + 1), 3);
+                worldIn.setBlock(pos, state.setValue(BITES, i + 1), 3);
             }
             else
             {
@@ -100,11 +97,11 @@ public class CheeseBlock extends Block
         }
         else
         {
-            player.getFoodStats().addStats(4, 4.0F);
-            int i = state.get(BITES);
+            player.getFoodData().eat(4, 4.0F);
+            int i = state.getValue(BITES);
             if (i < 2)
             {
-                world.setBlockState(pos, state.with(BITES, i + 1), 3);
+                world.setBlock(pos, state.setValue(BITES, i + 1), 3);
             }
             else
             {
@@ -115,17 +112,18 @@ public class CheeseBlock extends Block
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        return facing == Direction.DOWN && !stateIn.isValidPosition(worldIn, currentPos) ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos)
+    {
+        return facing == Direction.DOWN && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.down()).getMaterial().isSolid();
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        return worldIn.getBlockState(pos.below()).getMaterial().isSolid();
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
     {
         builder.add(BITES);
     }
