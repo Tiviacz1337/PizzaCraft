@@ -10,7 +10,7 @@ issueTrackerURL="https://github.com/Tiviacz1337/PizzaCraft/issues"
 
 modId="pizzacraft"
 
-version="3.0.6"
+version="3.0.8"
 
 displayName="PizzaCraft"
 
@@ -25,7 +25,7 @@ description='Brings the tasty pizza to Minecraft!'
 [[dependencies.pizzacraft]]
     modId="forge"
     mandatory=true
-    versionRange="[36.2.2,)"
+    versionRange="[36,)"
     ordering="NONE"
     side="BOTH"
 
