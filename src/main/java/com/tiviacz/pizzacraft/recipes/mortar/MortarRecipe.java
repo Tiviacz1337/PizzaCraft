@@ -98,6 +98,6 @@ public class MortarRecipe implements IRecipe<IInventory>
         private Type() {}
         public static final MortarRecipe.Type MORTAR_AND_PESTLE_RECIPE_TYPE = new MortarRecipe.Type();
 
-        public static final String NAME = "mortar_recipe";
+        public static final String ID = "mortar_recipe";
     }
 }

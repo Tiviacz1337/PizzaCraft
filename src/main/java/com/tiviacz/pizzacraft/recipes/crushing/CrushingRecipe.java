@@ -88,6 +88,6 @@ public class CrushingRecipe implements IRecipe<RecipeWrapper>
         private Type() {}
         public static final CrushingRecipe.Type CRUSHING_RECIPE_TYPE = new CrushingRecipe.Type();
 
-        public static final String NAME = "crushing_recipe";
+        public static final String ID = "crushing_recipe";
     }
 }

@@ -3,11 +3,16 @@ package com.tiviacz.pizzacraft.handlers;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.common.SeedsHarvestingModifier;
 import com.tiviacz.pizzacraft.init.ModBlocks;
+import com.tiviacz.pizzacraft.recipes.chopping.ChoppingRecipe;
+import com.tiviacz.pizzacraft.recipes.crushing.CrushingRecipe;
+import com.tiviacz.pizzacraft.recipes.mortar.MortarRecipe;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.FoliageColors;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,5 +47,13 @@ public class CommonEventHandler
         itemColors.register((stack, tintIndex) -> {
               BlockState BlockState = ((BlockItem)stack.getItem()).getBlock().defaultBlockState();
               return blockColors.getColor(BlockState, null, null, tintIndex); }, ModBlocks.OLIVE_LEAVES.get(), ModBlocks.FRUIT_OLIVE_LEAVES.get());
+    }
+
+    @SubscribeEvent
+    public static void registerRecipeTypes(final RegistryEvent.Register<IRecipeSerializer<?>> event)
+    {
+        Registry.register(Registry.RECIPE_TYPE, ChoppingRecipe.Type.ID, ChoppingRecipe.Type.CHOPPING_BOARD_RECIPE_TYPE);
+        Registry.register(Registry.RECIPE_TYPE, CrushingRecipe.Type.ID, CrushingRecipe.Type.CRUSHING_RECIPE_TYPE);
+        Registry.register(Registry.RECIPE_TYPE, MortarRecipe.Type.ID, MortarRecipe.Type.MORTAR_AND_PESTLE_RECIPE_TYPE);
     }
 }

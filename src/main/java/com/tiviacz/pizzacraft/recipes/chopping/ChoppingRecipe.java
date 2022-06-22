@@ -80,6 +80,6 @@ public class ChoppingRecipe implements IRecipe<RecipeWrapper>
         private Type() {}
         public static final Type CHOPPING_BOARD_RECIPE_TYPE = new Type();
 
-        public static final String NAME = "chopping_board_recipe";
+        public static final String ID = "chopping_board_recipe";
     }
 }
