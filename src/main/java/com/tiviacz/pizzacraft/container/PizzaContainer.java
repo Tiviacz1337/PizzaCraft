@@ -2,6 +2,7 @@ package com.tiviacz.pizzacraft.container;
 
 import com.tiviacz.pizzacraft.container.slots.UnaccessibleSlot;
 import com.tiviacz.pizzacraft.init.ModContainerTypes;
+import com.tiviacz.pizzacraft.init.PizzaLayers;
 import com.tiviacz.pizzacraft.tileentity.PizzaTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,6 +13,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
+import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class PizzaContainer extends Container
@@ -65,7 +67,14 @@ public class PizzaContainer extends Container
         {
             for(int j = 0; j < 3; ++j)
             {
-                this.addSlot(new SlotItemHandler(tileEntity.getInventory(), j + i * 3, 62 + j * 18, 10 + i * 18));
+                this.addSlot(new SlotItemHandler(tileEntity.getInventory(), j + i * 3, 62 + j * 18, 10 + i * 18)
+                {
+                    @Override
+                    public int getMaxStackSize(@Nonnull ItemStack stack)
+                    {
+                        return PizzaLayers.getMaxStackSizeForStack(stack);
+                    }
+                });
             }
         }
     }

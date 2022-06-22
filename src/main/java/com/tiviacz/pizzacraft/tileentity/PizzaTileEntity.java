@@ -401,7 +401,17 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
         {
             if(PizzaLayers.VALID_TAGS.contains(tagLocation))
             {
-                return true;
+                if(inventory.getStackInSlot(slot).isEmpty())
+                {
+                    return true;
+                }
+                else
+                {
+                    if(inventory.getStackInSlot(slot).getCount() + 1 <= PizzaLayers.getMaxStackSizeForStack(inventory.getStackInSlot(slot)))
+                    {
+                        return true;
+                    }
+                }
             }
         }
         return false;
@@ -447,6 +457,12 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
             protected int getStackLimit(int slot, @Nonnull ItemStack stack)
             {
                 return PizzaLayers.getMaxStackSizeForStack(stack);
+            }
+
+            @Override
+            public int getSlotLimit(int slot)
+            {
+                return getStackInSlot(slot).isEmpty() ? 1 : PizzaLayers.getMaxStackSizeForStack(getStackInSlot(slot));
             }
 
             @Override
