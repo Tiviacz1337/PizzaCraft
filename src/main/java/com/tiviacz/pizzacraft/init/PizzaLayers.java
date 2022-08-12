@@ -3,6 +3,8 @@ package com.tiviacz.pizzacraft.init;
 import com.google.common.collect.Maps;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Arrays;
@@ -13,10 +15,10 @@ public class PizzaLayers
 {
    // public static final Map<Item, ResourceLocation> ITEM_TO_LAYER = Maps.newHashMap();
    // public static final Map<Item, ResourceLocation> ITEM_TO_RAW_LAYER = Maps.newHashMap();
-    public static final Map<ResourceLocation, ResourceLocation> TAG_TO_LAYER = Maps.newHashMap();
-    public static final Map<ResourceLocation, ResourceLocation> TAG_TO_RAW_LAYER = Maps.newHashMap();
-    public static final Map<ResourceLocation, ResourceLocation> TAG_TO_ITEM_LAYER = Maps.newHashMap();
-    public static final Map<ResourceLocation, Integer> TAG_TO_MAX_STACK_SIZE = Maps.newHashMap();
+    public static final Map<TagKey<Item>, ResourceLocation> TAG_TO_LAYER = Maps.newHashMap();
+    public static final Map<TagKey<Item>, ResourceLocation> TAG_TO_RAW_LAYER = Maps.newHashMap();
+    public static final Map<TagKey<Item>, ResourceLocation> TAG_TO_ITEM_LAYER = Maps.newHashMap();
+    public static final Map<TagKey<Item>, Integer> TAG_TO_MAX_STACK_SIZE = Maps.newHashMap();
     //public static final Map<Item, Integer> MAX_STACK_SIZE = Maps.newHashMap();
 
     //public static final ResourceLocation CRUST_MODEL = new ResourceLocation(PizzaCraft.MODID, "models/block/raw_pizza_crust");
@@ -85,36 +87,50 @@ public class PizzaLayers
 
     public static final ResourceLocation TOMATO_SAUCE_ITEM_LAYER = new ResourceLocation(PizzaCraft.MODID, "item/tomato_sauce_item_layer");
 
-    public static Map<ResourceLocation, ResourceLocation> getTagToLayer()
+    public static Map<TagKey<Item>, ResourceLocation> getTagToLayer()
     {
         return TAG_TO_LAYER;
     }
 
-    public static Map<ResourceLocation, ResourceLocation> getTagToRawLayer()
+    public static Map<TagKey<Item>, ResourceLocation> getTagToRawLayer()
     {
         return TAG_TO_RAW_LAYER;
     }
 
-    public static Map<ResourceLocation, ResourceLocation> getTagToItemLayer()
+    public static Map<TagKey<Item>, ResourceLocation> getTagToItemLayer()
     {
         return TAG_TO_ITEM_LAYER;
     }
 
-    public static Map<ResourceLocation, Integer> getTagToMaxStackSize()
+    public static Map<TagKey<Item>, Integer> getTagToMaxStackSize()
     {
         return TAG_TO_MAX_STACK_SIZE;
     }
 
     public static int getMaxStackSizeForStack(ItemStack stack)
     {
-        for(ResourceLocation tagLocation : stack.getItem().getTags())
+        List<TagKey<Item>> tags = stack.getTags().toList();
+
+        for(TagKey<Item> tag : tags)
+        {
+            if(PizzaLayers.VALID_TAGS.contains(tag))
+            {
+                return PizzaLayers.getTagToMaxStackSize().get(tag);
+            }
+        }
+      /*  if(stack.getTags().anyMatch(t -> PizzaLayers.VALID_TAGS.contains(t.location())))
+        {
+            return PizzaLayers.getTagToMaxStackSize().get(stack.getTags().findFirst().get().location());
+        } */
+        return 0;
+     /*  for(ResourceLocation tagLocation : stack.getItem().getTags())
         {
             if(PizzaLayers.VALID_TAGS.contains(tagLocation))
             {
                 return PizzaLayers.getTagToMaxStackSize().get(tagLocation);
             }
         }
-        return 0;
+        return 0; */
     }
 
   /*  public static Map<ResourceLocation, Integer> getTagToMaxStackSize()
@@ -148,88 +164,88 @@ public class PizzaLayers
 
     public static void setTagToLayerMap()
     {
-        TAG_TO_LAYER.put(createResourceLocation("ingredients/cheese_layer"), CHEESE_LAYER);
+        TAG_TO_LAYER.put(ModTags.CHEESE_LAYER, CHEESE_LAYER);
 
-        TAG_TO_LAYER.put(createResourceLocation("ingredients/vegetables/broccoli_layer"), BROCCOLI_LAYER);
-        TAG_TO_LAYER.put(createResourceLocation("ingredients/vegetables/corn_layer"), CORN_LAYER);
-        TAG_TO_LAYER.put(createResourceLocation("ingredients/vegetables/cucumber_layer"), CUCUMBER_LAYER);
-        TAG_TO_LAYER.put(createResourceLocation("ingredients/vegetables/onion_layer"), ONION_LAYER);
-        TAG_TO_LAYER.put(createResourceLocation("ingredients/vegetables/pepper_layer"), PEPPER_LAYER);
-        TAG_TO_LAYER.put(createResourceLocation("ingredients/vegetables/tomato_layer"), TOMATO_LAYER);
+        TAG_TO_LAYER.put(ModTags.BROCCOLI_LAYER, BROCCOLI_LAYER);
+        TAG_TO_LAYER.put(ModTags.CORN_LAYER, CORN_LAYER);
+        TAG_TO_LAYER.put(ModTags.CUCUMBER_LAYER, CUCUMBER_LAYER);
+        TAG_TO_LAYER.put(ModTags.ONION_LAYER, ONION_LAYER);
+        TAG_TO_LAYER.put(ModTags.PEPPER_LAYER, PEPPER_LAYER);
+        TAG_TO_LAYER.put(ModTags.TOMATO_LAYER, TOMATO_LAYER);
 
-        TAG_TO_LAYER.put(createResourceLocation("ingredients/fruits/pineapple_layer"), PINEAPPLE_LAYER);
-        TAG_TO_LAYER.put(createResourceLocation("ingredients/fruits/olive_layer"), OLIVE_LAYER);
+        TAG_TO_LAYER.put(ModTags.PINEAPPLE_LAYER, PINEAPPLE_LAYER);
+        TAG_TO_LAYER.put(ModTags.OLIVE_LAYER, OLIVE_LAYER);
 
-        TAG_TO_LAYER.put(createResourceLocation("ingredients/mushrooms/mushroom_layer"), MUSHROOM_LAYER);
+        TAG_TO_LAYER.put(ModTags.MUSHROOM_LAYER, MUSHROOM_LAYER);
 
-        TAG_TO_LAYER.put(createResourceLocation("ingredients/meats/ham_layer"), HAM_LAYER);
-        TAG_TO_LAYER.put(createResourceLocation("ingredients/meats/chicken_layer"), CHICKEN_LAYER);
+        TAG_TO_LAYER.put(ModTags.HAM_LAYER, HAM_LAYER);
+        TAG_TO_LAYER.put(ModTags.CHICKEN_LAYER, CHICKEN_LAYER);
 
-        TAG_TO_LAYER.put(createResourceLocation("ingredients/sauces/tomato_sauce_layer"), TOMATO_SAUCE_LAYER);
+        TAG_TO_LAYER.put(ModTags.TOMATO_SAUCE, TOMATO_SAUCE_LAYER);
     }
 
     public static void setTagToRawLayerMap()
     {
-        TAG_TO_RAW_LAYER.put(createResourceLocation("ingredients/cheese_layer"), RAW_CHEESE_LAYER);
+        TAG_TO_RAW_LAYER.put(ModTags.CHEESE_LAYER, RAW_CHEESE_LAYER);
 
-        TAG_TO_RAW_LAYER.put(createResourceLocation("ingredients/vegetables/broccoli_layer"), RAW_BROCCOLI_LAYER);
-        TAG_TO_RAW_LAYER.put(createResourceLocation("ingredients/vegetables/corn_layer"), RAW_CORN_LAYER);
-        TAG_TO_RAW_LAYER.put(createResourceLocation("ingredients/vegetables/cucumber_layer"), RAW_CUCUMBER_LAYER);
-        TAG_TO_RAW_LAYER.put(createResourceLocation("ingredients/vegetables/onion_layer"), RAW_ONION_LAYER);
-        TAG_TO_RAW_LAYER.put(createResourceLocation("ingredients/vegetables/pepper_layer"), RAW_PEPPER_LAYER);
-        TAG_TO_RAW_LAYER.put(createResourceLocation("ingredients/vegetables/tomato_layer"), RAW_TOMATO_LAYER);
+        TAG_TO_RAW_LAYER.put(ModTags.BROCCOLI_LAYER, RAW_BROCCOLI_LAYER);
+        TAG_TO_RAW_LAYER.put(ModTags.CORN_LAYER, RAW_CORN_LAYER);
+        TAG_TO_RAW_LAYER.put(ModTags.CUCUMBER_LAYER, RAW_CUCUMBER_LAYER);
+        TAG_TO_RAW_LAYER.put(ModTags.ONION_LAYER, RAW_ONION_LAYER);
+        TAG_TO_RAW_LAYER.put(ModTags.PEPPER_LAYER, RAW_PEPPER_LAYER);
+        TAG_TO_RAW_LAYER.put(ModTags.TOMATO_LAYER, RAW_TOMATO_LAYER);
 
-        TAG_TO_RAW_LAYER.put(createResourceLocation("ingredients/fruits/pineapple_layer"), RAW_PINEAPPLE_LAYER);
-        TAG_TO_RAW_LAYER.put(createResourceLocation("ingredients/fruits/olive_layer"), RAW_OLIVE_LAYER);
+        TAG_TO_RAW_LAYER.put(ModTags.PINEAPPLE_LAYER, RAW_PINEAPPLE_LAYER);
+        TAG_TO_RAW_LAYER.put(ModTags.OLIVE_LAYER, RAW_OLIVE_LAYER);
 
-        TAG_TO_RAW_LAYER.put(createResourceLocation("ingredients/mushrooms/mushroom_layer"), RAW_MUSHROOM_LAYER);
+        TAG_TO_RAW_LAYER.put(ModTags.MUSHROOM_LAYER, RAW_MUSHROOM_LAYER);
 
-        TAG_TO_RAW_LAYER.put(createResourceLocation("ingredients/meats/ham_layer"), RAW_HAM_LAYER);
-        TAG_TO_RAW_LAYER.put(createResourceLocation("ingredients/meats/chicken_layer"), RAW_CHICKEN_LAYER);
+        TAG_TO_RAW_LAYER.put(ModTags.HAM_LAYER, RAW_HAM_LAYER);
+        TAG_TO_RAW_LAYER.put(ModTags.CHICKEN_LAYER, RAW_CHICKEN_LAYER);
 
-        TAG_TO_RAW_LAYER.put(createResourceLocation("ingredients/sauces/tomato_sauce_layer"), TOMATO_SAUCE_LAYER);
+        TAG_TO_RAW_LAYER.put(ModTags.TOMATO_SAUCE, TOMATO_SAUCE_LAYER);
     }
 
     public static void setTagToItemLayer()
     {
-        TAG_TO_ITEM_LAYER.put(createResourceLocation("ingredients/vegetables/broccoli_layer"), BROCCOLI_ITEM_LAYER);
-        TAG_TO_ITEM_LAYER.put(createResourceLocation("ingredients/vegetables/corn_layer"), CORN_ITEM_LAYER);
-        TAG_TO_ITEM_LAYER.put(createResourceLocation("ingredients/vegetables/cucumber_layer"), CUCUMBER_ITEM_LAYER);
-        TAG_TO_ITEM_LAYER.put(createResourceLocation("ingredients/vegetables/onion_layer"), ONION_ITEM_LAYER);
-        TAG_TO_ITEM_LAYER.put(createResourceLocation("ingredients/vegetables/pepper_layer"), PEPPER_ITEM_LAYER);
-        TAG_TO_ITEM_LAYER.put(createResourceLocation("ingredients/vegetables/tomato_layer"), TOMATO_ITEM_LAYER);
+        TAG_TO_ITEM_LAYER.put(ModTags.BROCCOLI_LAYER, BROCCOLI_ITEM_LAYER);
+        TAG_TO_ITEM_LAYER.put(ModTags.CORN_LAYER, CORN_ITEM_LAYER);
+        TAG_TO_ITEM_LAYER.put(ModTags.CUCUMBER_LAYER, CUCUMBER_ITEM_LAYER);
+        TAG_TO_ITEM_LAYER.put(ModTags.ONION_LAYER, ONION_ITEM_LAYER);
+        TAG_TO_ITEM_LAYER.put(ModTags.PEPPER_LAYER, PEPPER_ITEM_LAYER);
+        TAG_TO_ITEM_LAYER.put(ModTags.TOMATO_LAYER, TOMATO_ITEM_LAYER);
 
-        TAG_TO_ITEM_LAYER.put(createResourceLocation("ingredients/fruits/pineapple_layer"), PINEAPPLE_ITEM_LAYER);
-        TAG_TO_ITEM_LAYER.put(createResourceLocation("ingredients/fruits/olive_layer"), OLIVE_ITEM_LAYER);
+        TAG_TO_ITEM_LAYER.put(ModTags.PINEAPPLE_LAYER, PINEAPPLE_ITEM_LAYER);
+        TAG_TO_ITEM_LAYER.put(ModTags.OLIVE_LAYER, OLIVE_ITEM_LAYER);
 
-        TAG_TO_ITEM_LAYER.put(createResourceLocation("ingredients/mushrooms/mushroom_layer"), MUSHROOM_ITEM_LAYER);
+        TAG_TO_ITEM_LAYER.put(ModTags.MUSHROOM_LAYER, MUSHROOM_ITEM_LAYER);
 
-        TAG_TO_ITEM_LAYER.put(createResourceLocation("ingredients/meats/ham_layer"),HAM_ITEM_LAYER);
-        TAG_TO_ITEM_LAYER.put(createResourceLocation("ingredients/meats/chicken_layer"), CHICKEN_ITEM_LAYER);
+        TAG_TO_ITEM_LAYER.put(ModTags.HAM_LAYER, HAM_ITEM_LAYER);
+        TAG_TO_ITEM_LAYER.put(ModTags.CHICKEN_LAYER, CHICKEN_ITEM_LAYER);
 
-        TAG_TO_ITEM_LAYER.put(createResourceLocation("ingredients/sauces/tomato_sauce_layer"), TOMATO_SAUCE_ITEM_LAYER);
+        TAG_TO_ITEM_LAYER.put(ModTags.TOMATO_SAUCE, TOMATO_SAUCE_ITEM_LAYER);
     }
 
     public static void setTagToMaxStackSize()
     {
-        TAG_TO_MAX_STACK_SIZE.put(createResourceLocation("ingredients/cheese_layer"), 1);
+        TAG_TO_MAX_STACK_SIZE.put(ModTags.CHEESE_LAYER, 1);
 
-        TAG_TO_MAX_STACK_SIZE.put(createResourceLocation("ingredients/vegetables/broccoli_layer"), 2);
-        TAG_TO_MAX_STACK_SIZE.put(createResourceLocation("ingredients/vegetables/corn_layer"), 2);
-        TAG_TO_MAX_STACK_SIZE.put(createResourceLocation("ingredients/vegetables/cucumber_layer"), 4);
-        TAG_TO_MAX_STACK_SIZE.put(createResourceLocation("ingredients/vegetables/onion_layer"), 4);
-        TAG_TO_MAX_STACK_SIZE.put(createResourceLocation("ingredients/vegetables/pepper_layer"), 4);
-        TAG_TO_MAX_STACK_SIZE.put(createResourceLocation("ingredients/vegetables/tomato_layer"), 4);
+        TAG_TO_MAX_STACK_SIZE.put(ModTags.BROCCOLI_LAYER, 2);
+        TAG_TO_MAX_STACK_SIZE.put(ModTags.CORN_LAYER, 2);
+        TAG_TO_MAX_STACK_SIZE.put(ModTags.CUCUMBER_LAYER, 4);
+        TAG_TO_MAX_STACK_SIZE.put(ModTags.ONION_LAYER, 4);
+        TAG_TO_MAX_STACK_SIZE.put(ModTags.PEPPER_LAYER, 4);
+        TAG_TO_MAX_STACK_SIZE.put(ModTags.TOMATO_LAYER, 4);
 
-        TAG_TO_MAX_STACK_SIZE.put(createResourceLocation("ingredients/fruits/pineapple_layer"), 4);
-        TAG_TO_MAX_STACK_SIZE.put(createResourceLocation("ingredients/fruits/olive_layer"), 4);
+        TAG_TO_MAX_STACK_SIZE.put(ModTags.PINEAPPLE_LAYER, 4);
+        TAG_TO_MAX_STACK_SIZE.put(ModTags.OLIVE_LAYER, 4);
 
-        TAG_TO_MAX_STACK_SIZE.put(createResourceLocation("ingredients/mushrooms/mushroom_layer"), 4);
+        TAG_TO_MAX_STACK_SIZE.put(ModTags.MUSHROOM_LAYER, 4);
 
-        TAG_TO_MAX_STACK_SIZE.put(createResourceLocation("ingredients/meats/ham_layer"),4);
-        TAG_TO_MAX_STACK_SIZE.put(createResourceLocation("ingredients/meats/chicken_layer"), 4);
+        TAG_TO_MAX_STACK_SIZE.put(ModTags.HAM_LAYER,4);
+        TAG_TO_MAX_STACK_SIZE.put(ModTags.CHICKEN_LAYER, 4);
 
-        TAG_TO_MAX_STACK_SIZE.put(createResourceLocation("ingredients/sauces/tomato_sauce_layer"), 1);
+        TAG_TO_MAX_STACK_SIZE.put(ModTags.TOMATO_SAUCE, 1);
     }
 
     public static ResourceLocation createResourceLocation(String tagName)
@@ -308,45 +324,45 @@ public class PizzaLayers
         MAX_STACK_SIZE.put(ModItems.TOMATO_SAUCE.get(), 1); */
     }
 
-    public static final List<ResourceLocation> VALID_TAGS = Arrays.asList
+    public static final List<TagKey<Item>> VALID_TAGS = Arrays.asList
     (
-            createResourceLocation("ingredients/cheese_layer"),
+            ModTags.CHEESE_LAYER,
 
-            createResourceLocation("ingredients/vegetables/broccoli_layer"),
-            createResourceLocation("ingredients/vegetables/corn_layer"),
-            createResourceLocation("ingredients/vegetables/cucumber_layer"),
-            createResourceLocation("ingredients/vegetables/onion_layer"),
-            createResourceLocation("ingredients/vegetables/pepper_layer"),
-            createResourceLocation("ingredients/vegetables/tomato_layer"),
+            ModTags.BROCCOLI_LAYER,
+            ModTags.CORN_LAYER,
+            ModTags.CUCUMBER_LAYER,
+            ModTags.ONION_LAYER,
+            ModTags.PEPPER_LAYER,
+            ModTags.TOMATO_LAYER,
 
-            createResourceLocation("ingredients/fruits/pineapple_layer"),
-            createResourceLocation("ingredients/fruits/olive_layer"),
+            ModTags.PINEAPPLE_LAYER,
+            ModTags.OLIVE_LAYER,
 
-            createResourceLocation("ingredients/mushrooms/mushroom_layer"),
+            ModTags.MUSHROOM_LAYER,
 
-            createResourceLocation("ingredients/meats/ham_layer"),
-            createResourceLocation("ingredients/meats/chicken_layer"),
+            ModTags.HAM_LAYER,
+            ModTags.CHICKEN_LAYER,
 
-            createResourceLocation("ingredients/sauces/tomato_sauce_layer")
+            ModTags.TOMATO_SAUCE
     );
 
-    public static final List<ResourceLocation> VALID_ITEM_TAGS = Arrays.asList
+    public static final List<TagKey<Item>> VALID_ITEM_TAGS = Arrays.asList
     (
-            createResourceLocation("ingredients/vegetables/broccoli_layer"),
-            createResourceLocation("ingredients/vegetables/corn_layer"),
-            createResourceLocation("ingredients/vegetables/cucumber_layer"),
-            createResourceLocation("ingredients/vegetables/onion_layer"),
-            createResourceLocation("ingredients/vegetables/pepper_layer"),
-            createResourceLocation("ingredients/vegetables/tomato_layer"),
+            ModTags.BROCCOLI_LAYER,
+            ModTags.CORN_LAYER,
+            ModTags.CUCUMBER_LAYER,
+            ModTags.ONION_LAYER,
+            ModTags.PEPPER_LAYER,
+            ModTags.TOMATO_LAYER,
 
-            createResourceLocation("ingredients/fruits/pineapple_layer"),
-            createResourceLocation("ingredients/fruits/olive_layer"),
+            ModTags.PINEAPPLE_LAYER,
+            ModTags.OLIVE_LAYER,
 
-            createResourceLocation("ingredients/mushrooms/mushroom_layer"),
+            ModTags.MUSHROOM_LAYER,
 
-            createResourceLocation("ingredients/meats/ham_layer"),
-            createResourceLocation("ingredients/meats/chicken_layer"),
+            ModTags.HAM_LAYER,
+            ModTags.CHICKEN_LAYER,
 
-            createResourceLocation("ingredients/sauces/tomato_sauce_layer")
+            ModTags.TOMATO_SAUCE
     );
 }

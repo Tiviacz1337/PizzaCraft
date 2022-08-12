@@ -17,11 +17,10 @@ public class ScreenPizzaBag extends AbstractContainerScreen<PizzaBagMenu> implem
     public static final ResourceLocation SCREEN_PIZZA_BAG = new ResourceLocation(PizzaCraft.MODID, "textures/gui/pizza_bag.png");
     private final PizzaBagBlockEntity blockEntity;
 
-    public ScreenPizzaBag(PizzaBagMenu screenContainer, Inventory inv, Component titleIn) {
-        super(screenContainer, inv, titleIn);
+    public ScreenPizzaBag(PizzaBagMenu menu, Inventory inv, Component titleIn) {
+        super(menu, inv, titleIn);
 
-        this.blockEntity = screenContainer.blockEntity;
-
+        this.blockEntity = menu.blockEntity;
         this.leftPos = 0;
         this.topPos = 0;
 

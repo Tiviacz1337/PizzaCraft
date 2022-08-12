@@ -86,7 +86,7 @@ public class ClientEventHandler
     @SubscribeEvent
     public static void stitcherEventPre(TextureStitchEvent.Pre event)
     {
-        if(event.getMap().location() == InventoryMenu.BLOCK_ATLAS)
+        if(event.getAtlas().location() == InventoryMenu.BLOCK_ATLAS)
         {
             event.addSprite(PizzaLayers.PIZZA_SLICE);
 

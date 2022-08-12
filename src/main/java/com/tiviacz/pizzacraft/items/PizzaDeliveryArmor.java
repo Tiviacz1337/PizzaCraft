@@ -44,14 +44,14 @@ public class PizzaDeliveryArmor extends ArmorItem
         consumer.accept(new IItemRenderProperties()
         {
             @Override
-            public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A humanoid)
+            public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> humanoid)
             {
                 if(armorSlot == EquipmentSlot.HEAD)
                 {
                     PizzaDeliveryCapModel hat = new PizzaDeliveryCapModel(PizzaDeliveryCapModel.createModelData().bakeRoot());
-                    hat.copyPropertiesTo((HumanoidModel<AbstractClientPlayer>)humanoid);
+                    humanoid.copyPropertiesTo(hat);
 
-                    return (A)hat;
+                    return hat;
                 }
                 return null;
             }

@@ -24,6 +24,7 @@
             },
             {
               "function": "minecraft:set_contents",
+              "type": "pizzacraft:pizza_bag",
               "entries": [
                 {
                   "type": "minecraft:dynamic",

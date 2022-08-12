@@ -30,7 +30,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -109,7 +108,7 @@ public class RawPizzaBlock extends Block implements EntityBlock
     }
 
     @Override
-    public boolean removedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid)
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player)
     {
         if(level.getBlockEntity(pos) instanceof PizzaBlockEntity && !player.isCreative() && !(player.getMainHandItem().getItem() instanceof PizzaPeelItem))
         {
@@ -127,7 +126,7 @@ public class RawPizzaBlock extends Block implements EntityBlock
             Utils.spawnItemStackInWorld(level, pos, new ItemStack(ModItems.DOUGH.get()));
            // world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModItems.DOUGH.get())));
         }
-        return super.removedByPlayer(state, level, pos, player, willHarvest, fluid);
+        super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override
@@ -152,7 +151,7 @@ public class RawPizzaBlock extends Block implements EntityBlock
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult result, BlockGetter level, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(BlockState state, HitResult result, BlockGetter level, BlockPos pos, Player player)
     {
         if(level.getBlockEntity(pos) instanceof PizzaBlockEntity)
         {
@@ -160,7 +159,7 @@ public class RawPizzaBlock extends Block implements EntityBlock
             ((PizzaBlockEntity)level.getBlockEntity(pos)).writeToItemStack(stack);
             return stack;
         }
-        return this.getPickBlock(state, result, level, pos, player);
+        return this.getCloneItemStack(state, result, level, pos, player);
     }
 
     @Override

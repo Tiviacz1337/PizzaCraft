@@ -18,8 +18,10 @@ import net.minecraft.client.resources.model.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.model.*;
 import net.minecraftforge.client.model.geometry.IModelGeometry;
@@ -69,13 +71,26 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
         {
             ItemStack stackInSlot = handler.getStackInSlot(i);
 
-            for(ResourceLocation location : stackInSlot.getItem().getTags())
+           // if(stackInSlot.getTags().anyMatch(PizzaLayers.VALID_ITEM_TAGS::contains))
+           // {
+           //     layersLocations.add(new Material(InventoryMenu.BLOCK_ATLAS, PizzaLayers.getTagToItemLayer().get(stackInSlot.getTags().findFirst().get())));
+           // }
+
+            List<TagKey<Item>> tags = stackInSlot.getTags().toList();
+            for(TagKey<Item> tag : tags)
+            {
+                if(PizzaLayers.VALID_ITEM_TAGS.contains(tag))
+                {
+                    layersLocations.add(new Material(InventoryMenu.BLOCK_ATLAS, PizzaLayers.getTagToItemLayer().get(tag)));
+                }
+            }
+         /*   for(ResourceLocation location : stackInSlot.getItem().getTags())
             {
                 if(PizzaLayers.VALID_ITEM_TAGS.contains(location))
                 {
                     layersLocations.add(new Material(InventoryMenu.BLOCK_ATLAS, PizzaLayers.getTagToItemLayer().get(location)));
                 }
-            }
+            } */
         }
 
         ModelState transformsFromModel = owner.getCombinedTransform();
@@ -176,7 +191,7 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
                 if(!cache.containsKey(name))
                 {
                     DynamicPizzaSliceModel unbaked = this.parent.withStack(stack);
-                    BakedModel bakedModel = unbaked.bake(owner, bakery, ModelLoader.defaultTextureGetter(), BlockModelRotation.X0_Y0, this, new ResourceLocation("pizzacraft:pizza_slice_override"));
+                    BakedModel bakedModel = unbaked.bake(owner, bakery, ForgeModelBakery.defaultTextureGetter(), BlockModelRotation.X0_Y0, this, new ResourceLocation("pizzacraft:pizza_slice_override"));
                     cache.put(name, bakedModel);
                     return bakedModel;
                 }

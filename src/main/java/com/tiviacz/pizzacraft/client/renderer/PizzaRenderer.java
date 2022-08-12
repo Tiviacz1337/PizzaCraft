@@ -14,10 +14,7 @@ import java.util.Optional;
 
 public class PizzaRenderer implements BlockEntityRenderer<PizzaBlockEntity>
 {
-    public PizzaRenderer(BlockEntityRendererProvider.Context context)
-    {
-
-    }
+    public PizzaRenderer(BlockEntityRendererProvider.Context context) {}
 
     @Override
     public void render(PizzaBlockEntity tileEntityIn, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn)

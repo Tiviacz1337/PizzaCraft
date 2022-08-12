@@ -11,7 +11,7 @@ public class SauceRegistry
     public static final SauceRegistry INSTANCE = new SauceRegistry();
 
     private Map<String, SauceType> sauceTypes = Maps.newHashMap();
-    private Map<String, BasinContent> basinContents = Maps.newHashMap();
+    private final Map<String, BasinContent> basinContents = Maps.newHashMap();
     private Map<SauceType, BasinContent> typeToSauce = Maps.newHashMap();
     //private Map<SauceType, ItemStack> typeToSauceItemStack = Maps.newHashMap();
     //private Map<BasinContent, ItemStack> contentToItemStack = Maps.newHashMap();
@@ -45,7 +45,6 @@ public class SauceRegistry
 
     public BasinContent basinContentFromString(String name)
     {
-       // System.out.println(this.basinContents.keySet());
         return this.basinContents.get(name);
     }
 

@@ -3,17 +3,14 @@ package com.tiviacz.pizzacraft.blockentity;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.math.Vector3f;
-import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.*;
 import com.tiviacz.pizzacraft.recipes.crushing.CrushingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -59,23 +56,22 @@ public class BasinBlockEntity extends BaseBlockEntity
     public void load(CompoundTag compound)
     {
         super.load(compound);
-        this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
         this.content = SauceRegistry.INSTANCE.basinContentFromString(compound.getString(BASIN_CONTENT));
+        this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
         this.squashedStack = ItemStack.of(compound.getCompound(SQUASHED_STACK));
-        if(this.getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK) this.fermentProgress = compound.getInt(FERMENT_PROGRESS);
+        //if(this.getBasinContent() != null && this.getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK) this.fermentProgress = compound.getInt(FERMENT_PROGRESS);
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound)
+    public void saveAdditional(CompoundTag compound)
     {
-        super.save(compound);
-        compound.put(INVENTORY, this.inventory.serializeNBT());
+        super.saveAdditional(compound);
         compound.putString(BASIN_CONTENT, content.toString());
+        compound.put(INVENTORY, this.inventory.serializeNBT());
         CompoundTag squashedStack = new CompoundTag();
         this.squashedStack.save(squashedStack);
         compound.put(SQUASHED_STACK, squashedStack);
-        if(this.getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK) compound.putInt(FERMENT_PROGRESS, this.fermentProgress);
-        return compound;
+        //if(this.getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK) compound.putInt(FERMENT_PROGRESS, this.fermentProgress);
     }
 
  /*   public boolean canRender()
@@ -132,6 +128,10 @@ public class BasinBlockEntity extends BaseBlockEntity
 
     public BasinContent getBasinContent()
     {
+        if(this.content == null) //dont know why this happens lol
+        {
+            return BasinContent.FERMENTING_MILK;
+        }
         return this.content;
     }
 
@@ -168,9 +168,6 @@ public class BasinBlockEntity extends BaseBlockEntity
         map.put(BasinContent.OLIVE_OIL, 4);
         return map;
     }
-
-    public static final ResourceLocation FERMENTING_ITEMS_TAG = new ResourceLocation(PizzaCraft.MODID, "fermenting_items");
-
     public InteractionResult onBlockActivated(Player player, InteractionHand hand)
     {
         ItemStack itemHeld = player.getItemInHand(hand);
@@ -192,7 +189,7 @@ public class BasinBlockEntity extends BaseBlockEntity
             if(basinContentType == BasinContentType.MILK)
             {
                 //Check if player holds acceptable fermenting item, if so start fermenting process.
-                if(itemHeld.is(ItemTags.getAllTags().getTag(FERMENTING_ITEMS_TAG)))
+                if(itemHeld.is(ModTags.FERMENTING_ITEMS_TAG))
                 {
                     this.content = BasinContent.FERMENTING_MILK;
                     level.playSound(player, getBlockPos(), SoundEvents.COMPOSTER_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -494,44 +491,47 @@ public class BasinBlockEntity extends BaseBlockEntity
             tag.putInt(FERMENT_PROGRESS, this.fermentProgress);
             return tag;
         }
-        return save(new CompoundTag());
+        return super.getUpdateTag();
     }
 
     private int tick = 0;
 
     public static void tick(Level level, BlockPos pos, BlockState state, BasinBlockEntity blockEntity)
     {
-        if(blockEntity.getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK)
+        if(blockEntity.getBasinContent() != null)
         {
-            blockEntity.fermentProgress++;
-            //blockEntity.setChanged();
+            if(blockEntity.getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK)
+            {
+                blockEntity.fermentProgress++;
+                //blockEntity.setChanged();
 
-            if(blockEntity.fermentProgress % 60 == 0)
-            {
-                //if(tick == 59)
-                //{
-                level.playSound(null, pos, SoundEvents.FUNGUS_PLACE, SoundSource.BLOCKS, 0.8F, 0.9F + level.random.nextFloat());
-                //}
+                if(blockEntity.fermentProgress % 60 == 0)
+                {
+                    //if(tick == 59)
+                    //{
+                    level.playSound(null, pos, SoundEvents.FUNGUS_PLACE, SoundSource.BLOCKS, 0.8F, 0.9F + level.random.nextFloat());
+                    //}
+                }
             }
-        }
-        if(blockEntity.fermentProgress >= blockEntity.defaultFermentTime)
-        {
-            blockEntity.finishFermenting();
-        }
+            if(blockEntity.fermentProgress >= blockEntity.defaultFermentTime)
+            {
+                blockEntity.finishFermenting();
+            }
 
-        if(blockEntity.getBasinContent().getContentType() == BasinContentType.CHEESE)
-        {
-            if(blockEntity.tick % 20 == 0)
+            if(blockEntity.getBasinContent().getContentType() == BasinContentType.CHEESE)
             {
-                blockEntity.createCheeseParticle();
-            }
-            if(blockEntity.tick < 60)
-            {
-                blockEntity.tick++;
-            }
-            else if(blockEntity.tick == 60)
-            {
-                blockEntity.tick = 0;
+                if(blockEntity.tick % 20 == 0)
+                {
+                    blockEntity.createCheeseParticle();
+                }
+                if(blockEntity.tick < 60)
+                {
+                    blockEntity.tick++;
+                }
+                else if(blockEntity.tick == 60)
+                {
+                    blockEntity.tick = 0;
+                }
             }
         }
     }

@@ -1,6 +1,6 @@
 modLoader="javafml"
 
-loaderVersion="[37,)"
+loaderVersion="[40,)"
 
 license="All Rights Reserved"
 
@@ -10,7 +10,7 @@ issueTrackerURL="https://github.com/Tiviacz1337/PizzaCraft/issues"
 
 modId="pizzacraft"
 
-version="4.0.2"
+version="5.1.2"
 
 displayName="PizzaCraft"
 
@@ -25,13 +25,13 @@ description='Brings the tasty pizza to Minecraft!'
 [[dependencies.pizzacraft]]
     modId="forge"
     mandatory=true
-    versionRange="[37,)"
+    versionRange="[40,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.pizzacraft]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.17.1,)"
+    versionRange="[1.18.2,)"
     ordering="NONE"
     side="BOTH"

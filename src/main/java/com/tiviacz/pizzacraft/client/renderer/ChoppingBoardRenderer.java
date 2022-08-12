@@ -16,10 +16,7 @@ import net.minecraft.world.item.PickaxeItem;
 
 public class ChoppingBoardRenderer implements BlockEntityRenderer<ChoppingBoardBlockEntity>
 {
-    public ChoppingBoardRenderer(BlockEntityRendererProvider.Context context)
-    {
-
-    }
+    public ChoppingBoardRenderer(BlockEntityRendererProvider.Context context) {}
 
     @Override
     public void render(ChoppingBoardBlockEntity tileEntityIn, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn)

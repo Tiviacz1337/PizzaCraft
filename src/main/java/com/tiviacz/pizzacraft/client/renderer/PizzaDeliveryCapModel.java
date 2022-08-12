@@ -9,7 +9,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
 
-public class PizzaDeliveryCapModel extends HumanoidModel<AbstractClientPlayer>
+public class PizzaDeliveryCapModel extends HumanoidModel
 {
     public static final ModelLayerLocation CAP = new ModelLayerLocation(new ResourceLocation(PizzaCraft.MODID, "cap"), "main");
 

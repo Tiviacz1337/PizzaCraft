@@ -11,10 +11,12 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
@@ -173,14 +175,31 @@ public class PizzaBakedModel implements BakedModel
                 {
                     ResourceLocation layerLocation = null; // = new ResourceLocation("");
 
-                    for(ResourceLocation location : inventory.getStackInSlot(i).getItem().getTags())
+                   // if(inventory.getStackInSlot(i).getTags().anyMatch(t -> PizzaLayers.VALID_TAGS.contains(t.location())))
+                    //{
+                   //     layerLocation = isRaw ? PizzaLayers.getTagToRawLayer().get(inventory.getStackInSlot(i).getTags().findFirst().get().location()) : PizzaLayers.getTagToLayer().get(inventory.getStackInSlot(i).getTags().findFirst().get().location());
+                   // }
+
+                    List<TagKey<Item>> tags = inventory.getStackInSlot(i).getTags().toList();
+                    for(TagKey<Item> tag : tags)
+                    {
+                        if(PizzaLayers.VALID_TAGS.contains(tag))
+                        {
+                            layerLocation = isRaw ? PizzaLayers.getTagToRawLayer().get(tag) : PizzaLayers.getTagToLayer().get(tag);
+                        }
+                    }
+                    //if(inventory.getStackInSlot(i).getTags().anyMatch(PizzaLayers.VALID_TAGS::contains))
+                    //{
+                    //    layerLocation = isRaw ? PizzaLayers.getTagToRawLayer().get(inventory.getStackInSlot(i).getTags().findFirst().get()) : PizzaLayers.getTagToLayer().get(inventory.getStackInSlot(i).getTags().findFirst().get());
+                    //}
+                   /* for(ResourceLocation location : inventory.getStackInSlot(i).getItem().getTags())
                     {
                         if(PizzaLayers.VALID_TAGS.contains(location))
                         {
                             layerLocation = isRaw ? PizzaLayers.getTagToRawLayer().get(location) : PizzaLayers.getTagToLayer().get(location);
                         }
                         //layerLocation = isRaw ? PizzaLayers.TAG_TO_RAW_LAYER.get(location) : PizzaLayers.getTagToLayer().get(location);
-                    }
+                    } */
 
                     if(layerLocation == null)
                     {
@@ -203,7 +222,7 @@ public class PizzaBakedModel implements BakedModel
         BlockFaceUV blockFaceUV = new BlockFaceUV(uvArray, rotation);
         BlockElementFace blockElementFace = new BlockElementFace(face, -1, "",  blockFaceUV);
 
-        TextureAtlas blocksStitchedTextures = ModelLoader.instance().getSpriteMap().getAtlas(InventoryMenu.BLOCK_ATLAS);
+        TextureAtlas blocksStitchedTextures = ForgeModelBakery.instance().getSpriteMap().getAtlas(InventoryMenu.BLOCK_ATLAS);
         TextureAtlasSprite layersTextures = blocksStitchedTextures.getSprite(layerLocation);
 
         final ResourceLocation DUMMY_RL = new ResourceLocation("dummy_name");

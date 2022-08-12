@@ -31,11 +31,12 @@ public class PizzaBoardBlockEntity extends BaseBlockEntity
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound)
+    public void saveAdditional(CompoundTag compound)
     {
-        super.save(compound);
+        //super.save(compound);
+        super.saveAdditional(compound);
         compound.put(STORED_BLOCKSTATE, NbtUtils.writeBlockState(storedBlockState));
-        return compound;
+        //return compound;
     }
 
     public void use(Player player, InteractionHand hand)

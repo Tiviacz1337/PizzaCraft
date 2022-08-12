@@ -52,12 +52,12 @@ public class MortarAndPestleBlockEntity extends BaseBlockEntity
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound)
+    public void saveAdditional(CompoundTag compound)
     {
-        super.save(compound);
+        super.saveAdditional(compound);
         compound.put(INVENTORY, this.inventory.serializeNBT());
         compound.putInt(CRAFTING_PROGRESS, this.craftingProgress);
-        return compound;
+        //return compound;
     }
 
     // ======== MIXING ========

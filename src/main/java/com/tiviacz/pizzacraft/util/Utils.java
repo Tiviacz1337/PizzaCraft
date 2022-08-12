@@ -3,7 +3,6 @@ package com.tiviacz.pizzacraft.util;
 import com.tiviacz.pizzacraft.blockentity.PizzaBagBlockEntity;
 import com.tiviacz.pizzacraft.container.PizzaBagMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +15,6 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
-import java.util.Map;
 
 public class Utils
 {
@@ -25,7 +23,7 @@ public class Utils
         return targetType == type ? (BlockEntityTicker<A>) ticker : null;
     }
 
-    public static ResourceLocation matchRecipeTag(Map<?, ?> recipe, ItemStack stack)
+   /* public static ResourceLocation matchRecipeTag(Map<?, ?> recipe, ItemStack stack)
     {
         for(ResourceLocation tagLocation : stack.getItem().getTags())
         {
@@ -35,7 +33,7 @@ public class Utils
             }
         }
         return null;
-    }
+    } */
 
     public static ItemStackHandler createHandlerFromStack(ItemStack stack, int size)
     {

@@ -56,13 +56,13 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound)
+    public void saveAdditional(CompoundTag compound)
     {
-        super.save(compound);
+        super.saveAdditional(compound);
         compound.put(INVENTORY, this.inventory.serializeNBT());
         compound.putInt(FACING, this.facing.get2DDataValue());
         compound.putBoolean(IS_ITEM_CARVING_BOARD, this.isItemCarvingBoard);
-        return compound;
+        //return compound;
     }
 
     public Direction getFacing()

@@ -10,7 +10,6 @@ import com.tiviacz.pizzacraft.compat.curios.PizzaBagCurioRenderer;
 import com.tiviacz.pizzacraft.config.PizzaCraftConfig;
 import com.tiviacz.pizzacraft.init.*;
 import com.tiviacz.pizzacraft.recipes.BasinRecipeRegistry;
-import com.tiviacz.pizzacraft.worldgen.TreeGenerator;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -57,7 +56,7 @@ public class PizzaCraft
         ModMenuTypes.MENU_TYPES.register(modEventBus);
         ModRecipes.SERIALIZERS.register(modEventBus);
         ModSounds.SOUND_EVENTS.register(modEventBus);
-        ModFeatures.FEATURES.register(modEventBus);
+       // ModFeatures.FEATURES.register(modEventBus);
 
         curiosLoaded = ModList.get().isLoaded("curios");
     }
@@ -73,7 +72,7 @@ public class PizzaCraft
         event.enqueueWork(ModVanillaCompat::setup);
 
         ModAdvancements.register();
-        TreeGenerator.setup(event);
+        //TreeGenerator.setup(event);
     }
 
     private void doClientStuff(final FMLClientSetupEvent event)

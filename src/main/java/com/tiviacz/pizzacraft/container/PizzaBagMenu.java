@@ -96,6 +96,7 @@ public class PizzaBagMenu extends AbstractContainerMenu
         return itemstack;
     }
 
+    @Override
     public void removed(Player player)
     {
         super.removed(player);

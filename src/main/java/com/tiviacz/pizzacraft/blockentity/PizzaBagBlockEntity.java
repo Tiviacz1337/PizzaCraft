@@ -22,10 +22,10 @@ import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -71,11 +71,11 @@ public class PizzaBagBlockEntity extends BaseBlockEntity implements MenuProvider
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound)
+    public void saveAdditional(CompoundTag compound)
     {
-        super.save(compound);
+        super.saveAdditional(compound);
         compound.put(INVENTORY, this.inventory.serializeNBT());
-        return compound;
+        //return compound;
     }
 
     public void writeToItemStack(ItemStack stack)
@@ -134,81 +134,17 @@ public class PizzaBagBlockEntity extends BaseBlockEntity implements MenuProvider
         this.level.playSound(null, d0, d1, d2, SoundEvents.WOOL_PLACE, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
     }
 
-  /*  public void openInventory(Player player) {
-        if (!player.isSpectator()) {
-            if (this.numPlayersUsing < 0) {
-                this.numPlayersUsing = 0;
-            }
-
-            ++this.numPlayersUsing;
-            BlockState blockstate = this.getBlockState();
-            boolean flag = blockstate.getValue(PizzaBagBlock.PROPERTY_OPEN);
-
-            if (!flag) {
-                this.playSound(SoundEvents.WOOL_PLACE);
-                this.setOpenProperty(blockstate, true);
-            }
-
-            this.scheduleTick();
-        }
-
-    }
-
-    public void closeInventory(Player player) {
-        if (!player.isSpectator()) {
-            --this.numPlayersUsing;
-        }
-    }
-
-    private void scheduleTick() {
-        this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
-    }
-
-    public void pizzaBagTick() {
-        int i = this.getBlockPos().getX();
-        int j = this.getBlockPos().getY();
-        int k = this.getBlockPos().getZ();
-
-        int numPlayersUsing = Utils.calculatePlayersUsing(this.level, this, i, j, k);
-        if (numPlayersUsing > 0) {
-            this.scheduleTick();
-        } else {
-            BlockState blockstate = this.getBlockState();
-
-            boolean flag = blockstate.getValue(PizzaBagBlock.PROPERTY_OPEN);
-            if (flag) {
-                this.playSound(SoundEvents.WOOL_PLACE);
-                this.setOpenProperty(blockstate, false);
-            }
-        }
-    }
-
-    private void setOpenProperty(BlockState state, boolean open) {
-        this.level.setBlock(this.getBlockPos(), state.setValue(BarrelBlock.OPEN, open), 3);
-    }
-
-    private void playSound(SoundEvent sound) {
-        double d0 = (double) this.getBlockPos().getX() + 0.5D;
-        double d1 = (double) this.getBlockPos().getY() + 0.5D;
-        double d2 = (double) this.getBlockPos().getZ() + 0.5D;
-        this.level.playSound(null, d0, d1, d2, sound, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
-    } */
-
     // ======== ITEMHANDLER ========
 
-    private ItemStackHandler createHandler()
-    {
-        return new ItemStackHandler(6)
-        {
+    private ItemStackHandler createHandler() {
+        return new ItemStackHandler(6) {
             @Override
-            public boolean isItemValid(int slot, @Nonnull ItemStack stack)
-            {
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 return stack.getItem() == ModItems.PIZZA.get() || stack.getItem() == ModItems.RAW_PIZZA.get();
             }
 
             @Override
-            protected void onContentsChanged(int slot)
-            {
+            protected void onContentsChanged(int slot) {
                 setChanged();
             }
         };
@@ -216,28 +152,24 @@ public class PizzaBagBlockEntity extends BaseBlockEntity implements MenuProvider
 
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> cap, @Nullable final Direction side)
-    {
-        if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+    public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> cap, @Nullable final Direction side) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
             return inventoryCapability.cast();
         return super.getCapability(cap, side);
     }
 
-    public IItemHandlerModifiable getInventory()
-    {
+    public IItemHandlerModifiable getInventory() {
         return inventory;
     }
 
     @Override
-    public Component getDisplayName()
-    {
+    public Component getDisplayName() {
         return new TranslatableComponent(this.getBlockState().getBlock().getDescriptionId());
     }
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player)
-    {
+    public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
         return new PizzaBagMenu(id, playerInventory, this);
     }
 

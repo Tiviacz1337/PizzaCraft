@@ -19,10 +19,7 @@ public class MortarAndPestleRenderer implements BlockEntityRenderer<MortarAndPes
 {
     private final Random rand = new Random();
 
-    public MortarAndPestleRenderer(BlockEntityRendererProvider.Context context)
-    {
-
-    }
+    public MortarAndPestleRenderer(BlockEntityRendererProvider.Context context) {}
 
     @Override
     public void render(MortarAndPestleBlockEntity tileEntityIn, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn)

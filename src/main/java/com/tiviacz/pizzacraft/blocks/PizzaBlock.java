@@ -222,7 +222,7 @@ public class PizzaBlock extends Block implements EntityBlock
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player)
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player)
     {
         if(world.getBlockEntity(pos) instanceof PizzaBlockEntity)
         {
@@ -230,7 +230,7 @@ public class PizzaBlock extends Block implements EntityBlock
             ((PizzaBlockEntity)world.getBlockEntity(pos)).writeToItemStack(stack);
             return stack;
         }
-        return this.getPickBlock(state, target, world, pos, player);
+        return this.getCloneItemStack(state, target, world, pos, player);
     }
 
     @Override

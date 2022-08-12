@@ -9,7 +9,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
 
-public class ChefHatModel extends HumanoidModel<AbstractClientPlayer>
+public class ChefHatModel extends HumanoidModel
 {
     public static final ModelLayerLocation CHEF_HAT = new ModelLayerLocation(new ResourceLocation(PizzaCraft.MODID, "chef_hat"), "main");
 

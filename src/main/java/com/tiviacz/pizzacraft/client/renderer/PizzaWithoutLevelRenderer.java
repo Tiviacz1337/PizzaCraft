@@ -19,18 +19,18 @@ import net.minecraftforge.client.model.data.IModelData;
 import java.util.function.Supplier;
 
 @OnlyIn(Dist.CLIENT)
-public class PizzaItemStackRenderer extends BlockEntityWithoutLevelRenderer
+public class PizzaWithoutLevelRenderer extends BlockEntityWithoutLevelRenderer
 {
     private final Supplier<PizzaBlockEntity> pizza;
 
-    public PizzaItemStackRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet set, Supplier<PizzaBlockEntity> blockEntity)
+    public PizzaWithoutLevelRenderer(BlockEntityRenderDispatcher dispatcher, EntityModelSet set, Supplier<PizzaBlockEntity> blockEntity)
     {
         super(dispatcher, set);
         this.pizza = blockEntity;
     }
 
     @Override
-    public void renderByItem(ItemStack stack, ItemTransforms.TransformType p_239207_2_, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay)
+    public void renderByItem(ItemStack stack, ItemTransforms.TransformType type, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay)
     {
         Minecraft.getInstance().getBlockRenderer().renderSingleBlock(stack.getItem() == ModItems.RAW_PIZZA.get() ? ModBlocks.RAW_PIZZA.get().defaultBlockState() : ModBlocks.PIZZA.get().defaultBlockState(), poseStack, buffer, combinedLight, combinedOverlay, getModelData(stack));
     }

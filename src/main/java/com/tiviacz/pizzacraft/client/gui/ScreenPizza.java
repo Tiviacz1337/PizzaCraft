@@ -31,11 +31,11 @@ public class ScreenPizza extends AbstractContainerScreen<PizzaMenu> implements M
     private final ScreenImage HUNGER_INFO = new ScreenImage(127, 30, 13, 13);
     private final PizzaBlockEntity blockEntity;
 
-    public ScreenPizza(PizzaMenu screenContainer, Inventory inv, Component titleIn)
+    public ScreenPizza(PizzaMenu menu, Inventory inv, Component titleIn)
     {
-        super(screenContainer, inv, titleIn);
+        super(menu, inv, titleIn);
 
-        this.blockEntity = screenContainer.blockEntity;
+        this.blockEntity = menu.blockEntity;
 
         this.leftPos = 0;
         this.topPos = 0;

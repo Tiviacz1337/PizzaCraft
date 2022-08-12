@@ -9,9 +9,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems
 {
@@ -147,7 +147,6 @@ public class ModItems
     {
         return ITEMS.register(name, () -> new BlockItem(block.get(), properties));
     }
-
     public static Item.Properties pizzaProperties()
     {
         return new Item.Properties().tab(PizzaCraftItemGroup.PIZZACRAFT);
