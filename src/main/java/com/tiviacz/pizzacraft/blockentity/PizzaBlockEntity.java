@@ -17,7 +17,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -35,8 +34,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -514,7 +512,7 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
     @Override
     public Component getDisplayName()
     {
-        return new TranslatableComponent(getBlockState().getBlock().getDescriptionId());
+        return Component.translatable(getBlockState().getBlock().getDescriptionId());
     }
 
     @Nullable
@@ -528,7 +526,7 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
     {
         if(!player.level.isClientSide)
         {
-            NetworkHooks.openGui((ServerPlayer)player, menuSupplier, pos);
+            NetworkHooks.openScreen((ServerPlayer)player, menuSupplier, pos);
         }
     }
 
@@ -536,22 +534,23 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
 
     @Nonnull
     @Override
-    public IModelData getModelData()
+    public ModelData getModelData()
     {
-        ModelDataMap modelDataMap = PizzaBakedModel.getEmptyIModelData();
-        modelDataMap.setData(PizzaBakedModel.LAYER_PROVIDERS, Optional.of(getInventory()));
-        modelDataMap.setData(PizzaBakedModel.INTEGER_PROPERTY, Optional.of(getBlockState().getBlock() == ModBlocks.PIZZA.get() ? getBlockState().getValue(PizzaBlock.BITES) : 0));
-        modelDataMap.setData(PizzaBakedModel.IS_RAW, Optional.of(isRaw()));
-        return modelDataMap;
+        ModelData.Builder builder = ModelData.builder();
+        builder.with(PizzaBakedModel.LAYER_PROVIDERS, Optional.of(getInventory()));
+        builder.with(PizzaBakedModel.INTEGER_PROPERTY, Optional.of(getBlockState().getBlock() == ModBlocks.PIZZA.get() ? getBlockState().getValue(PizzaBlock.BITES) : 0));
+        builder.with(PizzaBakedModel.IS_RAW, Optional.of(isRaw()));
+        ModelData modelData = builder.build();
+        return modelData;
     }
 
-    public IModelData getItemStackModelData(ItemStack stack)
+    public ModelData getItemStackModelData(ItemStack stack)
     {
         readFromStack(stack);
-        ModelDataMap modelDataMap = PizzaBakedModel.getEmptyIModelData();
-        modelDataMap.setData(PizzaBakedModel.LAYER_PROVIDERS, Optional.of(getInventory()));
-        modelDataMap.setData(PizzaBakedModel.INTEGER_PROPERTY, Optional.of(0));
-        modelDataMap.setData(PizzaBakedModel.IS_RAW, Optional.of(stack.getItem() == ModItems.RAW_PIZZA.get()));
-        return modelDataMap;
+        ModelData.Builder builder = ModelData.builder();
+        builder.with(PizzaBakedModel.LAYER_PROVIDERS, Optional.of(getInventory()));
+        builder.with(PizzaBakedModel.INTEGER_PROPERTY, Optional.of(0));
+        builder.with(PizzaBakedModel.IS_RAW, Optional.of(stack.getItem() == ModItems.RAW_PIZZA.get()));
+        return builder.build();
     }
 }

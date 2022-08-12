@@ -11,7 +11,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModMenuTypes
 {
-    public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.CONTAINERS, PizzaCraft.MODID);
+    public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, PizzaCraft.MODID);
 
     public static final RegistryObject<MenuType<PizzaMenu>> PIZZA = MENU_TYPES.register("pizza", () -> IForgeMenuType.create(PizzaMenu::new));
     public static final RegistryObject<MenuType<PizzaBagMenu>> PIZZA_BAG = MENU_TYPES.register("pizza_bag", () -> IForgeMenuType.create(PizzaBagMenu::new));

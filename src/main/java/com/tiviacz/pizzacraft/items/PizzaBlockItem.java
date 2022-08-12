@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import java.util.function.Consumer;
 
@@ -20,14 +20,14 @@ public class PizzaBlockItem extends BlockItem
     }
 
     @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer)
+    public void initializeClient(Consumer<IClientItemExtensions> consumer)
     {
         super.initializeClient(consumer);
 
-        consumer.accept(new IItemRenderProperties()
+        consumer.accept(new IClientItemExtensions()
         {
             @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer()
+            public BlockEntityWithoutLevelRenderer getCustomRenderer()
             {
                 return new PizzaWithoutLevelRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels(), () -> new PizzaBlockEntity(BlockPos.ZERO, ModBlocks.PIZZA.get().defaultBlockState()));
             }

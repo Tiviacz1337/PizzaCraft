@@ -21,7 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
@@ -46,7 +46,7 @@ public class BlockAlphaRenderer extends ModelBlockRenderer
         super(baseRenderer.blockColors);
     }
 
-    public static void renderBlockAlpha(BlockPos pos, BlockState state, Level level, PoseStack poseStack, MultiBufferSource buffer, IModelData data)
+    public static void renderBlockAlpha(BlockPos pos, BlockState state, Level level, PoseStack poseStack, MultiBufferSource buffer, ModelData data)
     {
         poseStack.pushPose();
 
@@ -63,7 +63,7 @@ public class BlockAlphaRenderer extends ModelBlockRenderer
                 level.random,
                 state.getSeed(pos),
                 OverlayTexture.NO_OVERLAY,
-                data);
+                data, null);
 
         poseStack.popPose();
     }
@@ -82,14 +82,14 @@ public class BlockAlphaRenderer extends ModelBlockRenderer
             b = (i & 255) / 255.0F;
         }
         // FORGE: Apply diffuse lighting at render-time instead of baking it in
-        if (quadIn.isShade()) // better name: shouldApplyDiffuseLighting
-        {
-            // TODO this should be handled by the forge lighting pipeline
-            float forgeLighting = net.minecraftforge.client.model.pipeline.LightUtil.diffuseLight(quadIn.getDirection());
-            r *= forgeLighting;
-            g *= forgeLighting;
-            b *= forgeLighting;
-        }
+        //if (quadIn.isShade()) // better name: shouldApplyDiffuseLighting
+        //{
+       //     // TODO this should be handled by the forge lighting pipeline
+       //     float forgeLighting = net.minecraftforge.client.model.lighting.FlatQuadLighterLightUtil.diffuseLight(quadIn.getDirection());
+       //     r *= forgeLighting;
+       //     g *= forgeLighting;
+       //     b *= forgeLighting;
+       // }
 
         float alpha = 1.0F;
 

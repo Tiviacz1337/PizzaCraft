@@ -3,6 +3,7 @@ package com.tiviacz.pizzacraft.blocks.crops;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
@@ -63,7 +64,7 @@ public class SimpleCropBlock extends CropBlock
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, Random random)
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random)
     {
         if(random.nextInt(2) != 0)
         {

@@ -8,7 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -164,7 +163,7 @@ public class PizzaBagBlockEntity extends BaseBlockEntity implements MenuProvider
 
     @Override
     public Component getDisplayName() {
-        return new TranslatableComponent(this.getBlockState().getBlock().getDescriptionId());
+        return Component.translatable(this.getBlockState().getBlock().getDescriptionId());
     }
 
     @Nullable
@@ -177,7 +176,7 @@ public class PizzaBagBlockEntity extends BaseBlockEntity implements MenuProvider
     {
         if(!player.level.isClientSide)
         {
-            NetworkHooks.openGui((ServerPlayer)player, containerSupplier, pos);
+            NetworkHooks.openScreen((ServerPlayer)player, containerSupplier, pos);
         }
     }
 }

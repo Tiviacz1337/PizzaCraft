@@ -10,6 +10,7 @@ import com.tiviacz.pizzacraft.compat.curios.PizzaBagCurioRenderer;
 import com.tiviacz.pizzacraft.config.PizzaCraftConfig;
 import com.tiviacz.pizzacraft.init.*;
 import com.tiviacz.pizzacraft.recipes.BasinRecipeRegistry;
+import com.tiviacz.pizzacraft.init.ModBiomeModifiers;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -55,7 +56,11 @@ public class PizzaCraft
         ModBlockEntityTypes.BLOCK_ENTITY_TYPES.register(modEventBus);
         ModMenuTypes.MENU_TYPES.register(modEventBus);
         ModRecipes.SERIALIZERS.register(modEventBus);
+        ModRecipes.RECIPE_TYPES.register(modEventBus);
         ModSounds.SOUND_EVENTS.register(modEventBus);
+        ModPlacedFeatures.PLACED_FEATURES.register(modEventBus);
+        ModBiomeModifiers.BIOME_MODIFIERS.register(modEventBus);
+        ModLootModifiers.LOOT_MODIFIERS.register(modEventBus);
        // ModFeatures.FEATURES.register(modEventBus);
 
         curiosLoaded = ModList.get().isLoaded("curios");

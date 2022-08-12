@@ -9,7 +9,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlockEntityTypes
 {
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, PizzaCraft.MODID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, PizzaCraft.MODID);
 
     public static final RegistryObject<BlockEntityType<ChoppingBoardBlockEntity>> CHOPPING_BOARD = BLOCK_ENTITY_TYPES.register("chopping_board",
             () -> BlockEntityType.Builder.of(ChoppingBoardBlockEntity::new,

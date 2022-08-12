@@ -7,24 +7,28 @@ import com.google.common.collect.Sets;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
+import com.mojang.math.Vector3f;
 import com.tiviacz.pizzacraft.init.PizzaLayers;
 import com.tiviacz.pizzacraft.util.Utils;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.ForgeRenderTypes;
+import net.minecraftforge.client.RenderTypeGroup;
 import net.minecraftforge.client.model.*;
-import net.minecraftforge.client.model.geometry.IModelGeometry;
+import net.minecraftforge.client.model.geometry.*;
 import net.minecraftforge.items.ItemStackHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +38,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
-public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceModel>
+public class DynamicPizzaSliceModel implements IUnbakedGeometry<DynamicPizzaSliceModel>
 {
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -43,6 +47,9 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
     private static final float SOUTH_Z_COVER = 8.504f / 16f;
     private static final float NORTH_Z_FLUID = 7.498f / 16f;
     private static final float SOUTH_Z_FLUID = 8.502f / 16f;
+
+    private static final Transformation FLUID_TRANSFORM = new Transformation(Vector3f.ZERO, Quaternion.ONE, new Vector3f(1, 1, 1.002f), Quaternion.ONE);
+    private static final Transformation COVER_TRANSFORM = new Transformation(Vector3f.ZERO, Quaternion.ONE, new Vector3f(1, 1, 1.004f), Quaternion.ONE);
 
     @Nonnull
     private final ItemStack stack;
@@ -58,10 +65,10 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
     }
 
     @Override
-    public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides, ResourceLocation modelLocation)
+    public BakedModel bake(IGeometryBakingContext owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides, ResourceLocation modelLocation)
     {
-        Material particleLocation = owner.isTexturePresent("particle") ? owner.resolveTexture("particle") : null;
-        Material baseLocation = owner.isTexturePresent("base") ? owner.resolveTexture("base") : null;
+        Material particleLocation = owner.hasMaterial("particle") ? owner.getMaterial("particle") : null;
+        Material baseLocation = owner.hasMaterial("base") ? owner.getMaterial("base") : null;
 
         List<Material> layersLocations = new ArrayList<>();
 
@@ -93,24 +100,35 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
             } */
         }
 
-        ModelState transformsFromModel = owner.getCombinedTransform();
+        //ModelState transformsFromModel = owner.getCombinedTransform();
 
-        ImmutableMap<ItemTransforms.TransformType, Transformation> transformMap =
-                PerspectiveMapWrapper.getTransforms(new CompositeModelState(transformsFromModel, modelState));
+       // ImmutableMap<ItemTransforms.TransformType, Transformation> transformMap =
+       //         PerspectiveMapWrapper.getTransforms(new CompositeModelState(transformsFromModel, modelState));
 
         TextureAtlasSprite particleSprite = particleLocation != null ? spriteGetter.apply(particleLocation) : null;
 
         if (particleSprite == null) particleSprite = spriteGetter.apply(baseLocation);
 
-        Transformation transform = modelState.getRotation();
+        var rootTransform = owner.getRootTransform();
+        if (!rootTransform.isIdentity())
+            modelState = new SimpleModelState(modelState.getRotation().compose(rootTransform), modelState.isUvLocked());
 
-        ItemMultiLayerBakedModel.Builder builder = ItemMultiLayerBakedModel.builder(owner, particleSprite, new DynamicPizzaSliceModel.PizzaSliceOverrideHandler(overrides, bakery, owner, this), transformMap);
+        var itemContext = StandaloneGeometryBakingContext.builder(owner).withGui3d(false).withUseBlockLight(false).build(modelLocation);
+        CompositeModel.Baked.Builder builder = CompositeModel.Baked.builder(itemContext, particleSprite, new DynamicPizzaSliceModel.PizzaSliceOverrideHandler(overrides, bakery, itemContext, this), owner.getTransforms());
+
+        var normalRenderTypes = getLayerRenderTypes();
 
         if(baseLocation != null)
         {
             // build base (insidest)
             TextureAtlasSprite sprite = spriteGetter.apply(baseLocation);
-            builder.addQuads(ItemLayerModel.getLayerRenderType(false), ItemLayerModel.getQuadsForSprites(ImmutableList.of(baseLocation), transform, spriteGetter));
+
+            // Base texture
+            var unbaked = UnbakedGeometryHelper.createUnbakedItemElements(0, sprite);
+            var quads = UnbakedGeometryHelper.bakeElements(unbaked, $ -> sprite, modelState, modelLocation);
+            builder.addQuads(normalRenderTypes, quads);
+
+            //builder.addQuads(ItemLayerModel.getLayerRenderType(false), ItemLayerModel.getQuadsForSprites(ImmutableList.of(baseLocation), transform, spriteGetter));
             //builder.addQuads(ItemLayerModel.getLayerRenderType(true), ItemTextureQuadConverter.genQuad(transform, 0, 0, 16, 16, NORTH_Z_COVER, sprite, Direction.NORTH, 0xFFFFFFFF, -1));
             //builder.addQuads(ItemLayerModel.getLayerRenderType(true), ItemTextureQuadConverter.genQuad(transform, 0, 0, 16, 16, SOUTH_Z_COVER, sprite, Direction.SOUTH, 0xFFFFFFFF, -1));
             //builder.addQuads(ItemLayerModel.getLayerRenderType(false), ItemLayerModel.getQuadsForSprites(ImmutableList.of(baseLocation), transform, spriteGetter));
@@ -127,8 +145,17 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
 
                 if(sprite != null)
                 {
-                    builder.addQuads(ItemLayerModel.getLayerRenderType(false), ItemTextureQuadConverter.convertTexture(transform, sprite, sprite, NORTH_Z_COVER - i * 0.0001F, Direction.NORTH, 0xFFFFFFFF, -1));
-                    builder.addQuads(ItemLayerModel.getLayerRenderType(false), ItemTextureQuadConverter.convertTexture(transform, sprite, sprite, SOUTH_Z_COVER + i * 0.0001F, Direction.SOUTH, 0xFFFFFFFF, -1));
+                    var transformedState = new SimpleModelState(modelState.getRotation().compose(getLayerTransformation(i)), modelState.isUvLocked());
+                    var unbaked = UnbakedGeometryHelper.createUnbakedItemMaskElements(2, sprite); // Use cover as mask
+                    var quads = UnbakedGeometryHelper.bakeElements(unbaked, $ -> sprite, transformedState, modelLocation);
+                    //quads = UnbakedGeometryHelper.bakeElements(unbaked, $ -> sprite, transformedState, modelLocation); // Bake with selected texture
+                    //var quad = UnbakedGeometryHelper.bakeElementFace(unbaked, )
+                    //var quads = UnbakedGeometryHelper.bakeElementFace(unbaked, $ -> sprite, transformedState, modelLocation);
+
+                    builder.addQuads(getLayerRenderTypes(), quads);
+
+                    //builder.addQuads(ItemLayerModel.getLayerRenderType(false), ItemTextureQuadConverter.convertTexture(transform, sprite, sprite, NORTH_Z_COVER - i * 0.0001F, Direction.NORTH, 0xFFFFFFFF, -1));
+                   // builder.addQuads(ItemLayerModel.getLayerRenderType(false), ItemTextureQuadConverter.convertTexture(transform, sprite, sprite, SOUTH_Z_COVER + i * 0.0001F, Direction.SOUTH, 0xFFFFFFFF, -1));
                 }
             }
         }
@@ -138,26 +165,33 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
         return builder.build();
     }
 
+    public static Transformation getLayerTransformation(int i)
+    {
+        return new Transformation(Vector3f.ZERO, Quaternion.ONE, new Vector3f(1, 1, 1.004f + i * 0.0004F), Quaternion.ONE);
+    }
+
+    public static RenderTypeGroup getLayerRenderTypes()
+    {
+        return new RenderTypeGroup(RenderType.translucent(), ForgeRenderTypes.ITEM_UNSORTED_TRANSLUCENT.get());
+    }
+
     @Override
-    public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors)
+    public Collection<Material> getMaterials(IGeometryBakingContext owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors)
     {
         Set<Material> texs = Sets.newHashSet();
 
-        if(owner.isTexturePresent("particle")) texs.add(owner.resolveTexture("particle"));
-        if(owner.isTexturePresent("base")) texs.add(owner.resolveTexture("base"));
+        if(owner.hasMaterial("particle")) texs.add(owner.getMaterial("particle"));
+        if(owner.hasMaterial("base")) texs.add(owner.getMaterial("base"));
 
         return texs;
     }
 
-    public enum Loader implements IModelLoader<DynamicPizzaSliceModel>
+    public enum Loader implements IGeometryLoader<DynamicPizzaSliceModel>
     {
         INSTANCE;
 
         @Override
-        public void onResourceManagerReload(ResourceManager resourceManager) { }
-
-        @Override
-        public DynamicPizzaSliceModel read(JsonDeserializationContext deserializationContext, JsonObject modelContents)
+        public DynamicPizzaSliceModel read(JsonObject jsonObject, JsonDeserializationContext deserializationContext)
         {
             return new DynamicPizzaSliceModel(ItemStack.EMPTY);
         }
@@ -168,10 +202,10 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
         private final Map<String, BakedModel> cache = Maps.newHashMap(); // contains all the baked models since they'll never change
         private final ItemOverrides nested;
         private final ModelBakery bakery;
-        private final IModelConfiguration owner;
+        private final IGeometryBakingContext owner;
         private final DynamicPizzaSliceModel parent;
 
-        private PizzaSliceOverrideHandler(ItemOverrides nested, ModelBakery bakery, IModelConfiguration owner, DynamicPizzaSliceModel parent)
+        private PizzaSliceOverrideHandler(ItemOverrides nested, ModelBakery bakery, IGeometryBakingContext owner, DynamicPizzaSliceModel parent)
         {
             this.nested = nested;
             this.bakery = bakery;
@@ -191,7 +225,7 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
                 if(!cache.containsKey(name))
                 {
                     DynamicPizzaSliceModel unbaked = this.parent.withStack(stack);
-                    BakedModel bakedModel = unbaked.bake(owner, bakery, ForgeModelBakery.defaultTextureGetter(), BlockModelRotation.X0_Y0, this, new ResourceLocation("pizzacraft:pizza_slice_override"));
+                    BakedModel bakedModel = unbaked.bake(owner, bakery, Material::sprite, BlockModelRotation.X0_Y0, this, new ResourceLocation("pizzacraft:pizza_slice_override"));
                     cache.put(name, bakedModel);
                     return bakedModel;
                 }

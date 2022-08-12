@@ -6,6 +6,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -59,7 +60,7 @@ public class OvenBlock extends Block
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void animateTick(BlockState stateIn, Level level, BlockPos pos, Random rand)
+    public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand)
     {
         if(stateIn.getValue(LIT))
         {

@@ -6,7 +6,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -29,7 +28,7 @@ public class PizzaBagItem extends BlockItem
     @Override
     public Component getName(ItemStack stack)
     {
-        return new TranslatableComponent(this.getDescriptionId(stack)).withStyle(ChatFormatting.RED);
+        return Component.translatable(this.getDescriptionId(stack)).withStyle(ChatFormatting.RED);
     }
 
     @Nullable

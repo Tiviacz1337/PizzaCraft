@@ -12,7 +12,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Inventory;
@@ -55,16 +54,16 @@ public class ScreenPizza extends AbstractContainerScreen<PizzaMenu> implements M
     public List<Component> getTooltip()
     {
         List<Component> components = new ArrayList<>();
-        components.add(new TranslatableComponent("information.pizzacraft.hunger", FoodUtils.getHungerForSlice(blockEntity.getRefillmentValues().getFirst(), false), ((blockEntity.getRefillmentValues().getFirst() % 7 != 0) ? " (+" + blockEntity.getRefillmentValues().getFirst() % 7 + ")" : ""), blockEntity.getRefillmentValues().getFirst()).withStyle(ChatFormatting.BLUE));
-        components.add(new TranslatableComponent("information.pizzacraft.saturation", (float)(Math.round(blockEntity.getRefillmentValues().getSecond() / 7 * 100.0) / 100.0), (float)(Math.round(blockEntity.getRefillmentValues().getSecond() * 100.0) / 100.0)).withStyle(ChatFormatting.BLUE));
+        components.add(Component.translatable("information.pizzacraft.hunger", FoodUtils.getHungerForSlice(blockEntity.getRefillmentValues().getFirst(), false), ((blockEntity.getRefillmentValues().getFirst() % 7 != 0) ? " (+" + blockEntity.getRefillmentValues().getFirst() % 7 + ")" : ""), blockEntity.getRefillmentValues().getFirst()).withStyle(ChatFormatting.BLUE));
+        components.add(Component.translatable("information.pizzacraft.saturation", (float)(Math.round(blockEntity.getRefillmentValues().getSecond() / 7 * 100.0) / 100.0), (float)(Math.round(blockEntity.getRefillmentValues().getSecond() * 100.0) / 100.0)).withStyle(ChatFormatting.BLUE));
 
         if(!blockEntity.getEffects().isEmpty())
         {
-            components.add(new TranslatableComponent("information.pizzacraft.effects").withStyle(ChatFormatting.GOLD));
+            components.add(Component.translatable("information.pizzacraft.effects").withStyle(ChatFormatting.GOLD));
 
             for(Pair<MobEffectInstance, Float> pair : blockEntity.getEffects())
             {
-                components.add(new TranslatableComponent(pair.getFirst().getDescriptionId()).withStyle(pair.getFirst().getEffect().getCategory().getTooltipFormatting()));
+                components.add(Component.translatable(pair.getFirst().getDescriptionId()).withStyle(pair.getFirst().getEffect().getCategory().getTooltipFormatting()));
             }
         }
 

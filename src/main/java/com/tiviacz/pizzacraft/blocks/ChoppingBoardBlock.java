@@ -234,9 +234,9 @@ public class ChoppingBoardBlock extends Block implements EntityBlock
         @SubscribeEvent
         public static void onSneakPlaceTool(PlayerInteractEvent.RightClickBlock event)
         {
-            Level level = event.getWorld();
+            Level level = event.getLevel();
             BlockPos pos = event.getPos();
-            Player player = event.getPlayer();
+            Player player = event.getEntity();
             ItemStack heldItem = player.getMainHandItem();
             BlockEntity blockEntity = level.getBlockEntity(event.getPos());
 

@@ -12,6 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -58,7 +59,7 @@ public class RawPizzaBlock extends Block implements EntityBlock
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void animateTick(BlockState stateIn, Level level, BlockPos pos, Random rand)
+    public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand)
     {
         if(level.getBlockEntity(pos) instanceof PizzaBlockEntity)
         {

@@ -8,7 +8,7 @@ import com.tiviacz.pizzacraft.util.BlockAlphaRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 import java.util.Optional;
 
@@ -34,8 +34,8 @@ public class PizzaRenderer implements BlockEntityRenderer<PizzaBlockEntity>
         poseStack.scale(1.005F, 1.005F, 1.005F);
 
         //Set IModelData to baked pizza, just as we want it
-        IModelData modelData = tileEntity.getModelData();
-        modelData.setData(PizzaBakedModel.IS_RAW, Optional.of(false));
+        ModelData modelData = tileEntity.getModelData();
+        modelData.derive().with(PizzaBakedModel.IS_RAW, Optional.of(false));
 
         //Custom implementation of BlockModelRenderer with accessible alpha value (Thanks Commoble!)
         BlockAlphaRenderer.renderBlockAlpha(tileEntity.getBlockPos(), ModBlocks.PIZZA.get().defaultBlockState(), tileEntity.getLevel(), poseStack, bufferIn, modelData);

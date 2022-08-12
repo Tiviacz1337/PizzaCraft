@@ -4,6 +4,7 @@ import com.tiviacz.pizzacraft.init.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -54,7 +55,7 @@ public class OliveLeavesBlock extends LeavesBlock implements BonemealableBlock
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, Random random)
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random)
     {
         if(!level.isAreaLoaded(pos, 1)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light
 
@@ -121,13 +122,13 @@ public class OliveLeavesBlock extends LeavesBlock implements BonemealableBlock
     }
 
     @Override
-    public boolean isBonemealSuccess(Level level, Random rand, BlockPos pos, BlockState state)
+    public boolean isBonemealSuccess(Level level, RandomSource rand, BlockPos pos, BlockState state)
     {
         return state.getValue(AGE) < getMaxAge();
     }
 
     @Override
-    public void performBonemeal(ServerLevel level, Random rand, BlockPos pos, BlockState state)
+    public void performBonemeal(ServerLevel level, RandomSource rand, BlockPos pos, BlockState state)
     {
         int i = this.getAge(state) + this.getBonemealAgeIncrease(level);
         int j = this.getMaxAge();

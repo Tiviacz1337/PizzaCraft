@@ -5,6 +5,7 @@ import com.tiviacz.pizzacraft.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,7 +50,7 @@ public class PizzaBagBlock extends Block implements EntityBlock
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel level, BlockPos pos, Random rand)
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource rand)
     {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if(blockEntity instanceof PizzaBagBlockEntity)

@@ -25,6 +25,7 @@ import net.minecraft.world.level.levelgen.placement.RarityFilter;
 
 public class ModFeatures
 {
+
     public static final Holder<ConfiguredFeature<TreeConfiguration, ?>> OLIVE = FeatureUtils.register("olive", Feature.TREE,
             new TreeConfiguration.TreeConfigurationBuilder(
                     BlockStateProvider.simple(ModBlocks.OLIVE_LOG.get().defaultBlockState()),
@@ -39,7 +40,4 @@ public class ModFeatures
 
     public static final Holder<ConfiguredFeature<RandomFeatureConfiguration, ?>> OLIVE_SPAWN = FeatureUtils.register("olive_spawn", Feature.RANDOM_SELECTOR,
             new RandomFeatureConfiguration(ImmutableList.of(new WeightedPlacedFeature(OLIVE_CHECKED, 0.01F)), OLIVE_CHECKED));
-
-    public static final Holder<PlacedFeature> OLIVE_PLACED = PlacementUtils.register("olive_placed", OLIVE_SPAWN,
-            VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(5))); //PlacementUtils.countExtra(1, 0.1F, 2)));
 }

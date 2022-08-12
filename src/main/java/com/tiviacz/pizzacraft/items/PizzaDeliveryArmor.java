@@ -16,7 +16,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
@@ -39,12 +39,12 @@ public class PizzaDeliveryArmor extends ArmorItem
     }
 
     @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer)
+    public void initializeClient(Consumer<IClientItemExtensions> consumer)
     {
-        consumer.accept(new IItemRenderProperties()
+        consumer.accept(new IClientItemExtensions()
         {
             @Override
-            public HumanoidModel<?> getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> humanoid)
+            public HumanoidModel<?> getGenericArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> humanoid)
             {
                 if(armorSlot == EquipmentSlot.HEAD)
                 {

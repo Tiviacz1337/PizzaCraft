@@ -3,25 +3,22 @@ package com.tiviacz.pizzacraft.compat.jei;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.recipes.crushing.CrushingRecipe;
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipe>
 {
+    public static final RecipeType<CrushingRecipe> CRUSHING =
+            RecipeType.create(PizzaCraft.MODID, "crushing", CrushingRecipe.class);
+
     public static final ResourceLocation ID = new ResourceLocation(PizzaCraft.MODID, "crushing");
 
     private final IDrawable background;
@@ -32,21 +29,15 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipe>
     public CrushingRecipeCategory(IGuiHelper guiHelper)
     {
         background = guiHelper.createDrawable(new ResourceLocation(PizzaCraft.MODID, "textures/gui/crushing_recipe.png"), -5, -5, 96, 36);
-        icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.GRANITE_BASIN.get()));
-        title = new TranslatableComponent("recipecategory." + PizzaCraft.MODID + ".crushing");
+        icon = guiHelper.createDrawableItemStack(new ItemStack(ModBlocks.GRANITE_BASIN.get()));
+        title = Component.translatable("recipecategory." + PizzaCraft.MODID + ".crushing");
         //timer = guiHelper.createTickTimer(60, 320, false);
     }
 
     @Override
-    public ResourceLocation getUid()
+    public RecipeType<CrushingRecipe> getRecipeType()
     {
-        return ID;
-    }
-
-    @Override
-    public Class<? extends CrushingRecipe> getRecipeClass()
-    {
-        return CrushingRecipe.class;
+        return CRUSHING;
     }
 
     @Override
@@ -67,6 +58,13 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipe>
         return icon;
     }
 
+    @Override
+    public void setRecipe(IRecipeLayoutBuilder builder, CrushingRecipe recipe, IFocusGroup focuses)
+    {
+        builder.addSlot(RecipeIngredientRole.INPUT, 6, 10).addIngredients(recipe.getInput());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 69, 10).addItemStack(recipe.getResultItem());
+    }
+
   /*  @Nonnull
     public static List<CrushingRecipeType> getRecipes()
     {
@@ -75,15 +73,7 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipe>
         return recipes;
     } */
 
-    @Override
-    public void setIngredients(CrushingRecipe crushingRecipe, IIngredients iIngredients)
-    {
-        List<Ingredient> ingredients = Collections.singletonList(crushingRecipe.getInput());
-        iIngredients.setInputIngredients(ingredients);
-        iIngredients.setOutput(VanillaTypes.ITEM, crushingRecipe.getResultItem());
-    }
-
-    @Override
+  /*  @Override
     public void setRecipe(IRecipeLayout iRecipeLayout, CrushingRecipe crushingRecipe, IIngredients iIngredients)
     {
         IGuiItemStackGroup guiItemStacks = iRecipeLayout.getItemStacks();
@@ -96,7 +86,7 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipe>
 
         guiItemStacks.set(0, inputs);
         guiItemStacks.set(1, crushingRecipe.getResultItem());
-    }
+    } */
 
   //  @Override
   //  public void draw(CrushingRecipeType recipe, MatrixStack matrixStack, double mouseX, double mouseY)

@@ -10,9 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
-public class ChoppingRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ChoppingRecipe>
+public class ChoppingRecipeSerializer implements RecipeSerializer<ChoppingRecipe>
 {
     public ChoppingRecipeSerializer() {}
 

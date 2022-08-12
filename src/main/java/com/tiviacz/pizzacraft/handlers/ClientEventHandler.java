@@ -16,10 +16,8 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -27,9 +25,9 @@ import net.minecraftforge.fml.common.Mod;
 public class ClientEventHandler
 {
     @SubscribeEvent
-    public static void registerModels(ModelRegistryEvent event)
+    public static void registerModels(ModelEvent.RegisterGeometryLoaders event)
     {
-        ModelLoaderRegistry.registerLoader(new ResourceLocation(PizzaCraft.MODID, "pizza_slice_loader"), DynamicPizzaSliceModel.Loader.INSTANCE);
+        event.register("pizza_slice_loader", DynamicPizzaSliceModel.Loader.INSTANCE);
     }
 
     @SubscribeEvent
@@ -42,12 +40,12 @@ public class ClientEventHandler
     }
 
     @SubscribeEvent
-    public static void onModelBakeEvent(ModelBakeEvent event)
+    public static void onModelBakeEvent(ModelEvent.BakingCompleted event)
     {
         for(BlockState blockState : ModBlocks.PIZZA.get().getStateDefinition().getPossibleStates())
         {
             ModelResourceLocation variantMRL = BlockModelShaper.stateToModelLocation(blockState);
-            BakedModel existingModel = event.getModelRegistry().get(variantMRL);
+            BakedModel existingModel = event.getModels().get(variantMRL);
             if(existingModel == null)
             {
                 //LOGGER.warn("Did not find the expected vanilla baked model(s) for blockAltimeter in registry");
@@ -59,14 +57,14 @@ public class ClientEventHandler
             else
             {
                 PizzaBakedModel customModel = new PizzaBakedModel(existingModel);
-                event.getModelRegistry().put(variantMRL, customModel);
+                event.getModels().put(variantMRL, customModel);
             }
         }
 
         for(BlockState blockState : ModBlocks.RAW_PIZZA.get().getStateDefinition().getPossibleStates())
         {
             ModelResourceLocation variantMRL = BlockModelShaper.stateToModelLocation(blockState);
-            BakedModel existingModel = event.getModelRegistry().get(variantMRL);
+            BakedModel existingModel = event.getModels().get(variantMRL);
             if(existingModel == null)
             {
                 //LOGGER.warn("Did not find the expected vanilla baked model(s) for blockAltimeter in registry");
@@ -78,7 +76,7 @@ public class ClientEventHandler
             else
             {
                 PizzaBakedModel customModel = new PizzaBakedModel(existingModel);
-                event.getModelRegistry().put(variantMRL, customModel);
+                event.getModels().put(variantMRL, customModel);
             }
         }
     }

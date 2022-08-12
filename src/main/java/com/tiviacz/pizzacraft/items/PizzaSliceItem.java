@@ -6,7 +6,6 @@ import com.tiviacz.pizzacraft.util.FoodUtils;
 import com.tiviacz.pizzacraft.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -53,16 +52,16 @@ public class PizzaSliceItem extends Item
             effects = instance.getEffects();
         }
         //TranslationTextComponent translation = new TranslationTextComponent("information.pizzacraft.hunger", hunger).mergeStyle(TextFormatting.BLUE);
-        tooltip.add(new TranslatableComponent("information.pizzacraft.hunger_slice", hunger).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("information.pizzacraft.saturation_slice", saturation).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("information.pizzacraft.hunger_slice", hunger).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("information.pizzacraft.saturation_slice", saturation).withStyle(ChatFormatting.BLUE));
 
         if(!effects.isEmpty())
         {
-            tooltip.add(new TranslatableComponent("information.pizzacraft.effects").withStyle(ChatFormatting.GOLD));
+            tooltip.add(Component.translatable("information.pizzacraft.effects").withStyle(ChatFormatting.GOLD));
 
             for(Pair<MobEffectInstance, Float> pair : effects)
             {
-                tooltip.add(new TranslatableComponent(pair.getFirst().getDescriptionId()).withStyle(pair.getFirst().getEffect().getCategory().getTooltipFormatting()));
+                tooltip.add(Component.translatable(pair.getFirst().getDescriptionId()).withStyle(pair.getFirst().getEffect().getCategory().getTooltipFormatting()));
             }
         }
         //tooltip.add(new StringTextComponent("Restores: " + hunger + " Hunger").mergeStyle(TextFormatting.BLUE));

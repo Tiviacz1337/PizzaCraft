@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.client.ICurioRenderer;
 
@@ -48,7 +48,8 @@ public class PizzaBagCurioRenderer implements ICurioRenderer
                 livingEntity.getRandom(),
                 pizzaBag.defaultBlockState().getSeed(livingEntity.blockPosition()),
                 OverlayTexture.NO_OVERLAY,
-                EmptyModelData.INSTANCE);
+                ModelData.EMPTY,
+                null);
 
         matrixStack.popPose();
     }

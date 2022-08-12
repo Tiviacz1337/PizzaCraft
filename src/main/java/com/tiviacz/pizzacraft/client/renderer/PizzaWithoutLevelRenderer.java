@@ -13,8 +13,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 import java.util.function.Supplier;
 
@@ -32,11 +31,11 @@ public class PizzaWithoutLevelRenderer extends BlockEntityWithoutLevelRenderer
     @Override
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType type, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay)
     {
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(stack.getItem() == ModItems.RAW_PIZZA.get() ? ModBlocks.RAW_PIZZA.get().defaultBlockState() : ModBlocks.PIZZA.get().defaultBlockState(), poseStack, buffer, combinedLight, combinedOverlay, getModelData(stack));
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(stack.getItem() == ModItems.RAW_PIZZA.get() ? ModBlocks.RAW_PIZZA.get().defaultBlockState() : ModBlocks.PIZZA.get().defaultBlockState(), poseStack, buffer, combinedLight, combinedOverlay, getModelData(stack), null);
     }
 
-    public IModelData getModelData(ItemStack stack)
+    public ModelData getModelData(ItemStack stack)
     {
-        return stack.hasTag() ? pizza.get().getItemStackModelData(stack) : EmptyModelData.INSTANCE;
+        return stack.hasTag() ? pizza.get().getItemStackModelData(stack) : ModelData.EMPTY;
     }
 }

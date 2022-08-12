@@ -8,7 +8,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -57,15 +56,15 @@ public class KnifeItem extends SwordItem
     {
         super.appendHoverText(stack, level, tooltip, flagIn);
 
-        tooltip.add(new TranslatableComponent("description.pizzacraft.backstab.title").withStyle(ChatFormatting.RED));
+        tooltip.add(Component.translatable("description.pizzacraft.backstab.title").withStyle(ChatFormatting.RED));
 
         if(InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) || InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_RIGHT_SHIFT))
         {
-            tooltip.add(new TranslatableComponent("description.pizzacraft.backstab.description").withStyle(ChatFormatting.BLUE));
+            tooltip.add(Component.translatable("description.pizzacraft.backstab.description").withStyle(ChatFormatting.BLUE));
         }
         else
         {
-            tooltip.add(new TranslatableComponent("description.pizzacraft.hold_shift.title").withStyle(ChatFormatting.BLUE));
+            tooltip.add(Component.translatable("description.pizzacraft.hold_shift.title").withStyle(ChatFormatting.BLUE));
         }
     }
 
@@ -75,7 +74,7 @@ public class KnifeItem extends SwordItem
         @SubscribeEvent
         public static void onKnifeBackstab(LivingHurtEvent event)
         {
-            LivingEntity victim = event.getEntityLiving();
+            LivingEntity victim = event.getEntity();
             Entity attacker = event.getSource().getEntity();
 
             if(victim != null && attacker != null)

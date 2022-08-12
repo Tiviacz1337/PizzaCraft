@@ -14,8 +14,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -75,7 +75,7 @@ public class PizzaBlock extends Block implements EntityBlock
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void animateTick(BlockState stateIn, Level level, BlockPos pos, Random rand) //#TODO add particle for cooked pizza
+    public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) //#TODO add particle for cooked pizza
     {
         if(rand.nextInt(3) == 0 && level.getBlockEntity(pos) instanceof PizzaBlockEntity)
         {
@@ -298,22 +298,22 @@ public class PizzaBlock extends Block implements EntityBlock
             if(!handler.getStackInSlot(i).isEmpty())
             {
                 ItemStack stackInSlot = handler.getStackInSlot(i);
-                TranslatableComponent translatedText = new TranslatableComponent(stackInSlot.getDescriptionId());
-                TextComponent textComponent = new TextComponent(stackInSlot.getCount() > 1 ? stackInSlot.getCount() + "x " : "");
+                MutableComponent translatedText = Component.translatable(stackInSlot.getDescriptionId());
+                MutableComponent textComponent = Component.literal(stackInSlot.getCount() > 1 ? stackInSlot.getCount() + "x " : "");
                 tooltip.add(textComponent.append(translatedText).withStyle(ChatFormatting.BLUE));
             }
         }
         PizzaHungerSystem instance = new PizzaHungerSystem(handler);
-        tooltip.add(new TranslatableComponent("information.pizzacraft.hunger", FoodUtils.getHungerForSlice(instance.getHunger(), false), ((instance.getHunger() % 7 != 0) ? " (+" + instance.getHunger() % 7 + ")" : ""), instance.getHunger()).withStyle(ChatFormatting.BLUE));
-        tooltip.add(new TranslatableComponent("information.pizzacraft.saturation", (float)(Math.round(instance.getSaturation() / 7 * 100.0) / 100.0), (float)(Math.round(instance.getSaturation() * 100.0) / 100.0)).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("information.pizzacraft.hunger", FoodUtils.getHungerForSlice(instance.getHunger(), false), ((instance.getHunger() % 7 != 0) ? " (+" + instance.getHunger() % 7 + ")" : ""), instance.getHunger()).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("information.pizzacraft.saturation", (float)(Math.round(instance.getSaturation() / 7 * 100.0) / 100.0), (float)(Math.round(instance.getSaturation() * 100.0) / 100.0)).withStyle(ChatFormatting.BLUE));
 
         if(!instance.getEffects().isEmpty())
         {
-            tooltip.add(new TranslatableComponent("information.pizzacraft.effects").withStyle(ChatFormatting.GOLD));
+            tooltip.add(Component.translatable("information.pizzacraft.effects").withStyle(ChatFormatting.GOLD));
 
             for(Pair<MobEffectInstance, Float> pair : instance.getEffects())
             {
-                tooltip.add(new TranslatableComponent(pair.getFirst().getDescriptionId()).withStyle(pair.getFirst().getEffect().getCategory().getTooltipFormatting()));
+                tooltip.add(Component.translatable(pair.getFirst().getDescriptionId()).withStyle(pair.getFirst().getEffect().getCategory().getTooltipFormatting()));
             }
         }
         //tooltip.add(new StringTextComponent("Restores: " + FoodUtils.getHungerForSlice(instance.getHunger(), false) + ((instance.getHunger() % 7 != 0) ? " (+" + instance.getHunger() % 7 + ")" : "") + " Hunger per Slice").mergeStyle(TextFormatting.BLUE));
