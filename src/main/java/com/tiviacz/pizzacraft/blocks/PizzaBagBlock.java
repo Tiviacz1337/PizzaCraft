@@ -1,28 +1,29 @@
 package com.tiviacz.pizzacraft.blocks;
 
-import com.tiviacz.pizzacraft.tileentity.PizzaBagTileEntity;
+import com.tiviacz.pizzacraft.blockentity.PizzaBagBlockEntity;
 import com.tiviacz.pizzacraft.util.Utils;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemStackHandler;
@@ -31,7 +32,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class PizzaBagBlock extends Block
+public class PizzaBagBlock extends Block implements EntityBlock
 {
     public static final BooleanProperty PROPERTY_OPEN = BlockStateProperties.OPEN;
 
@@ -42,60 +43,60 @@ public class PizzaBagBlock extends Block
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
     {
         return box(0.0D, 0.0D, 0.0D, 16.0D, 5.0D, 16.0D);
     }
 
     @Override
-    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand)
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, Random rand)
     {
-        TileEntity tileentity = worldIn.getBlockEntity(pos);
-        if(tileentity instanceof PizzaBagTileEntity)
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if(blockEntity instanceof PizzaBagBlockEntity)
         {
-            ((PizzaBagTileEntity)tileentity).pizzaBagTick();
+            ((PizzaBagBlockEntity)blockEntity).recheckOpen();
         }
 
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit)
     {
-        if(worldIn.getBlockEntity(pos) instanceof PizzaBagTileEntity)
+        if(level.getBlockEntity(pos) instanceof PizzaBagBlockEntity)
         {
-            ((PizzaBagTileEntity)worldIn.getBlockEntity(pos)).openGUI(player, (PizzaBagTileEntity)worldIn.getBlockEntity(pos), pos);
-            return ActionResultType.SUCCESS;
+            ((PizzaBagBlockEntity)level.getBlockEntity(pos)).openGUI(player, (PizzaBagBlockEntity)level.getBlockEntity(pos), pos);
+            return InteractionResult.SUCCESS;
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
     {
-        if(worldIn.getBlockEntity(pos) instanceof PizzaBagTileEntity)
+        if(level.getBlockEntity(pos) instanceof PizzaBagBlockEntity)
         {
             if(stack.getTag() != null)
             {
-                ((PizzaBagTileEntity)worldIn.getBlockEntity(pos)).readFromStack(stack);
+                ((PizzaBagBlockEntity)level.getBlockEntity(pos)).readFromStack(stack);
             }
         }
     }
 
     @Override
-    public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player)
+    public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player)
     {
-        if(world.getBlockEntity(pos) instanceof PizzaBagTileEntity)
+        if(level.getBlockEntity(pos) instanceof PizzaBagBlockEntity)
         {
-            ItemStack stack = this.getBlock().getCloneItemStack(world, pos, state);
-            ((PizzaBagTileEntity)world.getBlockEntity(pos)).writeToItemStack(stack);
+            ItemStack stack = this.getCloneItemStack(level, pos, state);
+            ((PizzaBagBlockEntity)level.getBlockEntity(pos)).writeToItemStack(stack);
             return stack;
         }
-        return this.getBlock().getPickBlock(state, target, world, pos, player);
+        return this.getPickBlock(state, target, level, pos, player);
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flagIn)
     {
         if(stack.getTag() != null)
         {
@@ -112,20 +113,14 @@ public class PizzaBagBlock extends Block
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(PROPERTY_OPEN);
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return true;
-    }
-
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
-    {
-        return new PizzaBagTileEntity();
+        return new PizzaBagBlockEntity(pos, state);
     }
 }

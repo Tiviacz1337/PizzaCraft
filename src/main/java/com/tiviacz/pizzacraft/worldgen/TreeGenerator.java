@@ -5,21 +5,29 @@ import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.blocks.OliveLeavesBlock;
 import com.tiviacz.pizzacraft.config.PizzaCraftConfig;
 import com.tiviacz.pizzacraft.init.ModBlocks;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
-import net.minecraft.world.gen.blockstateprovider.WeightedBlockStateProvider;
-import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
-import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
-import net.minecraft.world.gen.placement.Placement;
-import net.minecraft.world.gen.treedecorator.BeehiveTreeDecorator;
-import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.data.worldgen.Features;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.random.SimpleWeightedRandomList;
+import net.minecraft.util.valueproviders.ConstantInt;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.stateproviders.SimpleStateProvider;
+import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
+import net.minecraft.world.level.levelgen.feature.treedecorators.BeehiveDecorator;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
+import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
+import net.minecraft.world.level.levelgen.placement.FrequencyWithExtraChanceDecoratorConfiguration;
 import net.minecraftforge.common.world.BiomeGenerationSettingsBuilder;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -31,26 +39,27 @@ public class TreeGenerator
 
     public static void setup(final FMLCommonSetupEvent event)
     {
-        WeightedBlockStateProvider weightedBlockStateProvider = new WeightedBlockStateProvider();
-        weightedBlockStateProvider.add(ModBlocks.OLIVE_LEAVES.get().defaultBlockState(), 85);
-        weightedBlockStateProvider.add(ModBlocks.FRUIT_OLIVE_LEAVES.get().defaultBlockState().setValue(OliveLeavesBlock.AGE, 1), 15);
+        WeightedStateProvider weightedBlockStateProvider = new WeightedStateProvider(SimpleWeightedRandomList.<BlockState>builder().add(ModBlocks.OLIVE_LEAVES.get().defaultBlockState(), 85).add(ModBlocks.FRUIT_OLIVE_LEAVES.get().defaultBlockState().setValue(OliveLeavesBlock.AGE, 1), 15).build());
+        // WeightedBlockStateProvider weightedBlockStateProvider = new WeightedBlockStateProvider();
+        //weightedBlockStateProvider.add(ModBlocks.OLIVE_LEAVES.get().defaultBlockState(), 85);
+        //weightedBlockStateProvider.add(ModBlocks.FRUIT_OLIVE_LEAVES.get().defaultBlockState().setValue(OliveLeavesBlock.AGE, 1), 15);
 
 
         event.enqueueWork(() -> {
             CONFIGURED_OLIVE_TREE = Feature.TREE.configured(
-                    new BaseTreeFeatureConfig.Builder(
-                            new SimpleBlockStateProvider(ModBlocks.OLIVE_LOG.get().defaultBlockState()),
-                            weightedBlockStateProvider,
-                            new BlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3),
+                    new TreeConfiguration.TreeConfigurationBuilder(
+                            new SimpleStateProvider(ModBlocks.OLIVE_LOG.get().defaultBlockState()),
                             new StraightTrunkPlacer(4, 2, 0),
-                            new TwoLayerFeature(1, 0, 1)
-                    ).ignoreVines().decorators(ImmutableList.of(new BeehiveTreeDecorator(0.002F))).build());
+                            weightedBlockStateProvider, new SimpleStateProvider(ModBlocks.OLIVE_SAPLING.get().defaultBlockState()),
+                            new BlobFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0), 3),
+                            new TwoLayersFeatureSize(1, 0, 1)
+                    ).ignoreVines().decorators(ImmutableList.of(new BeehiveDecorator(0.002F))).build());
 
-            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(PizzaCraft.MODID, "olive_tree"), CONFIGURED_OLIVE_TREE);
+            Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(PizzaCraft.MODID, "olive_tree"), CONFIGURED_OLIVE_TREE);
         });
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public static void onBiomesLoad(BiomeLoadingEvent event)
     {
         BiomeGenerationSettingsBuilder generation = event.getGeneration();
@@ -59,9 +68,9 @@ public class TreeGenerator
         {
             if(PizzaCraftConfig.COMMON.generateOliveTree.get())
             {
-                if(event.getCategory() == Biome.Category.SAVANNA)
+                if(event.getCategory() == Biome.BiomeCategory.SAVANNA)
                 {
-                    generation.getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> CONFIGURED_OLIVE_TREE.decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(1, 0.1F, 1)).squared()));
+                    generation.getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> CONFIGURED_OLIVE_TREE.decorated(Features.Decorators.HEIGHTMAP_WITH_TREE_THRESHOLD_SQUARED).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(1, 0.1F, 1)).squared()));
                 }
             }
         }

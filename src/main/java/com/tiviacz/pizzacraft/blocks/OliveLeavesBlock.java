@@ -1,29 +1,29 @@
 package com.tiviacz.pizzacraft.blocks;
 
 import com.tiviacz.pizzacraft.init.ModItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IGrowable;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.Random;
 
-public class OliveLeavesBlock extends LeavesBlock implements IGrowable
+public class OliveLeavesBlock extends LeavesBlock implements BonemealableBlock
 {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
 
@@ -34,31 +34,31 @@ public class OliveLeavesBlock extends LeavesBlock implements IGrowable
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit)
     {
         if(state.getValue(AGE) == getMaxAge())
         {
-            ItemStack stack = new ItemStack(ModItems.OLIVE.get(), worldIn.random.nextInt(2) + 1);
+            ItemStack stack = new ItemStack(ModItems.OLIVE.get(), level.random.nextInt(2) + 1);
 
             if(!player.addItem(stack))
             {
-                ItemEntity entity = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY() + 0.2, pos.getZ() + 0.5, stack);
-                worldIn.addFreshEntity(entity);
+                ItemEntity entity = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.2, pos.getZ() + 0.5, stack);
+                level.addFreshEntity(entity);
             }
 
-            worldIn.setBlockAndUpdate(pos, state.setValue(AGE, 0));
+            level.setBlockAndUpdate(pos, state.setValue(AGE, 0));
 
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random)
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, Random random)
     {
-        if(!worldIn.isAreaLoaded(pos, 1)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light
+        if(!level.isAreaLoaded(pos, 1)) return; // Forge: prevent loading unloaded chunks when checking neighbor's light
 
-        if(worldIn.getRawBrightness(pos, 0) >= 9 && random.nextInt(5) == 0)
+        if(level.getRawBrightness(pos, 0) >= 9 && random.nextInt(5) == 0)
         {
             int i = this.getAge(state);
 
@@ -68,7 +68,7 @@ public class OliveLeavesBlock extends LeavesBlock implements IGrowable
 
                // if(ForgeHooks.onCropsGrowPre(worldIn, pos, state, random.nextInt((int)(25.0F / f) + 1) == 0))
                // {
-                    worldIn.setBlock(pos, this.withAge(state, i + 1), 2);
+                level.setBlock(pos, this.withAge(state, i + 1), 2);
                 //    ForgeHooks.onCropsGrowPost(worldIn, pos, state);
                // }
             }
@@ -76,8 +76,8 @@ public class OliveLeavesBlock extends LeavesBlock implements IGrowable
 
         if(!state.getValue(PERSISTENT) && state.getValue(DISTANCE) == 7)
         {
-            dropResources(state, worldIn, pos);
-            worldIn.removeBlock(pos, false);
+            dropResources(state, level, pos);
+            level.removeBlock(pos, false);
         }
     }
 
@@ -88,13 +88,13 @@ public class OliveLeavesBlock extends LeavesBlock implements IGrowable
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         builder.add(AGE);
         super.createBlockStateDefinition(builder);
     }
 
-    public BlockState getStateForPlacement(BlockItemUseContext context)
+    public BlockState getStateForPlacement(BlockPlaceContext context)
     {
         return super.getStateForPlacement(context).setValue(AGE, 3);
     }
@@ -115,31 +115,31 @@ public class OliveLeavesBlock extends LeavesBlock implements IGrowable
     }
 
     @Override
-    public boolean isValidBonemealTarget(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient)
+    public boolean isValidBonemealTarget(BlockGetter level, BlockPos pos, BlockState state, boolean isClient)
     {
         return state.getValue(AGE) < getMaxAge();
     }
 
     @Override
-    public boolean isBonemealSuccess(World worldIn, Random rand, BlockPos pos, BlockState state)
+    public boolean isBonemealSuccess(Level level, Random rand, BlockPos pos, BlockState state)
     {
         return state.getValue(AGE) < getMaxAge();
     }
 
     @Override
-    public void performBonemeal(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state)
+    public void performBonemeal(ServerLevel level, Random rand, BlockPos pos, BlockState state)
     {
-        int i = this.getAge(state) + this.getBonemealAgeIncrease(worldIn);
+        int i = this.getAge(state) + this.getBonemealAgeIncrease(level);
         int j = this.getMaxAge();
         if (i > j) {
             i = j;
         }
 
-        worldIn.setBlock(pos, this.withAge(state, i), 2);
+        level.setBlock(pos, this.withAge(state, i), 2);
     }
 
-    protected int getBonemealAgeIncrease(World worldIn)
+    protected int getBonemealAgeIncrease(Level level)
     {
-        return MathHelper.nextInt(worldIn.random, 1, 2);
+        return Mth.nextInt(level.random, 1, 2);
     }
 }

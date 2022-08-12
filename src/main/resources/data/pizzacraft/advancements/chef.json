@@ -21,16 +21,24 @@
       "conditions": {
         "items": [
           {
-            "item": "pizzacraft:chef_hat"
+            "items": [
+              "pizzacraft:chef_hat"
+            ]
           },
           {
-            "item": "pizzacraft:chef_shirt"
+            "items": [
+              "pizzacraft:chef_shirt"
+            ]
           },
           {
-            "item": "pizzacraft:chef_leggings"
+            "items": [
+              "pizzacraft:chef_leggings"
+            ]
           },
           {
-            "item": "pizzacraft:chef_boots"
+            "items": [
+              "pizzacraft:chef_boots"
+            ]
           }
         ]
       }

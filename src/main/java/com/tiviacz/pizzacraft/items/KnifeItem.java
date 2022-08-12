@@ -2,27 +2,23 @@ package com.tiviacz.pizzacraft.items;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.tiviacz.pizzacraft.PizzaCraft;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IItemTier;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -37,11 +33,11 @@ public class KnifeItem extends SwordItem
 {
     private final Multimap<Attribute, AttributeModifier> attributeModifier;
 
-    public KnifeItem(IItemTier tier, int attackDamageIn, float attackSpeedIn, Item.Properties builderIn)
+    public KnifeItem(Tier tier, int attackDamageIn, float attackSpeedIn, Item.Properties builderIn)
     {
         super(tier, attackDamageIn, attackSpeedIn, builderIn);
 
-        Multimap<Attribute, AttributeModifier> attributeMap = getDefaultAttributeModifiers(EquipmentSlotType.MAINHAND);
+        Multimap<Attribute, AttributeModifier> attributeMap = getDefaultAttributeModifiers(EquipmentSlot.MAINHAND);
         ImmutableMultimap.Builder<Attribute, AttributeModifier> modifierBuilder = ImmutableMultimap.builder();
         modifierBuilder.putAll(attributeMap);
         modifierBuilder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier("KnifeMovementSpeedModifier", 0.1D, AttributeModifier.Operation.MULTIPLY_BASE));
@@ -50,26 +46,26 @@ public class KnifeItem extends SwordItem
     }
 
     @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot, ItemStack stack)
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot equipmentSlot, ItemStack stack)
     {
-        return equipmentSlot == EquipmentSlotType.MAINHAND ? this.attributeModifier : super.getAttributeModifiers(equipmentSlot, stack);
+        return equipmentSlot == EquipmentSlot.MAINHAND ? this.attributeModifier : super.getAttributeModifiers(equipmentSlot, stack);
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flagIn)
     {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+        super.appendHoverText(stack, level, tooltip, flagIn);
 
-        tooltip.add(new TranslationTextComponent("description.pizzacraft.backstab.title").withStyle(TextFormatting.RED));
+        tooltip.add(new TranslatableComponent("description.pizzacraft.backstab.title").withStyle(ChatFormatting.RED));
 
-        if(InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) || InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_RIGHT_SHIFT))
+        if(InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) || InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_RIGHT_SHIFT))
         {
-            tooltip.add(new TranslationTextComponent("description.pizzacraft.backstab.description").withStyle(TextFormatting.BLUE));
+            tooltip.add(new TranslatableComponent("description.pizzacraft.backstab.description").withStyle(ChatFormatting.BLUE));
         }
         else
         {
-            tooltip.add(new TranslationTextComponent("description.pizzacraft.hold_shift.title").withStyle(TextFormatting.BLUE));
+            tooltip.add(new TranslatableComponent("description.pizzacraft.hold_shift.title").withStyle(ChatFormatting.BLUE));
         }
     }
 
@@ -86,11 +82,11 @@ public class KnifeItem extends SwordItem
             {
                 if(attacker instanceof LivingEntity)
                 {
-                    if(compareRotations(attacker.yRot, victim.yRot, 50.0D))
+                    if(compareRotations(attacker.yRotO, victim.yRotO, 50.0D))
                     {
-                        Hand activeHand = ((LivingEntity)attacker).getUsedItemHand();
+                        InteractionHand activeHand = ((LivingEntity)attacker).getUsedItemHand();
 
-                        if(activeHand == Hand.MAIN_HAND)
+                        if(activeHand == InteractionHand.MAIN_HAND)
                         {
                             ItemStack stack = ((LivingEntity)attacker).getItemInHand(activeHand);
 

@@ -1,10 +1,10 @@
-package com.tiviacz.pizzacraft.tileentity;
+package com.tiviacz.pizzacraft.blockentity;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.item.Food;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class PizzaHungerSystem //#TODO needs tweaks
 
     private int hunger;
     private float saturation;
-    private List<Pair<EffectInstance, Float>> effects;
+    private List<Pair<MobEffectInstance, Float>> effects;
 
     public PizzaHungerSystem(ItemStackHandler handler)
     {
@@ -48,20 +48,20 @@ public class PizzaHungerSystem //#TODO needs tweaks
     {
         int baseHunger = BASE_HUNGER;
         float baseSaturation = BASE_SATURATION;
-        List<Pair<EffectInstance, Float>> effects = new ArrayList<>();
+        List<Pair<MobEffectInstance, Float>> effects = new ArrayList<>();
 
         for(ItemStack foodStack : ingredients)
         {
             if(foodStack.isEdible())
             {
-                Food food = foodStack.getItem().getFoodProperties();
+                FoodProperties food = foodStack.getItem().getFoodProperties();
 
                 baseHunger += (food.getNutrition() * foodStack.getCount());
                 baseSaturation += (food.getSaturationModifier() * foodStack.getCount());
 
                 if(!food.getEffects().isEmpty())
                 {
-                    List<Pair<EffectInstance, Float>> foodEffects = food.getEffects();
+                    List<Pair<MobEffectInstance, Float>> foodEffects = food.getEffects();
                     effects.addAll(foodEffects);
                 }
             }
@@ -101,7 +101,7 @@ public class PizzaHungerSystem //#TODO needs tweaks
         return this.saturation;
     }
 
-    public List<Pair<EffectInstance, Float>> getEffects()
+    public List<Pair<MobEffectInstance, Float>> getEffects()
     {
         return this.effects;
     }

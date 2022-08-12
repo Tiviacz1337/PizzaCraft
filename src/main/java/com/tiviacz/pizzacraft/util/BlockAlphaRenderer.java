@@ -1,24 +1,24 @@
 package com.tiviacz.pizzacraft.util;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.tiviacz.pizzacraft.tileentity.PizzaTileEntity;
-import net.minecraft.block.BlockState;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
+import com.mojang.math.Vector4f;
+import com.tiviacz.pizzacraft.blockentity.PizzaBlockEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockModelRenderer;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.math.vector.Vector3i;
-import net.minecraft.util.math.vector.Vector4f;
-import net.minecraft.world.IBlockDisplayReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
@@ -28,11 +28,11 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 @OnlyIn(Dist.CLIENT)
-public class BlockAlphaRenderer extends BlockModelRenderer
+public class BlockAlphaRenderer extends ModelBlockRenderer
 {
     private static BlockAlphaRenderer INSTANCE;
 
-    public static BlockAlphaRenderer getInstance(BlockModelRenderer baseRenderer)
+    public static BlockAlphaRenderer getInstance(ModelBlockRenderer baseRenderer)
     {
         if (INSTANCE == null || INSTANCE.blockColors != baseRenderer.blockColors)
         {
@@ -41,42 +41,42 @@ public class BlockAlphaRenderer extends BlockModelRenderer
 
         return INSTANCE;
     }
-    public BlockAlphaRenderer(BlockModelRenderer baseRenderer)
+    public BlockAlphaRenderer(ModelBlockRenderer baseRenderer)
     {
         super(baseRenderer.blockColors);
     }
 
-    public static void renderBlockAlpha(BlockPos pos, BlockState state, World world, MatrixStack matrix, IRenderTypeBuffer renderTypeBuffer, IModelData data)
+    public static void renderBlockAlpha(BlockPos pos, BlockState state, Level level, PoseStack poseStack, MultiBufferSource buffer, IModelData data)
     {
-        matrix.pushPose();
+        poseStack.pushPose();
 
-        BlockRendererDispatcher blockDispatcher = Minecraft.getInstance().getBlockRenderer();
-        BlockModelRenderer renderer = getInstance(blockDispatcher.getModelRenderer());
-        renderer.renderModel(
-                world,
+        BlockRenderDispatcher blockDispatcher = Minecraft.getInstance().getBlockRenderer();
+        ModelBlockRenderer renderer = getInstance(blockDispatcher.getModelRenderer());
+        renderer.tesselateBlock(
+                level,
                 blockDispatcher.getBlockModel(state),
                 state,
                 pos,
-                matrix,
-                renderTypeBuffer.getBuffer(RenderType.translucent()),
+                poseStack,
+                buffer.getBuffer(RenderType.translucent()),
                 false,
-                world.random,
+                level.random,
                 state.getSeed(pos),
                 OverlayTexture.NO_OVERLAY,
                 data);
 
-        matrix.popPose();
+        poseStack.popPose();
     }
 
     @Override
-    public void putQuadData(IBlockDisplayReader world, BlockState state, BlockPos pos, IVertexBuilder buffer, MatrixStack.Entry matrixEntry, BakedQuad quadIn, float tintA, float tintB, float tintC, float tintD, int brightness0, int brightness1, int brightness2, int brightness3, int combinedOverlayIn)
+    public void putQuadData(BlockAndTintGetter level, BlockState state, BlockPos pos, VertexConsumer consumer, PoseStack.Pose pose, BakedQuad quadIn, float tintA, float tintB, float tintC, float tintD, int brightness0, int brightness1, int brightness2, int brightness3, int combinedOverlayIn)
     {
         float r=1F;
         float g=1F;
         float b=1F;
         if (quadIn.isTinted())
         {
-            int i = Minecraft.getInstance().getBlockColors().getColor(state, world, pos, quadIn.getTintIndex());
+            int i = Minecraft.getInstance().getBlockColors().getColor(state, level, pos, quadIn.getTintIndex());
             r = (i >> 16 & 255) / 255.0F;
             g = (i >> 8 & 255) / 255.0F;
             b = (i & 255) / 255.0F;
@@ -93,33 +93,33 @@ public class BlockAlphaRenderer extends BlockModelRenderer
 
         float alpha = 1.0F;
 
-        if(world.getBlockEntity(pos) instanceof PizzaTileEntity)
+        if(level.getBlockEntity(pos) instanceof PizzaBlockEntity)
         {
             //Fetch the leftBakingTime and convert it to float value to represent smooth transition of baking
-            PizzaTileEntity tileEntity = (PizzaTileEntity)world.getBlockEntity(pos);
+            PizzaBlockEntity tileEntity = (PizzaBlockEntity)level.getBlockEntity(pos);
             alpha = 1.0F - (float)tileEntity.getLeftBakingTime() / tileEntity.getBakingTime();
         }
 
         // use our method below instead of adding the quad in the usual manner
-        addTransparentQuad(matrixEntry, quadIn, new float[] { tintA, tintB, tintC, tintD }, r, g, b, new int[] { brightness0, brightness1, brightness2, brightness3 },
-                combinedOverlayIn, true, buffer, alpha);
+        addTransparentQuad(pose, quadIn, new float[] { tintA, tintB, tintC, tintD }, r, g, b, new int[] { brightness0, brightness1, brightness2, brightness3 },
+                combinedOverlayIn, true, consumer, alpha);
     }
 
     // as IVertexBuilder::addQuad except when we add the vertex, we add an opacity float instead of 1.0F
-    public static void addTransparentQuad(MatrixStack.Entry matrixEntry, BakedQuad quad, float[] colorMuls, float r, float g, float b, int[] vertexLights,
-                                          int combinedOverlayIn, boolean mulColor, IVertexBuilder buffer, float alpha)
+    public static void addTransparentQuad(PoseStack.Pose pose, BakedQuad quad, float[] colorMuls, float r, float g, float b, int[] vertexLights,
+                                          int combinedOverlayIn, boolean mulColor, VertexConsumer consumer, float alpha)
     {
         int[] vertexData = quad.getVertices();
-        Vector3i faceVector3i = quad.getDirection().getNormal();
+        Vec3i faceVector3i = quad.getDirection().getNormal();
         Vector3f faceVector = new Vector3f(faceVector3i.getX(), faceVector3i.getY(), faceVector3i.getZ());
-        Matrix4f matrix = matrixEntry.pose();
-        faceVector.transform(matrixEntry.normal());
+        Matrix4f matrix = pose.pose();
+        faceVector.transform(pose.normal());
 
         int vertexDataEntries = vertexData.length / 8;
 
         try(MemoryStack memorystack = MemoryStack.stackPush())
         {
-            ByteBuffer bytebuffer = memorystack.malloc(DefaultVertexFormats.BLOCK.getVertexSize());
+            ByteBuffer bytebuffer = memorystack.malloc(DefaultVertexFormat.BLOCK.getVertexSize());
             IntBuffer intbuffer = bytebuffer.asIntBuffer();
 
             for (int vertexIndex = 0; vertexIndex < vertexDataEntries; ++vertexIndex)
@@ -144,13 +144,13 @@ public class BlockAlphaRenderer extends BlockModelRenderer
                     blue = blueMultiplier * blue;
                 }
 
-                int light = buffer.applyBakedLighting(vertexLights[vertexIndex], bytebuffer);
+                int light = consumer.applyBakedLighting(vertexLights[vertexIndex], bytebuffer);
                 float texU = bytebuffer.getFloat(16);
                 float texV = bytebuffer.getFloat(20);
                 Vector4f posVector = new Vector4f(x, y, z, 1.0F);
                 posVector.transform(matrix);
-                buffer.applyBakedNormals(faceVector, bytebuffer, matrixEntry.normal());
-                buffer.vertex(posVector.x(), posVector.y(), posVector.z(), red, green, blue, alpha, texU, texV,
+                consumer.applyBakedNormals(faceVector, bytebuffer, pose.normal());
+                consumer.vertex(posVector.x(), posVector.y(), posVector.z(), red, green, blue, alpha, texU, texV,
                         combinedOverlayIn, light, faceVector.x(), faceVector.y(), faceVector.z());
             }
         }

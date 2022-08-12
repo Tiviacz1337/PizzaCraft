@@ -1,74 +1,82 @@
 package com.tiviacz.pizzacraft.blocks;
 
-import com.tiviacz.pizzacraft.tileentity.BasinTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import com.tiviacz.pizzacraft.blockentity.BasinBlockEntity;
+import com.tiviacz.pizzacraft.init.ModBlockEntityTypes;
+import com.tiviacz.pizzacraft.util.Utils;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.items.IItemHandler;
 
-public class BasinBlock extends Block
+import javax.annotation.Nullable;
+
+public class BasinBlock extends Block implements EntityBlock
 {
     //private static final VoxelShape INSIDE = makeCuboidShape(2.0D, 1.0D, 2.0D, 14.0D, 7.0D, 14.0D);
     private static final VoxelShape SHAPE = box(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D);
     //protected static final VoxelShape SHAPE = VoxelShapes.combineAndSimplify(makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D), INSIDE, IBooleanFunction.ONLY_FIRST);
 
-    public BasinBlock(Properties properties)
+    public BasinBlock(BlockBehaviour.Properties properties)
     {
         super(properties);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
     {
         return SHAPE;
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit)
     {
-        if(worldIn.getBlockEntity(pos) instanceof BasinTileEntity)
+        if(worldIn.getBlockEntity(pos) instanceof BasinBlockEntity)
         {
-            return ((BasinTileEntity)worldIn.getBlockEntity(pos)).onBlockActivated(player, handIn);
+            return ((BasinBlockEntity)worldIn.getBlockEntity(pos)).onBlockActivated(player, handIn);
         }
-        return ActionResultType.FAIL;
+        return InteractionResult.FAIL;
     }
 
     @Override
-    public void fallOn(World worldIn, BlockPos pos, Entity entityIn, float fallDistance)
+    public void fallOn(Level level, BlockState state, BlockPos pos, Entity entityIn, float fallDistance)
     {
-        if(worldIn.getBlockEntity(pos) instanceof BasinTileEntity && entityIn instanceof PlayerEntity)
+        if(level.getBlockEntity(pos) instanceof BasinBlockEntity && entityIn instanceof Player)
         {
-            ((BasinTileEntity)worldIn.getBlockEntity(pos)).crush((PlayerEntity)entityIn);
+            ((BasinBlockEntity)level.getBlockEntity(pos)).crush((Player)entityIn);
         }
-        super.fallOn(worldIn, pos, entityIn, fallDistance);
+        super.fallOn(level, state, pos, entityIn, fallDistance);
     }
 
     @Override
-    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving)
     {
         if(state.getBlock() != newState.getBlock())
         {
-            if(world.getBlockEntity(pos) instanceof BasinTileEntity)
+            if(world.getBlockEntity(pos) instanceof BasinBlockEntity)
             {
-                IItemHandler inventory = ((BasinTileEntity)world.getBlockEntity(pos)).getInventory();
+                IItemHandler inventory = ((BasinBlockEntity)world.getBlockEntity(pos)).getInventory();
 
                 for(int i = 0; i < inventory.getSlots(); i++)
                 {
-                    InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(i));
+                    Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(i));
                 }
-                ((BasinTileEntity)world.getBlockEntity(pos)).setSquashedStackCount(0);
+                ((BasinBlockEntity)world.getBlockEntity(pos)).setSquashedStackCount(0);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
             super.onRemove(state, world, pos, newState, isMoving);
@@ -76,11 +84,11 @@ public class BasinBlock extends Block
     }
 
     @Override
-    public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side)
+    public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction)
     {
-        if(blockAccess.getBlockEntity(pos) instanceof BasinTileEntity)
+        if(level.getBlockEntity(pos) instanceof BasinBlockEntity)
         {
-            return ((BasinTileEntity)blockAccess.getBlockEntity(pos)).getComparatorOutput();
+            return ((BasinBlockEntity)level.getBlockEntity(pos)).getComparatorOutput();
         }
         return 0;
     }
@@ -91,14 +99,26 @@ public class BasinBlock extends Block
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return true;
+        return new BasinBlockEntity(pos, state);
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType)
     {
-        return new BasinTileEntity();
+        return Utils.getTicker(blockEntityType, ModBlockEntityTypes.BASIN.get(), BasinBlockEntity::tick);
     }
+
+  /*  @Nullable
+    protected static <T extends BlockEntity> BlockEntityTicker<T> createBasinTicker(Level level, BlockEntityType<T> blockEntityType, BlockEntityType<? extends BasinBlockEntity> blockEntity)
+    {
+        return level.isClientSide ? null : createTickerHelper(blockEntityType, blockEntity, BasinBlockEntity::serverTick);
+    }
+
+    @Nullable
+    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
+        return p_152134_ == p_152133_ ? (BlockEntityTicker<A>)p_152135_ : null;
+    } */
 }

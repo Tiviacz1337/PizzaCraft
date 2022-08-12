@@ -2,23 +2,28 @@ package com.tiviacz.pizzacraft.blocks;
 
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.ModItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class DoughBlock extends Block
 {
@@ -31,65 +36,65 @@ public class DoughBlock extends Block
             Block.box(3.0D, 0.0D, 5.0D, 11.0D, 4.0D, 11.0D),
             Block.box(3.0D, 0.0D, 3.0D, 13.0D, 2.0D, 13.0D)};
 
-    public DoughBlock(Properties properties)
+    public DoughBlock(BlockBehaviour.Properties properties)
     {
         super(properties);
         this.registerDefaultState(getStateDefinition().any().setValue(KNEEDING, 0));
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
     {
         return SHAPES[state.getValue(KNEEDING)];
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit)
     {
         ItemStack stack = player.getItemInHand(handIn);
 
         if(player.getItemInHand(handIn).getItem() == ModItems.ROLLING_PIN.get())
         {
-            proceedKneeding(state, worldIn, pos, player);
+            proceedKneeding(state, level, pos, player);
             stack.hurtAndBreak(1, player, e -> e.broadcastBreakEvent(handIn));
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
-    public void proceedKneeding(BlockState state, World worldIn, BlockPos pos, PlayerEntity player)
+    public void proceedKneeding(BlockState state, Level level, BlockPos pos, Player player)
     {
         int i = state.getValue(KNEEDING);
 
         if(i < 5)
         {
-            worldIn.setBlock(pos, state.setValue(KNEEDING, i + 1), 3);
+            level.setBlock(pos, state.setValue(KNEEDING, i + 1), 3);
         }
         else
         {
-            worldIn.setBlock(pos, ModBlocks.RAW_PIZZA.get().defaultBlockState(), 3);
+            level.setBlock(pos, ModBlocks.RAW_PIZZA.get().defaultBlockState(), 3);
         }
-        worldIn.playSound(player, pos, SoundEvents.PLAYER_ATTACK_SWEEP, SoundCategory.BLOCKS, 0.7F, 0.8F + worldIn.random.nextFloat());
+        level.playSound(player, pos, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos)
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
     {
-        return facing == Direction.DOWN && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return facing == Direction.DOWN && !stateIn.canSurvive(level, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);
     }
 
     @Override
-    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos)
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos)
     {
-        return worldIn.getBlockState(pos.below()).getMaterial().isSolid();
+        return level.getBlockState(pos.below()).getMaterial().isSolid();
     }
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(KNEEDING);
     }
 
     @Override
-    public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side)
+    public int getSignal(BlockState blockState, BlockGetter level, BlockPos pos, Direction side)
     {
         return (blockState.getValue(KNEEDING) + 1) * 2;
     }

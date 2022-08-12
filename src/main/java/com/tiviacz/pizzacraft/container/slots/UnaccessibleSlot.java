@@ -1,6 +1,6 @@
 package com.tiviacz.pizzacraft.container.slots;
 
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -12,7 +12,7 @@ public class UnaccessibleSlot extends SlotItemHandler
     }
 
     @Override
-    public boolean mayPickup(PlayerEntity playerIn)
+    public boolean mayPickup(Player playerIn)
     {
         return false;
     }

@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "pizzacraft:tomato_sauce"
+            "items": [
+              "pizzacraft:tomato_sauce"
+            ]
           }
         ]
       }

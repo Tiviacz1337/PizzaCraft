@@ -1,51 +1,37 @@
 package com.tiviacz.pizzacraft.client.renderer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.LivingEntity;
+import com.tiviacz.pizzacraft.PizzaCraft;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.resources.ResourceLocation;
 
-public class PizzaDeliveryCapModel extends BipedModel
+public class PizzaDeliveryCapModel extends HumanoidModel<AbstractClientPlayer>
 {
-    public final ModelRenderer box1;
-    public final ModelRenderer box2;
+    public static final ModelLayerLocation CAP = new ModelLayerLocation(new ResourceLocation(PizzaCraft.MODID, "cap"), "main");
 
-    public PizzaDeliveryCapModel()
+    public PizzaDeliveryCapModel(ModelPart root)
     {
-        super(1.0F, 0.0F, 128, 64);
-
-        box1 = new ModelRenderer(this, 0, 53);
-        box1.setPos(0.0F, 24.0F, 0.0F);
-        box1.addBox(-4.0F, -32.0F, -4.0F, 8, 3, 8, 0.5F);
-
-        box2 = new ModelRenderer(this, 33, 60);
-        box2.setPos(0.0F, 24.0F, 0.0F);
-        box2.addBox(-4.0F, -30.0F, -7.0F, 8, 1, 3, 0.5F);
-
-        this.hat.addChild(box1);
-        this.hat.addChild(box2);
+        super(root);
     }
 
-    @Override
-    public void renderToBuffer(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha)
+    public static LayerDefinition createModelData()
     {
-        super.renderToBuffer(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-    }
+        CubeDeformation cube = new CubeDeformation(0.5F);
+        MeshDefinition humanoidMesh = HumanoidModel.createMesh(cube, 0.0F);
+        PartDefinition part = humanoidMesh.getRoot().getChild("hat");
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void setupAnim(LivingEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
-    {
-        super.setupAnim(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        this.box1.copyFrom(this.hat);
-        this.box2.copyFrom(this.hat);
-    }
+        part.addOrReplaceChild("box1", CubeListBuilder.create().texOffs(0, 53)
+                .addBox(-4.0F, -32.0F, -4.0F, 8, 3, 8, cube),
+                PartPose.offset(0.0F, 24.0F, 0.0F));
 
-    public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z)
-    {
-        modelRenderer.xRot = x;
-        modelRenderer.yRot = y;
-        modelRenderer.zRot = z;
+        part.addOrReplaceChild("box2", CubeListBuilder.create().texOffs(33, 60)
+                .addBox(-4.0F, -30.0F, -7.0F, 8, 1, 3, cube),
+                PartPose.offset(0.0F, 24.0F, 0.0F));
+
+        return LayerDefinition.create(humanoidMesh, 128, 64);
     }
 }

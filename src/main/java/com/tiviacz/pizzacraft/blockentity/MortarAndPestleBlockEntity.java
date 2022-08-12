@@ -1,22 +1,23 @@
-package com.tiviacz.pizzacraft.tileentity;
+package com.tiviacz.pizzacraft.blockentity;
 
 import com.tiviacz.pizzacraft.init.ModAdvancements;
-import com.tiviacz.pizzacraft.init.ModTileEntityTypes;
+import com.tiviacz.pizzacraft.init.ModBlockEntityTypes;
 import com.tiviacz.pizzacraft.recipes.mortar.MortarRecipe;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -28,7 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class MortarAndPestleTileEntity extends BaseTileEntity
+public class MortarAndPestleBlockEntity extends BaseBlockEntity
 {
     private final ItemStackHandler inventory = createHandler();
     private int craftingProgress = 0;
@@ -37,21 +38,21 @@ public class MortarAndPestleTileEntity extends BaseTileEntity
 
     private final LazyOptional<ItemStackHandler> inventoryCapability = LazyOptional.of(() -> this.inventory);
 
-    public MortarAndPestleTileEntity()
+    public MortarAndPestleBlockEntity(BlockPos pos, BlockState state)
     {
-        super(ModTileEntityTypes.MORTAR_AND_PESTLE.get());
+        super(ModBlockEntityTypes.MORTAR_AND_PESTLE.get(), pos, state);
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound)
+    public void load(CompoundTag compound)
     {
-        super.load(state, compound);
+        super.load(compound);
         this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
         this.craftingProgress = compound.getInt(CRAFTING_PROGRESS);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound)
+    public CompoundTag save(CompoundTag compound)
     {
         super.save(compound);
         compound.put(INVENTORY, this.inventory.serializeNBT());
@@ -61,14 +62,14 @@ public class MortarAndPestleTileEntity extends BaseTileEntity
 
     // ======== MIXING ========
 
-    public boolean canMix(PlayerEntity player)
+    public boolean canMix(Player player)
     {
         this.craftingProgress++;
 
         if(craftingProgress % 2 == 0)
         {
             //world.playSound(player, pos.getX() + 0.5D, pos.getY() + 0.3D, pos.getZ() + 0.5D, SoundEvents.BLOCK_STONE_STEP, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
-            level.playSound(player, getBlockPos(), SoundEvents.STONE_STEP, SoundCategory.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
+            level.playSound(player, getBlockPos(), SoundEvents.STONE_STEP, SoundSource.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
         }
 
         if(craftingProgress >= 50) resetProgress();
@@ -76,9 +77,9 @@ public class MortarAndPestleTileEntity extends BaseTileEntity
         return level.getRecipeManager().getRecipeFor(MortarRecipe.Type.MORTAR_AND_PESTLE_RECIPE_TYPE, new RecipeWrapper(getInventory()), level).isPresent();
     }
 
-    public void mix(World world, PlayerEntity player)
+    public void mix(Level level, Player player)
     {
-        Optional<MortarRecipe> match = world.getRecipeManager().getRecipeFor(MortarRecipe.Type.MORTAR_AND_PESTLE_RECIPE_TYPE, new RecipeWrapper(getInventory()), world);
+        Optional<MortarRecipe> match = level.getRecipeManager().getRecipeFor(MortarRecipe.Type.MORTAR_AND_PESTLE_RECIPE_TYPE, new RecipeWrapper(getInventory()), level);
 
         if(match.isPresent())
         {
@@ -87,22 +88,22 @@ public class MortarAndPestleTileEntity extends BaseTileEntity
             if(this.craftingProgress == duration)
             {
                 ItemStack result = match.get().getResultItem().copy();
-                world.addParticle(new ItemParticleData(ParticleTypes.ITEM, getInventory().getStackInSlot(0)), getBlockPos().getX() + 0.5D, getBlockPos().getY() + 0.3D, getBlockPos().getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
+                level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, getInventory().getStackInSlot(0)), getBlockPos().getX() + 0.5D, getBlockPos().getY() + 0.3D, getBlockPos().getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
 
                 for(int i = 0; i < match.get().getInputs().size(); i++)
                 {
                     decrStackSize(getInventory(), i, 1);  //¯\_( ͡° ͜ʖ ͡°)_/¯
                 }
                 //world.playSound(player, pos.getX() + 0.5D, pos.getY() + 0.3D, pos.getZ() + 0.5D, SoundEvents.BLOCK_PUMPKIN_CARVE, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
-                world.playSound(player, getBlockPos(), SoundEvents.PUMPKIN_CARVE, SoundCategory.BLOCKS, 0.7F, 0.8F); // + world.rand.nextFloat());
+                level.playSound(player, getBlockPos(), SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 0.7F, 0.8F); // + world.rand.nextFloat());
                 //world.addEntity(new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, result));
-                ItemEntity entity = new ItemEntity(world, getBlockPos().getX() + 0.5 + (Direction.NORTH.getStepX() * 0.2), getBlockPos().getY() + 0.2, getBlockPos().getZ() + 0.5 + (Direction.NORTH.getStepZ() * 0.2), result.copy());
+                ItemEntity entity = new ItemEntity(level, getBlockPos().getX() + 0.5 + (Direction.NORTH.getStepX() * 0.2), getBlockPos().getY() + 0.2, getBlockPos().getZ() + 0.5 + (Direction.NORTH.getStepZ() * 0.2), result.copy());
                 entity.setDeltaMovement(Direction.NORTH.getStepX() * 0.2F, 0.0F, Direction.NORTH.getStepZ() * 0.2F);
-                world.addFreshEntity(entity);
+                level.addFreshEntity(entity);
 
-                if(player instanceof ServerPlayerEntity)
+                if(player instanceof ServerPlayer)
                 {
-                    ModAdvancements.MORTAR_AND_PESTLE.trigger((ServerPlayerEntity)player);
+                    ModAdvancements.MORTAR_AND_PESTLE.trigger((ServerPlayer)player);
                 }
 
                 resetProgress();
@@ -122,7 +123,7 @@ public class MortarAndPestleTileEntity extends BaseTileEntity
         return this.inventory;
     }
 
-    public void insertStack(int slot, PlayerEntity player, Hand hand)
+    public void insertStack(int slot, Player player, InteractionHand hand)
     {
         if(!player.isCreative())
         {
@@ -132,20 +133,20 @@ public class MortarAndPestleTileEntity extends BaseTileEntity
         {
             getInventory().insertItem(slot, player.getItemInHand(hand).copy(), false);
         }
-        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
+        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
     }
 
-    public void extractStack(int slot, PlayerEntity player)
+    public void extractStack(int slot, Player player)
     {
         if(!player.isCreative())
         {
-            InventoryHelper.dropItemStack(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), getInventory().extractItem(slot, 64, false));
+            Containers.dropItemStack(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), getInventory().extractItem(slot, 64, false));
         }
         else
         {
             getInventory().extractItem(slot, 64, false);
         }
-        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
+        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
     }
 
     private ItemStackHandler createHandler()

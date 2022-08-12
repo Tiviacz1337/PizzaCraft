@@ -5,20 +5,20 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import com.tiviacz.pizzacraft.PizzaCraft;
+import com.tiviacz.pizzacraft.blockentity.BasinContent;
 import com.tiviacz.pizzacraft.init.SauceRegistry;
-import com.tiviacz.pizzacraft.tileentity.BasinContent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 
-public class CrushingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CrushingRecipe>
+public class CrushingRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CrushingRecipe>
 {
     public CrushingRecipeSerializer() {}
 
@@ -30,7 +30,7 @@ public class CrushingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
     {
         //ChoppingRecipeJSON recipeJson = new Gson().fromJson(json, ChoppingRecipeJSON.class);
 
-        Ingredient input = Ingredient.fromJson(JSONUtils.getAsJsonObject(json, "input"));
+        Ingredient input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));
 
         if(input.isEmpty())
         {
@@ -39,9 +39,9 @@ public class CrushingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
         else
         {
             //BasinContent basinContent = deserializeContent(JSONUtils.getString(json, "content"));
-            int inputCount = JSONUtils.getAsInt(json, "inputCount");
-            String basinContent = JSONUtils.getAsString(json, "content");
-            ItemStack outputStack = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
+            int inputCount = GsonHelper.getAsInt(json, "inputCount");
+            String basinContent = GsonHelper.getAsString(json, "content");
+            ItemStack outputStack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             return new CrushingRecipe(input, inputCount, basinContent, outputStack, id);
             //ItemStack outputStack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
         }
@@ -64,7 +64,7 @@ public class CrushingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
     }
 
     @Override
-    public CrushingRecipe fromNetwork(ResourceLocation id, PacketBuffer buf)
+    public CrushingRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf)
     {
         Ingredient input = Ingredient.fromNetwork(buf);
         int inputCount = buf.readInt();
@@ -76,7 +76,7 @@ public class CrushingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
     }
 
     @Override
-    public void toNetwork(PacketBuffer buf, CrushingRecipe recipe)
+    public void toNetwork(FriendlyByteBuf buf, CrushingRecipe recipe)
     {
         recipe.getInput().toNetwork(buf);
         buf.writeInt(recipe.getInputCount());

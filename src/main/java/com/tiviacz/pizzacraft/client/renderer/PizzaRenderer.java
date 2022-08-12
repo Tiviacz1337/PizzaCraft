@@ -1,48 +1,48 @@
 package com.tiviacz.pizzacraft.client.renderer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.tiviacz.pizzacraft.blockentity.PizzaBlockEntity;
 import com.tiviacz.pizzacraft.client.PizzaBakedModel;
 import com.tiviacz.pizzacraft.init.ModBlocks;
-import com.tiviacz.pizzacraft.tileentity.PizzaTileEntity;
 import com.tiviacz.pizzacraft.util.BlockAlphaRenderer;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraftforge.client.model.data.IModelData;
 
 import java.util.Optional;
 
-public class PizzaRenderer extends TileEntityRenderer<PizzaTileEntity>
+public class PizzaRenderer implements BlockEntityRenderer<PizzaBlockEntity>
 {
-    public PizzaRenderer(TileEntityRendererDispatcher rendererDispatcherIn)
+    public PizzaRenderer(BlockEntityRendererProvider.Context context)
     {
-        super(rendererDispatcherIn);
+
     }
 
     @Override
-    public void render(PizzaTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn)
+    public void render(PizzaBlockEntity tileEntityIn, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn)
     {
         if(tileEntityIn.isBaking())
         {
-            renderPizzaBakingProcess(tileEntityIn, matrixStackIn, bufferIn);
+            renderPizzaBakingProcess(tileEntityIn, poseStack, bufferIn);
         }
     }
 
-    public void renderPizzaBakingProcess(PizzaTileEntity tileEntity, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer)
+    public void renderPizzaBakingProcess(PizzaBlockEntity tileEntity, PoseStack poseStack, MultiBufferSource bufferIn)
     {
-        matrixStack.pushPose();
+        poseStack.pushPose();
 
         //Translate and scale renderer to avoid z-fighting
-        matrixStack.translate(-0.0025D, 0D, -0.0025D);
-        matrixStack.scale(1.005F, 1.005F, 1.005F);
+        poseStack.translate(-0.0025D, 0D, -0.0025D);
+        poseStack.scale(1.005F, 1.005F, 1.005F);
 
         //Set IModelData to baked pizza, just as we want it
         IModelData modelData = tileEntity.getModelData();
         modelData.setData(PizzaBakedModel.IS_RAW, Optional.of(false));
 
         //Custom implementation of BlockModelRenderer with accessible alpha value (Thanks Commoble!)
-        BlockAlphaRenderer.renderBlockAlpha(tileEntity.getBlockPos(), ModBlocks.PIZZA.get().defaultBlockState(), tileEntity.getLevel(), matrixStack, renderTypeBuffer, modelData);
-        matrixStack.popPose();
+        BlockAlphaRenderer.renderBlockAlpha(tileEntity.getBlockPos(), ModBlocks.PIZZA.get().defaultBlockState(), tileEntity.getLevel(), poseStack, bufferIn, modelData);
+        poseStack.popPose();
     }
 
  /*   public static void render(PizzaTileEntity tile, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn)

@@ -20,7 +20,9 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "pizzacraft:tomato"
+          "items": [
+            "pizzacraft:tomato"
+          ]
         }
       }
     },
@@ -28,7 +30,9 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "pizzacraft:pepper"
+          "items": [
+            "pizzacraft:pepper"
+          ]
         }
       }
     },
@@ -36,7 +40,9 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "pizzacraft:onion"
+          "items": [
+            "pizzacraft:onion"
+          ]
         }
       }
     },
@@ -44,7 +50,9 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "pizzacraft:corn"
+          "items": [
+            "pizzacraft:corn"
+          ]
         }
       }
     },
@@ -52,7 +60,9 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "pizzacraft:pineapple"
+          "items": [
+            "pizzacraft:pineapple"
+          ]
         }
       }
     },
@@ -60,7 +70,9 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "pizzacraft:olive"
+          "items": [
+            "pizzacraft:olive"
+          ]
         }
       }
     },
@@ -68,7 +80,9 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "pizzacraft:broccoli"
+          "items": [
+            "pizzacraft:broccoli"
+          ]
         }
       }
     },
@@ -76,7 +90,9 @@
       "trigger": "minecraft:consume_item",
       "conditions": {
         "item": {
-          "item": "pizzacraft:cucumber"
+          "items": [
+            "pizzacraft:cucumber"
+          ]
         }
       }
     }

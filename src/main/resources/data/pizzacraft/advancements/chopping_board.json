@@ -10,7 +10,7 @@
     "description": {
       "translate": "advancements.pizzacraft.chopping_board.description"
     },
-    "frame": "task",
+    "frame": "goal",
     "show_toast": false,
     "announce_to_chat": true,
     "hidden": false

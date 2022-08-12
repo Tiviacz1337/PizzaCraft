@@ -3,51 +3,72 @@ package com.tiviacz.pizzacraft.items;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.client.renderer.ChefHatModel;
 import com.tiviacz.pizzacraft.init.ModItems;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.client.IItemRenderProperties;
 
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 public class ChefArmor extends ArmorItem
 {
-    public ChefArmor(IArmorMaterial materialIn, EquipmentSlotType slot, Properties builderIn)
+    public ChefArmor(ArmorMaterial materialIn, EquipmentSlot slot, Properties builderIn)
     {
         super(materialIn, slot, builderIn);
     }
 
     @Override
-    public void onArmorTick(ItemStack stack, World world, PlayerEntity player)
+    public void onArmorTick(ItemStack stack, Level world, Player player)
     {
-        if(player.getItemBySlot(EquipmentSlotType.HEAD).getItem() == ModItems.CHEF_HAT.get() && player.getItemBySlot(EquipmentSlotType.CHEST).getItem() == ModItems.CHEF_SHIRT.get()
-                && player.getItemBySlot(EquipmentSlotType.LEGS).getItem() == ModItems.CHEF_LEGGINGS.get() && player.getItemBySlot(EquipmentSlotType.FEET).getItem() == ModItems.CHEF_BOOTS.get())
+        if(player.getItemBySlot(EquipmentSlot.HEAD).getItem() == ModItems.CHEF_HAT.get() && player.getItemBySlot(EquipmentSlot.CHEST).getItem() == ModItems.CHEF_SHIRT.get()
+                && player.getItemBySlot(EquipmentSlot.LEGS).getItem() == ModItems.CHEF_LEGGINGS.get() && player.getItemBySlot(EquipmentSlot.FEET).getItem() == ModItems.CHEF_BOOTS.get())
         {
-            player.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 1, 0, false, false));
+            player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 1, 0, false, false));
         }
     }
 
-    @Nullable
+    @Override
+    public void initializeClient(Consumer<IItemRenderProperties> consumer)
+    {
+        consumer.accept(new IItemRenderProperties()
+        {
+            @Override
+            public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A humanoid)
+            {
+                if(armorSlot == EquipmentSlot.HEAD)
+                {
+                    ChefHatModel hat = new ChefHatModel(ChefHatModel.createModelData().bakeRoot());
+                    hat.copyPropertiesTo((HumanoidModel<AbstractClientPlayer>)humanoid);
+
+                    return (A)hat;
+                }
+                return null;
+            }
+        });
+    }
+
+ /*   @Nullable
     @Override
     @OnlyIn(Dist.CLIENT)
-    public <A extends BipedModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlotType armorSlot, A _default)
+    public <A extends HumanoidModel<?>> A getArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, A _default)
     {
-        if(armorSlot == EquipmentSlotType.HEAD)
+        if(armorSlot == EquipmentSlot.HEAD)
         {
             ChefHatModel hat = new ChefHatModel();
 
-            hat.box1.visible = armorSlot == EquipmentSlotType.HEAD;
-            hat.box2.visible = armorSlot == EquipmentSlotType.HEAD;
+            hat.box1.visible = armorSlot == EquipmentSlot.HEAD;
+            hat.box2.visible = armorSlot == EquipmentSlot.HEAD;
 
             hat.young = _default.young;
             hat.riding = _default.riding;
@@ -58,13 +79,13 @@ public class ChefArmor extends ArmorItem
             return (A)hat;
         }
         return null;
-    }
+    } */
 
     @Nullable
     @Override
-    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlotType slot, String type)
+    public String getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, String type)
     {
-        if(slot == EquipmentSlotType.HEAD)
+        if(slot == EquipmentSlot.HEAD)
         {
             return new ResourceLocation(PizzaCraft.MODID, "textures/models/armor/chef_hat.png").toString();//PizzaCraft.MODID + ":textures/models/armor/chef_hat.png";
         }

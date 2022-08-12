@@ -1,40 +1,45 @@
-package com.tiviacz.pizzacraft.tileentity;
+package com.tiviacz.pizzacraft.blockentity;
 
 import com.mojang.datafixers.util.Pair;
 import com.tiviacz.pizzacraft.blocks.OvenBlock;
 import com.tiviacz.pizzacraft.blocks.PizzaBlock;
 import com.tiviacz.pizzacraft.blocks.RawPizzaBlock;
 import com.tiviacz.pizzacraft.client.PizzaBakedModel;
-import com.tiviacz.pizzacraft.container.PizzaContainer;
+import com.tiviacz.pizzacraft.container.PizzaMenu;
+import com.tiviacz.pizzacraft.init.ModBlockEntityTypes;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.init.ModTileEntityTypes;
 import com.tiviacz.pizzacraft.init.PizzaLayers;
 import com.tiviacz.pizzacraft.util.FoodUtils;
 import com.tiviacz.pizzacraft.util.NBTUtils;
 import com.tiviacz.pizzacraft.util.Utils;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -43,7 +48,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class PizzaTileEntity extends BaseTileEntity implements INamedContainerProvider, ITickableTileEntity //#TODO sauce application has to be done
+public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //#TODO sauce application has to be done
 {
     private final ItemStackHandler inventory = createHandler();
     private int leftBakingTime = -1;
@@ -52,7 +57,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
     private final int baseFreshTime = 1800;
     private int selectedSlot = 0;
     private Pair<Integer, Float> refillment = Pair.of(0, 0.0F);
-    private List<Pair<EffectInstance, Float>> effects = new ArrayList<>();
+    private List<Pair<MobEffectInstance, Float>> effects = new ArrayList<>();
     private final LazyOptional<ItemStackHandler> inventoryCapability = LazyOptional.of(() -> this.inventory);
 
     private final String LEFT_BAKING_TIME = "LeftBakingTime";
@@ -61,15 +66,15 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
     private final String SATURATION = "Saturation";
     private final String EFFECTS = "Effects";
 
-    public PizzaTileEntity()
+    public PizzaBlockEntity(BlockPos pos, BlockState state)
     {
-        super(ModTileEntityTypes.PIZZA.get());
+        super(ModBlockEntityTypes.PIZZA.get(), pos, state);
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound)
+    public void load(CompoundTag compound)
     {
-        super.load(state, compound);
+        super.load(compound);
         this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
         this.leftBakingTime = compound.getInt(LEFT_BAKING_TIME);
         this.leftFreshTime = compound.getInt(LEFT_FRESH_TIME);
@@ -78,7 +83,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound)
+    public CompoundTag save(CompoundTag compound)
     {
         super.save(compound);
         compound.put(INVENTORY, this.inventory.serializeNBT());
@@ -95,9 +100,9 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
      */
     public static Set<Item> baseIngredients = new HashSet<>(Collections.singletonList(ModItems.CHEESE.get()));
 
-    public ActionResultType onBlockActivated(PlayerEntity player, Hand hand)
+    public InteractionResult onBlockActivated(Player player, InteractionHand hand)
     {
-        if(hand == Hand.MAIN_HAND)
+        if(hand == InteractionHand.MAIN_HAND)
         {
             ItemStack stack = player.getItemInHand(hand);
 
@@ -109,7 +114,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
                     if(player.isCrouching())
                     {
                         openGUI(player, this, getBlockPos());
-                        return ActionResultType.SUCCESS;
+                        return InteractionResult.SUCCESS;
                     }
                     else
                     {
@@ -131,14 +136,14 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
                             ItemStack modifiedCopy = inventory.getStackInSlot(this.selectedSlot).copy();
                             modifiedCopy.setCount(1);
 
-                            if(!player.inventory.add(modifiedCopy))
+                            if(!player.getInventory().add(modifiedCopy))
                             {
                                 level.addFreshEntity(new ItemEntity(player.level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), modifiedCopy));
                             }
-                            level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
+                            level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
                             decreaseInSlot(this.selectedSlot, 1);
                             this.setChanged();
-                            return ActionResultType.SUCCESS;
+                            return InteractionResult.SUCCESS;
                         }
                     }
                 }
@@ -185,8 +190,8 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
                             inventory.setStackInSlot(this.selectedSlot, modifiedCopy);
                         }
                         stack.shrink(1);
-                        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
-                        return ActionResultType.SUCCESS;
+                        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
+                        return InteractionResult.SUCCESS;
                     }
                 }
             }
@@ -199,7 +204,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
                     {
                         //Open Gui
                         openGUI(player, this, getBlockPos());
-                        return ActionResultType.SUCCESS;
+                        return InteractionResult.SUCCESS;
                     }
                     else
                     {
@@ -208,12 +213,12 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
                 }
             }
         }
-        return ActionResultType.FAIL;
+        return InteractionResult.FAIL;
     }
 
     public void writeToSliceItemStack(ItemStack stack, int sliceNumber)
     {
-        CompoundNBT compound = new CompoundNBT();
+        CompoundTag compound = new CompoundTag();
         if(isEmpty(inventory))
         {
             return;
@@ -229,7 +234,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
 
     public void writeToItemStack(ItemStack stack)
     {
-        CompoundNBT compound = new CompoundNBT();
+        CompoundTag compound = new CompoundTag();
         if(isEmpty(inventory))
         {
             return;
@@ -305,43 +310,43 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
         return bakingTime;
     }
 
-    @Override
-    public void tick()
+    //@Override
+    public static void tick(Level level, BlockPos pos, BlockState state, PizzaBlockEntity blockEntity)
     {
-        if(!this.isRaw() && this.isFresh())
+        if(!blockEntity.isRaw() && blockEntity.isFresh())
         {
-            this.leftFreshTime--;
+            blockEntity.leftFreshTime--;
 
-            if(this.leftFreshTime == 0) {
-                this.leftFreshTime = -1;
+            if(blockEntity.leftFreshTime == 0) {
+                blockEntity.leftFreshTime = -1;
             }
         }
 
-        if(this.isRaw())
+        if(blockEntity.isRaw())
         {
-            if(isBaking())
+            if(blockEntity.isBaking())
             {
                // world.playSound(null, pos, ModSounds.SIZZLING_SOUND.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
 
-                this.leftBakingTime--;
+                blockEntity.leftBakingTime--;
 
-                if(this.leftBakingTime == 0 || !(level.getBlockState(getBlockPos().below()).getBlock() instanceof OvenBlock))
+                if(blockEntity.leftBakingTime == 0 || !(level.getBlockState(blockEntity.getBlockPos().below()).getBlock() instanceof OvenBlock))
                 {
-                    if(this.leftBakingTime == 0)
+                    if(blockEntity.leftBakingTime == 0)
                     {
                         if(!level.isClientSide)
                         {
-                            level.setBlockAndUpdate(getBlockPos(), ModBlocks.PIZZA.get().defaultBlockState());
+                            level.setBlockAndUpdate(blockEntity.getBlockPos(), ModBlocks.PIZZA.get().defaultBlockState());
                         }
-                        this.leftFreshTime = this.baseFreshTime;
+                        blockEntity.leftFreshTime = blockEntity.baseFreshTime;
                     }
-                    this.leftBakingTime = -1;
+                    blockEntity.leftBakingTime = -1;
                 }
             }
 
-            else if(!isBaking() && level.getBlockState(getBlockPos().below()).getBlock() instanceof OvenBlock)
+            else if(!blockEntity.isBaking() && level.getBlockState(blockEntity.getBlockPos().below()).getBlock() instanceof OvenBlock)
             {
-                this.leftBakingTime = this.getBakingTime();
+                blockEntity.leftBakingTime = blockEntity.getBakingTime();
             }
         }
     }
@@ -363,7 +368,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
         //return instance.getEffects();
   //  }
 
-    public List<Pair<EffectInstance, Float>> getEffects()
+    public List<Pair<MobEffectInstance, Float>> getEffects()
     {
         return this.effects;
     }
@@ -392,7 +397,7 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
 
     public void dropItemStack(int slot)
     {
-        InventoryHelper.dropItemStack(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), inventory.getStackInSlot(slot));
+        Containers.dropItemStack(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), inventory.getStackInSlot(slot));
     }
 
     public boolean canAddIngredient(ItemStack stack, int slot)
@@ -497,23 +502,23 @@ public class PizzaTileEntity extends BaseTileEntity implements INamedContainerPr
     // ======== CONTAINER ========
 
     @Override
-    public ITextComponent getDisplayName()
+    public Component getDisplayName()
     {
-        return new TranslationTextComponent(getBlockState().getBlock().getDescriptionId());
+        return new TranslatableComponent(getBlockState().getBlock().getDescriptionId());
     }
 
     @Nullable
     @Override
-    public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity)
+    public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player playerEntity)
     {
-        return new PizzaContainer(id, playerInventory, this);
+        return new PizzaMenu(id, playerInventory, this);
     }
 
-    public void openGUI(PlayerEntity player, INamedContainerProvider containerSupplier, BlockPos pos)
+    public void openGUI(Player player, MenuProvider menuSupplier, BlockPos pos)
     {
         if(!player.level.isClientSide)
         {
-            NetworkHooks.openGui((ServerPlayerEntity)player, containerSupplier, pos);
+            NetworkHooks.openGui((ServerPlayer)player, menuSupplier, pos);
         }
     }
 

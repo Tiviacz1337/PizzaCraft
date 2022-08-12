@@ -1,7 +1,7 @@
 package com.tiviacz.pizzacraft.compat.jei;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 
 public class DoughRecipeType
 {

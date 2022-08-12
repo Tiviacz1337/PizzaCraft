@@ -1,24 +1,25 @@
-package com.tiviacz.pizzacraft.tileentity;
+package com.tiviacz.pizzacraft.blockentity;
 
 import com.tiviacz.pizzacraft.init.ModAdvancements;
-import com.tiviacz.pizzacraft.init.ModTileEntityTypes;
+import com.tiviacz.pizzacraft.init.ModBlockEntityTypes;
 import com.tiviacz.pizzacraft.items.KnifeItem;
 import com.tiviacz.pizzacraft.recipes.chopping.ChoppingRecipe;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ShearsItem;
-import net.minecraft.item.TieredItem;
-import net.minecraft.item.TridentItem;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShearsItem;
+import net.minecraft.world.item.TieredItem;
+import net.minecraft.world.item.TridentItem;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -30,7 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class ChoppingBoardTileEntity extends BaseTileEntity
+public class ChoppingBoardBlockEntity extends BaseBlockEntity
 {
     private final ItemStackHandler inventory = createHandler();
     private boolean isItemCarvingBoard = false;
@@ -40,22 +41,22 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
     private final String IS_ITEM_CARVING_BOARD = "IsItemCarvingBoard";
     private final String FACING = "Facing";
 
-    public ChoppingBoardTileEntity()
+    public ChoppingBoardBlockEntity(BlockPos pos, BlockState state)
     {
-        super(ModTileEntityTypes.CHOPPING_BOARD.get());
+        super(ModBlockEntityTypes.CHOPPING_BOARD.get(), pos, state);
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound)
+    public void load(CompoundTag compound)
     {
-        super.load(state, compound);
+        super.load(compound);
         this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
         this.facing = Direction.from2DDataValue(compound.getInt(FACING));
         this.isItemCarvingBoard = compound.getBoolean(IS_ITEM_CARVING_BOARD);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound)
+    public CompoundTag save(CompoundTag compound)
     {
         super.save(compound);
         compound.put(INVENTORY, this.inventory.serializeNBT());
@@ -83,15 +84,15 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
         return matchTool && match.isPresent();
     }
 
-    public void chop(ItemStack stack, @Nullable PlayerEntity player)
+    public void chop(ItemStack stack, @Nullable Player player)
     {
         Optional<ChoppingRecipe> match = level.getRecipeManager().getRecipeFor(ChoppingRecipe.Type.CHOPPING_BOARD_RECIPE_TYPE, new RecipeWrapper(getInventory()), level);
 
         if(match.isPresent())
         {
             ItemStack result = match.get().getResultItem().copy();
-            level.addParticle(new ItemParticleData(ParticleTypes.ITEM, getStoredStack()), getBlockPos().getX() + 0.5D, getBlockPos().getY() + 0.3D, getBlockPos().getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
-            level.playSound(player, getBlockPos(), SoundEvents.PUMPKIN_CARVE, SoundCategory.BLOCKS, 0.7F, 0.8F);
+            level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, getStoredStack()), getBlockPos().getX() + 0.5D, getBlockPos().getY() + 0.3D, getBlockPos().getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
+            level.playSound(player, getBlockPos(), SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 0.7F, 0.8F);
 
             Direction direction = facing.getCounterClockWise(); //#TODO
             ItemEntity entity = new ItemEntity(level, getBlockPos().getX() + 0.5 + (direction.getStepX() * 0.2), getBlockPos().getY() + 0.2, getBlockPos().getZ() + 0.5 + (direction.getStepZ() * 0.2), result.copy());
@@ -100,7 +101,7 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
 
             if(player != null)
             {
-                stack.hurtAndBreak(1, player, (user) -> user.broadcastBreakEvent(Hand.MAIN_HAND));
+                stack.hurtAndBreak(1, player, (user) -> user.broadcastBreakEvent(InteractionHand.MAIN_HAND));
             }
             else
             {
@@ -110,9 +111,9 @@ public class ChoppingBoardTileEntity extends BaseTileEntity
                 }
             }
 
-            if(player instanceof ServerPlayerEntity)
+            if(player instanceof ServerPlayer)
             {
-                ModAdvancements.CHOPPING_BOARD.trigger((ServerPlayerEntity)player);
+                ModAdvancements.CHOPPING_BOARD.trigger((ServerPlayer)player);
             }
 
             getStoredStack().shrink(1);

@@ -1,23 +1,30 @@
-package com.tiviacz.pizzacraft.tileentity;
+package com.tiviacz.pizzacraft.blockentity;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonSyntaxException;
+import com.mojang.math.Vector3f;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.*;
 import com.tiviacz.pizzacraft.recipes.crushing.CrushingRecipe;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.MilkBucketItem;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.RedstoneParticleData;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.*;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.MilkBucketItem;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -30,7 +37,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Optional;
 
-public class BasinTileEntity extends BaseTileEntity implements ITickableTileEntity
+public class BasinBlockEntity extends BaseBlockEntity
 {
     private final ItemStackHandler inventory = createHandler();
     private BasinContent content = BasinContent.AIR;
@@ -43,15 +50,15 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
     private final String SQUASHED_STACK = "SquashedStack";
     private final String FERMENT_PROGRESS = "FermentProgress";
 
-    public BasinTileEntity()
+    public BasinBlockEntity(BlockPos pos, BlockState state)
     {
-        super(ModTileEntityTypes.BASIN.get());
+        super(ModBlockEntityTypes.BASIN.get(), pos, state);
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound)
+    public void load(CompoundTag compound)
     {
-        super.load(state, compound);
+        super.load(compound);
         this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
         this.content = SauceRegistry.INSTANCE.basinContentFromString(compound.getString(BASIN_CONTENT));
         this.squashedStack = ItemStack.of(compound.getCompound(SQUASHED_STACK));
@@ -59,12 +66,12 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound)
+    public CompoundTag save(CompoundTag compound)
     {
         super.save(compound);
         compound.put(INVENTORY, this.inventory.serializeNBT());
         compound.putString(BASIN_CONTENT, content.toString());
-        CompoundNBT squashedStack = new CompoundNBT();
+        CompoundTag squashedStack = new CompoundTag();
         this.squashedStack.save(squashedStack);
         compound.put(SQUASHED_STACK, squashedStack);
         if(this.getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK) compound.putInt(FERMENT_PROGRESS, this.fermentProgress);
@@ -164,7 +171,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
 
     public static final ResourceLocation FERMENTING_ITEMS_TAG = new ResourceLocation(PizzaCraft.MODID, "fermenting_items");
 
-    public ActionResultType onBlockActivated(PlayerEntity player, Hand hand)
+    public InteractionResult onBlockActivated(Player player, InteractionHand hand)
     {
         ItemStack itemHeld = player.getItemInHand(hand);
         BasinContentType basinContentType = getBasinContent().getContentType();
@@ -176,19 +183,19 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
             level.addFreshEntity(new ItemEntity(level, getBlockPos().getX() + 0.5D, getBlockPos().getY() + 0.5D, getBlockPos().getZ() + 0.5D, new ItemStack(ModBlocks.CHEESE_BLOCK.get())));
             this.content = BasinContent.AIR;
             this.squashedStack = ItemStack.EMPTY;
-            level.playSound(player, getBlockPos(), SoundEvents.FUNGUS_PLACE, SoundCategory.BLOCKS, 0.8F, 0.9F + level.random.nextFloat());
+            level.playSound(player, getBlockPos(), SoundEvents.FUNGUS_PLACE, SoundSource.BLOCKS, 0.8F, 0.9F + level.random.nextFloat());
             this.setChanged();
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        if(hand == Hand.MAIN_HAND)
+        if(hand == InteractionHand.MAIN_HAND)
         {
             if(basinContentType == BasinContentType.MILK)
             {
                 //Check if player holds acceptable fermenting item, if so start fermenting process.
-                if(itemHeld.getItem().is(ItemTags.getAllTags().getTag(FERMENTING_ITEMS_TAG)))
+                if(itemHeld.is(ItemTags.getAllTags().getTag(FERMENTING_ITEMS_TAG)))
                 {
                     this.content = BasinContent.FERMENTING_MILK;
-                    level.playSound(player, getBlockPos(), SoundEvents.COMPOSTER_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    level.playSound(player, getBlockPos(), SoundEvents.COMPOSTER_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
 
                     if(!player.isCreative())
                     {
@@ -199,7 +206,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                        // }
                     }
                     this.setChanged();
-                    return ActionResultType.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
 
                 //Extract Milk
@@ -213,9 +220,9 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                         level.addFreshEntity(new ItemEntity(player.level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), new ItemStack(Items.MILK_BUCKET)));
                     }
 
-                    level.playSound(player, getBlockPos(), SoundEvents.BUCKET_FILL, SoundCategory.BLOCKS, 0.8F, 1.0F);
+                    level.playSound(player, getBlockPos(), SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.8F, 1.0F);
                     this.setChanged();
-                    return ActionResultType.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             }
 
@@ -233,9 +240,9 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                             itemHeld.shrink(2);
                         }
 
-                        level.playSound(player, getBlockPos(), SoundEvents.FUNGUS_PLACE, SoundCategory.BLOCKS, 0.8F, 0.9F + level.random.nextFloat());
+                        level.playSound(player, getBlockPos(), SoundEvents.FUNGUS_PLACE, SoundSource.BLOCKS, 0.8F, 0.9F + level.random.nextFloat());
                         this.setChanged();
-                        return ActionResultType.SUCCESS;
+                        return InteractionResult.SUCCESS;
                     }
 
                     else if(itemHeld.getItem() instanceof MilkBucketItem && stackInSlot.isEmpty())
@@ -248,20 +255,20 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                             player.setItemInHand(hand, new ItemStack(Items.BUCKET));
                         }
 
-                        level.playSound(player, getBlockPos(), SoundEvents.BUCKET_EMPTY, SoundCategory.BLOCKS, 0.8F, 1.0F);
+                        level.playSound(player, getBlockPos(), SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.8F, 1.0F);
                         this.setChanged();
-                        return ActionResultType.SUCCESS;
+                        return InteractionResult.SUCCESS;
                     }
 
                     else if(canInsert(itemHeld))
                     {
                         insertStack(player, hand);
-                        return ActionResultType.SUCCESS;
+                        return InteractionResult.SUCCESS;
                     }
                     else if(canExtract(player, hand))
                     {
                         extractStack(player);
-                        return ActionResultType.SUCCESS;
+                        return InteractionResult.SUCCESS;
                     }
                 }
                 else if(getBasinContent().getSauceType() != SauceType.NONE || basinContentType == BasinContentType.OIL) //#TODO IF NOT FIX OLIVE, ADD LINE HERE
@@ -273,30 +280,30 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                             //itemHeld.shrink(1);
                             ItemStack result = basinContentToItemStack().get(getBasinContent());
 
-                            if(!player.inventory.add(result))
+                            if(!player.getInventory().add(result))
                             {
                                 level.addFreshEntity(new ItemEntity(player.level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), result));
                             }
-                            level.playSound(player, getBlockPos(), SoundEvents.BOTTLE_FILL, SoundCategory.BLOCKS, 0.7F, 0.9F + level.random.nextFloat());
+                            level.playSound(player, getBlockPos(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.7F, 0.9F + level.random.nextFloat());
                             setSquashedStackCount(getSquashedStackCount() - basinContentExtractSize().get(getBasinContent()));
-                            return ActionResultType.SUCCESS;
+                            return InteractionResult.SUCCESS;
                         }
                     //}
 
                     else if(canInsert(itemHeld))
                     {
                         insertStack(player, hand);
-                        return ActionResultType.SUCCESS;
+                        return InteractionResult.SUCCESS;
                     }
                     else if(canExtract(player, hand))
                     {
                         extractStack(player);
-                        return ActionResultType.SUCCESS;
+                        return InteractionResult.SUCCESS;
                     }
                 }
             }
         }
-        return ActionResultType.FAIL;
+        return InteractionResult.FAIL;
     }
 
     // ======== CRUSHING ========
@@ -321,7 +328,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
      * Called when player jumps on basin block
      * @param player
      */
-    public void crush(PlayerEntity player)
+    public void crush(Player player)
     {
         if(!isEmpty(inventory) && getSquashedStackCount() + 1 <= getInventory().getSlotLimit(0))
         {
@@ -349,7 +356,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
 
                     this.content = SauceRegistry.INSTANCE.basinContentFromString(match.get().getContentOutput());
                     decrStackSize(inventory, 0, 1);
-                    level.playSound(player, getBlockPos(), SoundEvents.SLIME_BLOCK_FALL, SoundCategory.BLOCKS, 0.7F, 0.9F + (0.1F * level.random.nextFloat()));
+                    level.playSound(player, getBlockPos(), SoundEvents.SLIME_BLOCK_FALL, SoundSource.BLOCKS, 0.7F, 0.9F + (0.1F * level.random.nextFloat()));
                 }
             }
             //Check for possible recipes
@@ -441,9 +448,94 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
         setChanged();
     }
 
-    private int tick = 0;
+  /*  @Override
+    public void setChanged()
+    {
+        super.setChanged();
+        notifyBlockUpdate();
+    }
+
+    private void notifyBlockUpdate()
+    {
+        BlockState blockstate = getLevel().getBlockState(getBlockPos());
+        level.setBlocksDirty(getBlockPos(), blockstate, blockstate);
+        level.sendBlockUpdated(getBlockPos(), blockstate, blockstate, Block.UPDATE_CLIENTS);
+    }
 
     @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket()
+    {
+        return new ClientboundBlockEntityDataPacket(this.getBlockPos(), 3, getUpdateTag());
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt)
+    {
+        super.onDataPacket(net, pkt);
+        this.handleUpdateTag(pkt.getTag());
+    } */
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag)
+    {
+        if(getBasinContent() == BasinContent.FERMENTING_MILK)
+        {
+            this.fermentProgress = tag.getInt(FERMENT_PROGRESS);
+        }
+        else super.handleUpdateTag(tag);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag()
+    {
+        if(getBasinContent() == BasinContent.FERMENTING_MILK)
+        {
+            CompoundTag tag = new CompoundTag();
+            tag.putInt(FERMENT_PROGRESS, this.fermentProgress);
+            return tag;
+        }
+        return save(new CompoundTag());
+    }
+
+    private int tick = 0;
+
+    public static void tick(Level level, BlockPos pos, BlockState state, BasinBlockEntity blockEntity)
+    {
+        if(blockEntity.getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK)
+        {
+            blockEntity.fermentProgress++;
+            //blockEntity.setChanged();
+
+            if(blockEntity.fermentProgress % 60 == 0)
+            {
+                //if(tick == 59)
+                //{
+                level.playSound(null, pos, SoundEvents.FUNGUS_PLACE, SoundSource.BLOCKS, 0.8F, 0.9F + level.random.nextFloat());
+                //}
+            }
+        }
+        if(blockEntity.fermentProgress >= blockEntity.defaultFermentTime)
+        {
+            blockEntity.finishFermenting();
+        }
+
+        if(blockEntity.getBasinContent().getContentType() == BasinContentType.CHEESE)
+        {
+            if(blockEntity.tick % 20 == 0)
+            {
+                blockEntity.createCheeseParticle();
+            }
+            if(blockEntity.tick < 60)
+            {
+                blockEntity.tick++;
+            }
+            else if(blockEntity.tick == 60)
+            {
+                blockEntity.tick = 0;
+            }
+        }
+    }
+/*    @Override
     public void tick()
     {
         if(getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK)
@@ -453,7 +545,7 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
             if(fermentProgress % 60 == 0) {
                 //if(tick == 59)
                 //{
-                level.playSound(null, getBlockPos(), SoundEvents.FUNGUS_PLACE, SoundCategory.BLOCKS, 0.8F, 0.9F + level.random.nextFloat());
+                level.playSound(null, getBlockPos(), SoundEvents.FUNGUS_PLACE, SoundSource.BLOCKS, 0.8F, 0.9F + level.random.nextFloat());
                 //}
             }
         }
@@ -477,13 +569,13 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
                 tick = 0;
             }
         }
-    }
+    } */
 
     private void createCheeseParticle()
     {
         double x = ((double)level.random.nextInt(12) / 16);
         double z = ((double)level.random.nextInt(12) / 16);
-        level.addParticle(new RedstoneParticleData(0.91F, 0.76F, 0.31F, 1.0F), getBlockPos().getX() + x + 0.2D, getBlockPos().getY() + 0.6D, getBlockPos().getZ() + z + 0.2D, 0.0D, 0.09D, 0.0D);
+        level.addParticle(new DustParticleOptions(new Vector3f(0.91F, 0.76F, 0.31F), 1.0F), getBlockPos().getX() + x + 0.2D, getBlockPos().getY() + 0.6D, getBlockPos().getZ() + z + 0.2D, 0.0D, 0.09D, 0.0D);
     }
 
     // ======== ITEMHANDLER ========
@@ -498,12 +590,12 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
         return !stack.isEmpty() && isEmpty();
     }
 
-    public boolean canExtract(PlayerEntity player, Hand handIn)
+    public boolean canExtract(Player player, InteractionHand handIn)
     {
         return player.getItemInHand(handIn).isEmpty() && !isEmpty();
     }
 
-    public void insertStack(PlayerEntity player, Hand hand)
+    public void insertStack(Player player, InteractionHand hand)
     {
         if(!player.isCreative())
         {
@@ -513,20 +605,20 @@ public class BasinTileEntity extends BaseTileEntity implements ITickableTileEnti
         {
             getInventory().insertItem(0, player.getItemInHand(hand).copy(), false);
         }
-        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
+        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
     }
 
-    public void extractStack(PlayerEntity player)
+    public void extractStack(Player player)
     {
         if(!player.isCreative())
         {
-            InventoryHelper.dropItemStack(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), getInventory().extractItem(0, 64, false));
+            Containers.dropItemStack(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), getInventory().extractItem(0, 64, false));
         }
         else
         {
             getInventory().extractItem(0, 64, false);
         }
-        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
+        level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
     }
 
     public IItemHandlerModifiable getInventory()

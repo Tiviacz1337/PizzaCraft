@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "pizzacraft:cheese_block"
+            "items": [
+              "pizzacraft:cheese_block"
+            ]
           }
         ]
       }

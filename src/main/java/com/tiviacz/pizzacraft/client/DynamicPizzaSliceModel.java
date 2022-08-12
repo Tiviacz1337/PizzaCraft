@@ -7,18 +7,20 @@ import com.google.common.collect.Sets;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.math.Transformation;
 import com.tiviacz.pizzacraft.init.PizzaLayers;
 import com.tiviacz.pizzacraft.util.Utils;
-import net.minecraft.client.renderer.model.*;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.TransformationMatrix;
+import net.minecraft.client.resources.model.*;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.model.*;
 import net.minecraftforge.client.model.geometry.IModelGeometry;
 import net.minecraftforge.items.ItemStackHandler;
@@ -54,12 +56,12 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
     }
 
     @Override
-    public IBakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<RenderMaterial, TextureAtlasSprite> spriteGetter, IModelTransform modelTransform, ItemOverrideList overrides, ResourceLocation modelLocation)
+    public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides, ResourceLocation modelLocation)
     {
-        RenderMaterial particleLocation = owner.isTexturePresent("particle") ? owner.resolveTexture("particle") : null;
-        RenderMaterial baseLocation = owner.isTexturePresent("base") ? owner.resolveTexture("base") : null;
+        Material particleLocation = owner.isTexturePresent("particle") ? owner.resolveTexture("particle") : null;
+        Material baseLocation = owner.isTexturePresent("base") ? owner.resolveTexture("base") : null;
 
-        List<RenderMaterial> layersLocations = new ArrayList<>();
+        List<Material> layersLocations = new ArrayList<>();
 
         ItemStackHandler handler = Utils.createHandlerFromStack(stack, 9);
 
@@ -71,21 +73,21 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
             {
                 if(PizzaLayers.VALID_ITEM_TAGS.contains(location))
                 {
-                    layersLocations.add(new RenderMaterial(PlayerContainer.BLOCK_ATLAS, PizzaLayers.getTagToItemLayer().get(location)));
+                    layersLocations.add(new Material(InventoryMenu.BLOCK_ATLAS, PizzaLayers.getTagToItemLayer().get(location)));
                 }
             }
         }
 
-        IModelTransform transformsFromModel = owner.getCombinedTransform();
+        ModelState transformsFromModel = owner.getCombinedTransform();
 
-        ImmutableMap<ItemCameraTransforms.TransformType, TransformationMatrix> transformMap =
-                PerspectiveMapWrapper.getTransforms(new ModelTransformComposition(transformsFromModel, modelTransform));
+        ImmutableMap<ItemTransforms.TransformType, Transformation> transformMap =
+                PerspectiveMapWrapper.getTransforms(new CompositeModelState(transformsFromModel, modelState));
 
         TextureAtlasSprite particleSprite = particleLocation != null ? spriteGetter.apply(particleLocation) : null;
 
         if (particleSprite == null) particleSprite = spriteGetter.apply(baseLocation);
 
-        TransformationMatrix transform = modelTransform.getRotation();
+        Transformation transform = modelState.getRotation();
 
         ItemMultiLayerBakedModel.Builder builder = ItemMultiLayerBakedModel.builder(owner, particleSprite, new DynamicPizzaSliceModel.PizzaSliceOverrideHandler(overrides, bakery, owner, this), transformMap);
 
@@ -103,7 +105,7 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
         {
             int i = 0;
 
-            for(RenderMaterial material : layersLocations)
+            for(Material material : layersLocations)
             {
                 TextureAtlasSprite sprite = spriteGetter.apply(material);
                 i++;
@@ -122,9 +124,9 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
     }
 
     @Override
-    public Collection<RenderMaterial> getTextures(IModelConfiguration owner, Function<ResourceLocation, IUnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors)
+    public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors)
     {
-        Set<RenderMaterial> texs = Sets.newHashSet();
+        Set<Material> texs = Sets.newHashSet();
 
         if(owner.isTexturePresent("particle")) texs.add(owner.resolveTexture("particle"));
         if(owner.isTexturePresent("base")) texs.add(owner.resolveTexture("base"));
@@ -137,7 +139,7 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
         INSTANCE;
 
         @Override
-        public void onResourceManagerReload(IResourceManager resourceManager) { }
+        public void onResourceManagerReload(ResourceManager resourceManager) { }
 
         @Override
         public DynamicPizzaSliceModel read(JsonDeserializationContext deserializationContext, JsonObject modelContents)
@@ -146,15 +148,15 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
         }
     }
 
-    private static final class PizzaSliceOverrideHandler extends ItemOverrideList
+    private static final class PizzaSliceOverrideHandler extends ItemOverrides
     {
-        private final Map<String, IBakedModel> cache = Maps.newHashMap(); // contains all the baked models since they'll never change
-        private final ItemOverrideList nested;
+        private final Map<String, BakedModel> cache = Maps.newHashMap(); // contains all the baked models since they'll never change
+        private final ItemOverrides nested;
         private final ModelBakery bakery;
         private final IModelConfiguration owner;
         private final DynamicPizzaSliceModel parent;
 
-        private PizzaSliceOverrideHandler(ItemOverrideList nested, ModelBakery bakery, IModelConfiguration owner, DynamicPizzaSliceModel parent)
+        private PizzaSliceOverrideHandler(ItemOverrides nested, ModelBakery bakery, IModelConfiguration owner, DynamicPizzaSliceModel parent)
         {
             this.nested = nested;
             this.bakery = bakery;
@@ -163,9 +165,9 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
         }
 
         @Override
-        public IBakedModel resolve(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity)
+        public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int integer)
         {
-            IBakedModel overriden = nested.resolve(originalModel, stack, world, entity);
+            BakedModel overriden = nested.resolve(originalModel, stack, level, entity, integer);
             if(overriden != originalModel) return overriden;
             if(stack.getTag() != null)
             {
@@ -174,7 +176,7 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
                 if(!cache.containsKey(name))
                 {
                     DynamicPizzaSliceModel unbaked = this.parent.withStack(stack);
-                    IBakedModel bakedModel = unbaked.bake(owner, bakery, ModelLoader.defaultTextureGetter(), ModelRotation.X0_Y0, this, new ResourceLocation("pizzacraft:pizza_slice_override"));
+                    BakedModel bakedModel = unbaked.bake(owner, bakery, ModelLoader.defaultTextureGetter(), BlockModelRotation.X0_Y0, this, new ResourceLocation("pizzacraft:pizza_slice_override"));
                     cache.put(name, bakedModel);
                     return bakedModel;
                 }

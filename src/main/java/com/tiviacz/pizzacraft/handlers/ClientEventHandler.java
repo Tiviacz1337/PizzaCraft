@@ -3,15 +3,19 @@ package com.tiviacz.pizzacraft.handlers;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.client.DynamicPizzaSliceModel;
 import com.tiviacz.pizzacraft.client.PizzaBakedModel;
+import com.tiviacz.pizzacraft.client.renderer.BasinRenderer;
+import com.tiviacz.pizzacraft.client.renderer.ChefHatModel;
+import com.tiviacz.pizzacraft.client.renderer.PizzaDeliveryCapModel;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.PizzaLayers;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -29,12 +33,21 @@ public class ClientEventHandler
     }
 
     @SubscribeEvent
+    public static void layerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event)
+    {
+        event.registerLayerDefinition(BasinRenderer.ContentModel.CONTENT_LAYER, BasinRenderer.ContentModel::createModelData);
+        event.registerLayerDefinition(BasinRenderer.SauceModel.SAUCE_LAYER, BasinRenderer.SauceModel::createModelData);
+        event.registerLayerDefinition(PizzaDeliveryCapModel.CAP, PizzaDeliveryCapModel::createModelData);
+        event.registerLayerDefinition(ChefHatModel.CHEF_HAT, ChefHatModel::createModelData);
+    }
+
+    @SubscribeEvent
     public static void onModelBakeEvent(ModelBakeEvent event)
     {
         for(BlockState blockState : ModBlocks.PIZZA.get().getStateDefinition().getPossibleStates())
         {
-            ModelResourceLocation variantMRL = BlockModelShapes.stateToModelLocation(blockState);
-            IBakedModel existingModel = event.getModelRegistry().get(variantMRL);
+            ModelResourceLocation variantMRL = BlockModelShaper.stateToModelLocation(blockState);
+            BakedModel existingModel = event.getModelRegistry().get(variantMRL);
             if(existingModel == null)
             {
                 //LOGGER.warn("Did not find the expected vanilla baked model(s) for blockAltimeter in registry");
@@ -52,8 +65,8 @@ public class ClientEventHandler
 
         for(BlockState blockState : ModBlocks.RAW_PIZZA.get().getStateDefinition().getPossibleStates())
         {
-            ModelResourceLocation variantMRL = BlockModelShapes.stateToModelLocation(blockState);
-            IBakedModel existingModel = event.getModelRegistry().get(variantMRL);
+            ModelResourceLocation variantMRL = BlockModelShaper.stateToModelLocation(blockState);
+            BakedModel existingModel = event.getModelRegistry().get(variantMRL);
             if(existingModel == null)
             {
                 //LOGGER.warn("Did not find the expected vanilla baked model(s) for blockAltimeter in registry");
@@ -73,7 +86,7 @@ public class ClientEventHandler
     @SubscribeEvent
     public static void stitcherEventPre(TextureStitchEvent.Pre event)
     {
-        if(event.getMap().location() == PlayerContainer.BLOCK_ATLAS)
+        if(event.getMap().location() == InventoryMenu.BLOCK_ATLAS)
         {
             event.addSprite(PizzaLayers.PIZZA_SLICE);
 

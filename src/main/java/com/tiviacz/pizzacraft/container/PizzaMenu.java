@@ -1,39 +1,39 @@
 package com.tiviacz.pizzacraft.container;
 
+import com.tiviacz.pizzacraft.blockentity.PizzaBlockEntity;
 import com.tiviacz.pizzacraft.container.slots.UnaccessibleSlot;
-import com.tiviacz.pizzacraft.init.ModContainerTypes;
+import com.tiviacz.pizzacraft.init.ModMenuTypes;
 import com.tiviacz.pizzacraft.init.PizzaLayers;
-import com.tiviacz.pizzacraft.tileentity.PizzaTileEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
-public class PizzaContainer extends Container
+public class PizzaMenu extends AbstractContainerMenu
 {
-    public PlayerInventory playerInventory;
-    public PizzaTileEntity tileEntity;
+    public Inventory inv;
+    public PizzaBlockEntity blockEntity;
 
-    public PizzaContainer(int windowID, PlayerInventory playerInventory, PacketBuffer data)
+    public PizzaMenu(int windowID, Inventory inv, FriendlyByteBuf data)
     {
-        this(windowID, playerInventory, getTileEntity(playerInventory, data));
+        this(windowID, inv, getBlockEntity(inv, data));
     }
 
-    public PizzaContainer(int windowID, PlayerInventory playerInventory, TileEntity tile)
+    public PizzaMenu(int windowID, Inventory inv, BlockEntity tile)
     {
-        super(ModContainerTypes.PIZZA.get(), windowID);
+        super(ModMenuTypes.PIZZA.get(), windowID);
 
-        this.playerInventory = playerInventory;
-        this.tileEntity = (PizzaTileEntity)tile;
+        this.inv = inv;
+        this.blockEntity = (PizzaBlockEntity)tile;
 
-        if(tileEntity.isRaw())
+        if(blockEntity.isRaw())
         {
             this.addIngredientsSlotsRaw();
         }
@@ -42,22 +42,22 @@ public class PizzaContainer extends Container
             this.addIngredientsSlots();
         }
 
-        this.addPlayerInventoryAndHotbar(playerInventory);
+        this.addPlayerInventoryAndHotbar(inv);
     }
 
-    public void addPlayerInventoryAndHotbar(PlayerInventory playerInv)
+    public void addPlayerInventoryAndHotbar(Inventory inv)
     {
         for(int y = 0; y < 3; ++y)
         {
             for(int x = 0; x < 9; ++x)
             {
-                this.addSlot(new Slot(playerInv, x + y * 9 + 9, 8 + x * 18, 76 + y * 18));
+                this.addSlot(new Slot(inv, x + y * 9 + 9, 8 + x * 18, 76 + y * 18));
             }
         }
 
         for(int x = 0; x < 9; x++)
         {
-            this.addSlot(new Slot(playerInv, x, 8 + x*18, 134));
+            this.addSlot(new Slot(inv, x, 8 + x*18, 134));
         }
     }
 
@@ -67,7 +67,7 @@ public class PizzaContainer extends Container
         {
             for(int j = 0; j < 3; ++j)
             {
-                this.addSlot(new SlotItemHandler(tileEntity.getInventory(), j + i * 3, 62 + j * 18, 10 + i * 18)
+                this.addSlot(new SlotItemHandler(blockEntity.getInventory(), j + i * 3, 62 + j * 18, 10 + i * 18)
                 {
                     @Override
                     public int getMaxStackSize(@Nonnull ItemStack stack)
@@ -106,7 +106,7 @@ public class PizzaContainer extends Container
         {
             for(int j = 0; j < 3; ++j)
             {
-                this.addSlot(new UnaccessibleSlot(tileEntity.getInventory(), j + i * 3, 62 + j * 18, 10 + i * 18));
+                this.addSlot(new UnaccessibleSlot(blockEntity.getInventory(), j + i * 3, 62 + j * 18, 10 + i * 18));
             }
         }
     }
@@ -134,7 +134,7 @@ public class PizzaContainer extends Container
     } */
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity player, int index)
+    public ItemStack quickMoveStack(Player player, int index)
     {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
@@ -167,28 +167,28 @@ public class PizzaContainer extends Container
         return itemstack;
     }
 
-    public void removed(PlayerEntity playerIn)
+    public void removed(Player player)
     {
-        super.removed(playerIn);
+        super.removed(player);
     }
 
     @Override
-    public boolean stillValid(PlayerEntity playerIn)
+    public boolean stillValid(Player player)
     {
         return true;
     }
 
-    private static PizzaTileEntity getTileEntity(final PlayerInventory playerInventory, final PacketBuffer data)
+    private static PizzaBlockEntity getBlockEntity(final Inventory inv, final FriendlyByteBuf data)
     {
-        Objects.requireNonNull(playerInventory, "playerInventory cannot be null");
+        Objects.requireNonNull(inv, "inv cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
 
-        final TileEntity tileAtPos = playerInventory.player.level.getBlockEntity(data.readBlockPos());
+        final BlockEntity blockEntity = inv.player.level.getBlockEntity(data.readBlockPos());
 
-        if(tileAtPos instanceof PizzaTileEntity)
+        if(blockEntity instanceof PizzaBlockEntity)
         {
-            return (PizzaTileEntity)tileAtPos;
+            return (PizzaBlockEntity)blockEntity;
         }
-        throw new IllegalStateException("Tile entity is not correct! " + tileAtPos);
+        throw new IllegalStateException("Block entity is not correct! " + blockEntity);
     }
 }

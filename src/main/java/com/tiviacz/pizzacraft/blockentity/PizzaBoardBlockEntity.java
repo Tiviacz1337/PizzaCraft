@@ -1,45 +1,46 @@
-package com.tiviacz.pizzacraft.tileentity;
+package com.tiviacz.pizzacraft.blockentity;
 
+import com.tiviacz.pizzacraft.init.ModBlockEntityTypes;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.init.ModTileEntityTypes;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.util.Hand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class PizzaBoardTileEntity extends BaseTileEntity
+public class PizzaBoardBlockEntity extends BaseBlockEntity
 {
     private BlockState storedBlockState = Blocks.AIR.defaultBlockState();
     private final String STORED_BLOCKSTATE = "StoredBlockState";
 
-    public PizzaBoardTileEntity()
+    public PizzaBoardBlockEntity(BlockPos pos, BlockState state)
     {
-        super(ModTileEntityTypes.PIZZA.get());
+        super(ModBlockEntityTypes.PIZZA.get(), pos, state);
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound)
+    public void load(CompoundTag compound)
     {
-        super.load(state, compound);
-        this.storedBlockState = NBTUtil.readBlockState(compound);
+        super.load(compound);
+        this.storedBlockState = NbtUtils.readBlockState(compound);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound)
+    public CompoundTag save(CompoundTag compound)
     {
         super.save(compound);
-        compound.put(STORED_BLOCKSTATE, NBTUtil.writeBlockState(storedBlockState));
+        compound.put(STORED_BLOCKSTATE, NbtUtils.writeBlockState(storedBlockState));
         return compound;
     }
 
-    public void use(PlayerEntity player, Hand hand)
+    public void use(Player player, InteractionHand hand)
     {
-        if(hand == Hand.MAIN_HAND)
+        if(hand == InteractionHand.MAIN_HAND)
         {
             ItemStack stack = player.getItemInHand(hand);
 

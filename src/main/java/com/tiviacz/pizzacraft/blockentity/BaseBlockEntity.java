@@ -1,22 +1,23 @@
-package com.tiviacz.pizzacraft.tileentity;
+package com.tiviacz.pizzacraft.blockentity;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
-public class BaseTileEntity extends TileEntity
+public class BaseBlockEntity extends BlockEntity
 {
     protected final String INVENTORY = "Inventory";
 
-    public BaseTileEntity(TileEntityType<?> tileEntityTypeIn)
+    public BaseBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state)
     {
-        super(tileEntityTypeIn);
+        super(tileEntityTypeIn, pos, state);
     }
 
     public boolean isEmpty(IItemHandlerModifiable inventory)
@@ -54,25 +55,26 @@ public class BaseTileEntity extends TileEntity
     {
         BlockState blockstate = getLevel().getBlockState(getBlockPos());
         level.setBlocksDirty(getBlockPos(), blockstate, blockstate);
-        level.sendBlockUpdated(getBlockPos(), blockstate, blockstate, Constants.BlockFlags.BLOCK_UPDATE);
+        level.sendBlockUpdated(getBlockPos(), blockstate, blockstate, Block.UPDATE_CLIENTS);
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket()
+    public ClientboundBlockEntityDataPacket getUpdatePacket()
     {
-        return new SUpdateTileEntityPacket(this.getBlockPos(), 3, getUpdateTag());
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt)
     {
+        //this.load(pkt.getTag());
         super.onDataPacket(net, pkt);
-        this.handleUpdateTag(level.getBlockState(pkt.getPos()), pkt.getTag());
+        this.handleUpdateTag(pkt.getTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag()
+    public CompoundTag getUpdateTag()
     {
-        return this.save(new CompoundNBT());
+        return this.save(new CompoundTag());
     }
 }

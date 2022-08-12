@@ -2,14 +2,14 @@ package com.tiviacz.pizzacraft.advancement;
 
 import com.google.gson.JsonObject;
 import com.tiviacz.pizzacraft.PizzaCraft;
-import net.minecraft.advancements.criterion.AbstractCriterionTrigger;
-import net.minecraft.advancements.criterion.CriterionInstance;
-import net.minecraft.advancements.criterion.EntityPredicate;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.loot.ConditionArrayParser;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 
-public class ChoppingBoardTrigger extends AbstractCriterionTrigger<ChoppingBoardTrigger.Instance>
+public class ChoppingBoardTrigger extends SimpleCriterionTrigger<ChoppingBoardTrigger.Instance>
 {
     private static final ResourceLocation ID = new ResourceLocation(PizzaCraft.MODID, "use_chopping_board");
 
@@ -17,23 +17,23 @@ public class ChoppingBoardTrigger extends AbstractCriterionTrigger<ChoppingBoard
         return ID;
     }
 
-    public void trigger(ServerPlayerEntity player) {
+    public void trigger(ServerPlayer player) {
         this.trigger(player, Instance::test);
     }
 
     @Override
-    protected Instance createInstance(JsonObject json, EntityPredicate.AndPredicate player, ConditionArrayParser conditionsParser) {
+    protected Instance createInstance(JsonObject json, EntityPredicate.Composite player, DeserializationContext conditionsParser) {
         return new ChoppingBoardTrigger.Instance(player);
     }
 
-    public static class Instance extends CriterionInstance
+    public static class Instance extends AbstractCriterionTriggerInstance
     {
-        public Instance(EntityPredicate.AndPredicate player) {
+        public Instance(EntityPredicate.Composite player) {
             super(ChoppingBoardTrigger.ID, player);
         }
 
         public static ChoppingBoardTrigger.Instance simple() {
-            return new ChoppingBoardTrigger.Instance(EntityPredicate.AndPredicate.ANY);
+            return new ChoppingBoardTrigger.Instance(EntityPredicate.Composite.ANY);
         }
 
         public boolean test() {

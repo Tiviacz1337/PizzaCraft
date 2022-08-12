@@ -1,20 +1,21 @@
 package com.tiviacz.pizzacraft.client;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.math.Vector3f;
 import com.tiviacz.pizzacraft.init.PizzaLayers;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.*;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.texture.MissingTextureSprite;
+import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.inventory.container.PlayerContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.SimpleModelTransform;
+import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -27,12 +28,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-public class PizzaBakedModel implements IBakedModel
+public class PizzaBakedModel implements BakedModel
 {
-    private final IBakedModel baseModel;
+    private final BakedModel baseModel;
     private final FaceBakery faceBakery = new FaceBakery();
 
-    public PizzaBakedModel(IBakedModel baseModel)
+    public PizzaBakedModel(BakedModel baseModel)
     {
         this.baseModel = baseModel;
     }
@@ -53,9 +54,9 @@ public class PizzaBakedModel implements IBakedModel
 
     @Override
     @Nonnull
-    public IModelData getModelData(@Nonnull IBlockDisplayReader world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData)
+    public IModelData getModelData(@Nonnull BlockAndTintGetter level, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData blockEntityData)
     {
-        return tileData;
+        return blockEntityData;
     }
 
     @Override
@@ -183,7 +184,7 @@ public class PizzaBakedModel implements IBakedModel
 
                     if(layerLocation == null)
                     {
-                        layerLocation = MissingTextureSprite.getLocation();
+                        layerLocation = MissingTextureAtlasSprite.getLocation();
                     }
 
                     //layerLocation = isRaw ? PizzaLayers.getItemToRawLayerMap().get(inventory.getStackInSlot(i).getItem()) : PizzaLayers.getTagToLayer().get(inventory.getStackInSlot(i).getItem().getTags())//PizzaLayers.getItemToLayerMap().get(inventory.getStackInSlot(i).getItem());
@@ -200,13 +201,13 @@ public class PizzaBakedModel implements IBakedModel
         Vector3f to = new Vector3f((float)maxX, (float)maxY, (float)maxZ);
 
         BlockFaceUV blockFaceUV = new BlockFaceUV(uvArray, rotation);
-        BlockPartFace blockPartFace = new BlockPartFace(face, -1, "",  blockFaceUV);
+        BlockElementFace blockElementFace = new BlockElementFace(face, -1, "",  blockFaceUV);
 
-        AtlasTexture blocksStitchedTextures = ModelLoader.instance().getSpriteMap().getAtlas(PlayerContainer.BLOCK_ATLAS);
+        TextureAtlas blocksStitchedTextures = ModelLoader.instance().getSpriteMap().getAtlas(InventoryMenu.BLOCK_ATLAS);
         TextureAtlasSprite layersTextures = blocksStitchedTextures.getSprite(layerLocation);
 
         final ResourceLocation DUMMY_RL = new ResourceLocation("dummy_name");
-        BakedQuad bakedQuad = faceBakery.bakeQuad(from, to, blockPartFace, layersTextures, face, SimpleModelTransform.IDENTITY, null, true, DUMMY_RL);
+        BakedQuad bakedQuad = faceBakery.bakeQuad(from, to, blockElementFace, layersTextures, face, SimpleModelState.IDENTITY, null, true, DUMMY_RL);
         return bakedQuad;
     }
 
@@ -241,7 +242,7 @@ public class PizzaBakedModel implements IBakedModel
     }
 
     @Override
-    public ItemOverrideList getOverrides()
+    public ItemOverrides getOverrides()
     {
         return baseModel.getOverrides();
     }

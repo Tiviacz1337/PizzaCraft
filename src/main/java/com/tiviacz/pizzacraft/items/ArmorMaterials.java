@@ -1,16 +1,16 @@
 package com.tiviacz.pizzacraft.items;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.LazyValue;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.function.Supplier;
 
-public class ArmorMaterials implements IArmorMaterial
+public class ArmorMaterials implements ArmorMaterial
 {
     public static final ArmorMaterials CHEF = new ArmorMaterials("chef", 5, new int[]{1, 2, 3, 1}, 10, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.EMPTY);
     public static final ArmorMaterials PIZZA_DELIVERY = new ArmorMaterials("pizza_delivery", 5, new int[]{1, 2, 3, 1}, 10, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, 0.0F, () -> Ingredient.EMPTY);
@@ -22,7 +22,7 @@ public class ArmorMaterials implements IArmorMaterial
     private final int[] defense;
     private float toughness;
     private float knockbackResistance;
-    private LazyValue<Ingredient> material;
+    private LazyLoadedValue<Ingredient> material;
 
     private ArmorMaterials(String name, int durability, int[] defense, int enchantability, SoundEvent equipSound, float toughness, float knockbackResistance, Supplier<Ingredient> material)
     {
@@ -33,17 +33,17 @@ public class ArmorMaterials implements IArmorMaterial
         this.defense = defense;
         this.toughness = toughness;
         this.knockbackResistance = knockbackResistance;
-        this.material = new LazyValue<>(material);
+        this.material = new LazyLoadedValue(material);
     }
 
     @Override
-    public int getDurabilityForSlot(EquipmentSlotType slotIn)
+    public int getDurabilityForSlot(EquipmentSlot slotIn)
     {
         return MAX_DAMAGE_ARRAY[slotIn.getIndex()] * this.durability;
     }
 
     @Override
-    public int getDefenseForSlot(EquipmentSlotType slotIn)
+    public int getDefenseForSlot(EquipmentSlot slotIn)
     {
         return this.defense[slotIn.getIndex()];
     }

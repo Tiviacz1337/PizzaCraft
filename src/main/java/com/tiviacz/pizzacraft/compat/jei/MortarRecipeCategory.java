@@ -1,6 +1,6 @@
 package com.tiviacz.pizzacraft.compat.jei;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.recipes.mortar.MortarRecipe;
@@ -12,11 +12,12 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,13 +28,13 @@ public class MortarRecipeCategory implements IRecipeCategory<MortarRecipe>
 
     private final IDrawable background;
     private final IDrawable icon;
-    private final String title;
+    private final Component title;
 
     public MortarRecipeCategory(IGuiHelper guiHelper)
     {
         background = guiHelper.createDrawable(new ResourceLocation(PizzaCraft.MODID, "textures/gui/mortar_recipe.png"), -9, -9, 128, 96);
         icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.MORTAR_AND_PESTLE.get()));
-        title = I18n.get("recipecategory." + PizzaCraft.MODID + ".mortar");
+        title = new TranslatableComponent("recipecategory." + PizzaCraft.MODID + ".mortar");
     }
 
     @Override
@@ -49,7 +50,7 @@ public class MortarRecipeCategory implements IRecipeCategory<MortarRecipe>
     }
 
     @Override
-    public String getTitle()
+    public Component getTitle()
     {
         return title;
     }
@@ -90,10 +91,10 @@ public class MortarRecipeCategory implements IRecipeCategory<MortarRecipe>
     }
 
     @Override
-    public void draw(MortarRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY)
+    public void draw(MortarRecipe recipe, PoseStack poseStack, double mouseX, double mouseY)
     {
-        FontRenderer fontRenderer = Minecraft.getInstance().font;
+        Font font = Minecraft.getInstance().font;
         String duration = recipe.getDuration() + "x";
-        fontRenderer.draw(matrixStack, duration, 44 - fontRenderer.width(duration) / 2F, 27, 0xff404040);
+        font.draw(poseStack, duration, 44 - font.width(duration) / 2F, 27, 0xff404040);
     }
 }

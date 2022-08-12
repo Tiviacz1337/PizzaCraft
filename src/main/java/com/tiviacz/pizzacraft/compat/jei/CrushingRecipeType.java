@@ -1,6 +1,6 @@
 package com.tiviacz.pizzacraft.compat.jei;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class CrushingRecipeType
 {

@@ -1,15 +1,15 @@
 package com.tiviacz.pizzacraft.items;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
-import com.tiviacz.pizzacraft.compat.curios.PizzaCraftCurios;
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.tiviacz.pizzacraft.compat.curios.PizzaBagCurio;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -27,20 +27,20 @@ public class PizzaBagItem extends BlockItem
     }
 
     @Override
-    public ITextComponent getName(ItemStack stack)
+    public Component getName(ItemStack stack)
     {
-        return new TranslationTextComponent(this.getDescriptionId(stack)).withStyle(TextFormatting.RED);
+        return new TranslatableComponent(this.getDescriptionId(stack)).withStyle(ChatFormatting.RED);
     }
 
     @Nullable
     @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt)
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt)
     {
         if(PizzaCraft.curiosLoaded)
         {
             return new ICapabilityProvider()
             {
-                final LazyOptional<ICurio> curio = LazyOptional.of(PizzaCraftCurios::createPizzaBagProvider);
+                final LazyOptional<ICurio> curio = LazyOptional.of(() -> new PizzaBagCurio(ItemStack.EMPTY));
 
                 @Nonnull
                 @Override

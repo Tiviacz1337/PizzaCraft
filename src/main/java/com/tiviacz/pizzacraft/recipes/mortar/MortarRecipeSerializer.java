@@ -4,19 +4,19 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.tiviacz.pizzacraft.PizzaCraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 
-public class MortarRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<MortarRecipe>
+public class MortarRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<MortarRecipe>
 {
     public MortarRecipeSerializer() {}
 
@@ -26,8 +26,8 @@ public class MortarRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
     @Override
     public MortarRecipe fromJson(ResourceLocation id, JsonObject json)
     {
-        int duration = JSONUtils.getAsInt(json, "duration", 20);
-        NonNullList<Ingredient> nonnulllist = readIngredients(JSONUtils.getAsJsonArray(json, "ingredients"));
+        int duration = GsonHelper.getAsInt(json, "duration", 20);
+        NonNullList<Ingredient> nonnulllist = readIngredients(GsonHelper.getAsJsonArray(json, "ingredients"));
 
         if(nonnulllist.isEmpty())
         {
@@ -39,14 +39,14 @@ public class MortarRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
         }
         else
         {
-            ItemStack itemstack = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "result"));
+            ItemStack itemstack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             return new MortarRecipe(nonnulllist, itemstack, duration, id);
         }
     }
 
     @Nullable
     @Override
-    public MortarRecipe fromNetwork(ResourceLocation id, PacketBuffer buffer)
+    public MortarRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buffer)
     {
         int d = buffer.readInt();
         int i = buffer.readVarInt();
@@ -77,7 +77,7 @@ public class MortarRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
     }
 
     @Override
-    public void toNetwork(PacketBuffer buffer, MortarRecipe recipe)
+    public void toNetwork(FriendlyByteBuf buffer, MortarRecipe recipe)
     {
         buffer.writeInt(recipe.getDuration());
         buffer.writeVarInt(recipe.getInputs().size());

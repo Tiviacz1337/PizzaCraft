@@ -1,21 +1,30 @@
 package com.tiviacz.pizzacraft.util;
 
-import com.tiviacz.pizzacraft.container.PizzaBagContainer;
-import com.tiviacz.pizzacraft.tileentity.PizzaBagTileEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import com.tiviacz.pizzacraft.blockentity.PizzaBagBlockEntity;
+import com.tiviacz.pizzacraft.container.PizzaBagMenu;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 public class Utils
 {
+    @Nullable
+    public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> getTicker(BlockEntityType<A> type, BlockEntityType<E> targetType, BlockEntityTicker<? super E> ticker) {
+        return targetType == type ? (BlockEntityTicker<A>) ticker : null;
+    }
+
     public static ResourceLocation matchRecipeTag(Map<?, ?> recipe, ItemStack stack)
     {
         for(ResourceLocation tagLocation : stack.getItem().getTags())
@@ -38,20 +47,20 @@ public class Utils
         return handler;
     }
 
-    public static void spawnItemStackInWorld(World world, BlockPos pos, ItemStack stack)
+    public static void spawnItemStackInWorld(Level level, BlockPos pos, ItemStack stack)
     {
-        ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
+        ItemEntity itemEntity = new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
         itemEntity.setDefaultPickUpDelay();
-        world.addFreshEntity(itemEntity);
+        level.addFreshEntity(itemEntity);
     }
 
-    public static int calculatePlayersUsing(World world, PizzaBagTileEntity tile, int p_213976_2_, int p_213976_3_, int p_213976_4_)
+    public static int calculatePlayersUsing(Level level, PizzaBagBlockEntity tile, int p_213976_2_, int p_213976_3_, int p_213976_4_)
     {
         int i = 0;
 
-        for(PlayerEntity playerentity : world.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB((double)((float)p_213976_2_ - 5.0F), (double)((float)p_213976_3_ - 5.0F), (double)((float)p_213976_4_ - 5.0F), (double)((float)(p_213976_2_ + 1) + 5.0F), (double)((float)(p_213976_3_ + 1) + 5.0F), (double)((float)(p_213976_4_ + 1) + 5.0F))))
+        for(Player player : level.getEntitiesOfClass(Player.class, new AABB((double)((float)p_213976_2_ - 5.0F), (double)((float)p_213976_3_ - 5.0F), (double)((float)p_213976_4_ - 5.0F), (double)((float)(p_213976_2_ + 1) + 5.0F), (double)((float)(p_213976_3_ + 1) + 5.0F), (double)((float)(p_213976_4_ + 1) + 5.0F))))
         {
-            if(playerentity.containerMenu instanceof PizzaBagContainer)
+            if(player.containerMenu instanceof PizzaBagMenu)
             {
                 ++i;
             }

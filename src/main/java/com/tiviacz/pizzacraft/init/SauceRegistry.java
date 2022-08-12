@@ -1,8 +1,8 @@
 package com.tiviacz.pizzacraft.init;
 
 import com.google.common.collect.Maps;
-import com.tiviacz.pizzacraft.tileentity.BasinContent;
-import com.tiviacz.pizzacraft.tileentity.BasinContentType;
+import com.tiviacz.pizzacraft.blockentity.BasinContent;
+import com.tiviacz.pizzacraft.blockentity.BasinContentType;
 
 import java.util.Map;
 

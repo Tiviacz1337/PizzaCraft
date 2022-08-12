@@ -10,7 +10,7 @@
     "description": {
       "translate": "advancements.pizzacraft.cheese.description"
     },
-    "frame": "task",
+    "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": false
@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "pizzacraft:cheese"
+            "items": [
+              "pizzacraft:cheese"
+            ]
           }
         ]
       }

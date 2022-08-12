@@ -2,12 +2,12 @@ package com.tiviacz.pizzacraft.common;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.ModBlocks;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
-public class PizzaCraftItemGroup extends ItemGroup
+public class PizzaCraftItemGroup extends CreativeModeTab
 {
-    public static final ItemGroup PIZZACRAFT = new PizzaCraftItemGroup(ItemGroup.TABS.length, PizzaCraft.MODID);
+    public static final CreativeModeTab PIZZACRAFT = new PizzaCraftItemGroup(CreativeModeTab.TABS.length, PizzaCraft.MODID);
 
     private PizzaCraftItemGroup(int index, String label)
     {

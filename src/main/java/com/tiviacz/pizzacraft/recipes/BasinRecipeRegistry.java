@@ -1,8 +1,8 @@
 package com.tiviacz.pizzacraft.recipes;
 
 import com.tiviacz.pizzacraft.init.ModItems;
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 
 import java.util.ArrayList;
 import java.util.HashMap;

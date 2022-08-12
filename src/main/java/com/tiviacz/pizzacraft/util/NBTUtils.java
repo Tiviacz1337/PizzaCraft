@@ -1,9 +1,9 @@
 package com.tiviacz.pizzacraft.util;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,17 +12,17 @@ public class NBTUtils
 {
     public static final String PROBABILITY = "Probability";
 
-    public static CompoundNBT writeEffectsToTag(List<Pair<EffectInstance, Float>> effects)
+    public static CompoundTag writeEffectsToTag(List<Pair<MobEffectInstance, Float>> effects)
     {
-        CompoundNBT compound = new CompoundNBT();
+        CompoundTag compound = new CompoundTag();
 
         if(!effects.isEmpty())
         {
             int i = 0;
 
-            for(Pair<EffectInstance, Float> pair : effects)
+            for(Pair<MobEffectInstance, Float> pair : effects)
             {
-                CompoundNBT effect = new CompoundNBT();
+                CompoundTag effect = new CompoundTag();
                 pair.getFirst().writeCurativeItems(effect);
                 effect.putFloat(PROBABILITY, pair.getSecond());
                 compound.put(String.valueOf(i), effect);
@@ -32,18 +32,18 @@ public class NBTUtils
         return compound;
     }
 
-    public static List<Pair<EffectInstance, Float>> readEffectsFromTag(CompoundNBT effectsNBT)
+    public static List<Pair<MobEffectInstance, Float>> readEffectsFromTag(CompoundTag effectsNBT)
     {
-        List<Pair<EffectInstance, Float>> effects = new ArrayList<>();
+        List<Pair<MobEffectInstance, Float>> effects = new ArrayList<>();
 
         if(!effectsNBT.isEmpty())
         {
             for(int i = 0; i < effectsNBT.size(); i++)
             {
-                CompoundNBT effect = effectsNBT.getCompound(String.valueOf(i));
+                CompoundTag effect = effectsNBT.getCompound(String.valueOf(i));
                 if(!effect.isEmpty())
                 {
-                    Pair<EffectInstance, Float> effectPair = Pair.of(EffectInstance.load(effect), effect.getFloat(PROBABILITY));
+                    Pair<MobEffectInstance, Float> effectPair = Pair.of(MobEffectInstance.load(effect), effect.getFloat(PROBABILITY));
                     effects.add(effectPair);
                 }
             }
@@ -51,7 +51,7 @@ public class NBTUtils
         return effects;
     }
 
-    public static void writeToItemStack(ItemStack stack, CompoundNBT compound)
+    public static void writeToItemStack(ItemStack stack, CompoundTag compound)
     {
 
     }

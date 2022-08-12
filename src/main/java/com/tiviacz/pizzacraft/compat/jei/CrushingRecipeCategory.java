@@ -10,10 +10,11 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,14 +26,14 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipe>
 
     private final IDrawable background;
     private final IDrawable icon;
-    private final String title;
+    private final Component title;
     //private final ITickTimer timer;
 
     public CrushingRecipeCategory(IGuiHelper guiHelper)
     {
         background = guiHelper.createDrawable(new ResourceLocation(PizzaCraft.MODID, "textures/gui/crushing_recipe.png"), -5, -5, 96, 36);
         icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.GRANITE_BASIN.get()));
-        title = I18n.get("recipecategory." + PizzaCraft.MODID + ".crushing");
+        title = new TranslatableComponent("recipecategory." + PizzaCraft.MODID + ".crushing");
         //timer = guiHelper.createTickTimer(60, 320, false);
     }
 
@@ -49,7 +50,7 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipe>
     }
 
     @Override
-    public String getTitle()
+    public Component getTitle()
     {
         return title;
     }

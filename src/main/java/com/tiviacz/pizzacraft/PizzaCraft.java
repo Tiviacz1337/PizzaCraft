@@ -6,18 +6,19 @@ import com.tiviacz.pizzacraft.client.renderer.BasinRenderer;
 import com.tiviacz.pizzacraft.client.renderer.ChoppingBoardRenderer;
 import com.tiviacz.pizzacraft.client.renderer.MortarAndPestleRenderer;
 import com.tiviacz.pizzacraft.client.renderer.PizzaRenderer;
+import com.tiviacz.pizzacraft.compat.curios.PizzaBagCurioRenderer;
 import com.tiviacz.pizzacraft.config.PizzaCraftConfig;
 import com.tiviacz.pizzacraft.init.*;
 import com.tiviacz.pizzacraft.recipes.BasinRecipeRegistry;
 import com.tiviacz.pizzacraft.worldgen.TreeGenerator;
-import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -29,6 +30,7 @@ import org.apache.logging.log4j.Logger;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 import top.theillusivec4.curios.api.SlotTypePreset;
+import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 
 @Mod("pizzacraft")
 public class PizzaCraft
@@ -51,8 +53,8 @@ public class PizzaCraft
 
         ModItems.ITEMS.register(modEventBus);
         ModBlocks.BLOCKS.register(modEventBus);
-        ModTileEntityTypes.TILE_ENTITY_TYPES.register(modEventBus);
-        ModContainerTypes.CONTAINER_TYPES.register(modEventBus);
+        ModBlockEntityTypes.BLOCK_ENTITY_TYPES.register(modEventBus);
+        ModMenuTypes.MENU_TYPES.register(modEventBus);
         ModRecipes.SERIALIZERS.register(modEventBus);
         ModSounds.SOUND_EVENTS.register(modEventBus);
         ModFeatures.FEATURES.register(modEventBus);
@@ -77,36 +79,48 @@ public class PizzaCraft
     private void doClientStuff(final FMLClientSetupEvent event)
     {
         //Screens
-        ScreenManager.register(ModContainerTypes.PIZZA.get(), ScreenPizza::new);
-        ScreenManager.register(ModContainerTypes.PIZZA_BAG.get(), ScreenPizzaBag::new);
+        MenuScreens.register(ModMenuTypes.PIZZA.get(), ScreenPizza::new);
+        MenuScreens.register(ModMenuTypes.PIZZA_BAG.get(), ScreenPizzaBag::new);
         //ScreenManager.registerFactory(ModContainerTypes.OVEN.get(), ScreenOven::new);
 
         //TESRs
-        ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.CHOPPING_BOARD.get(), ChoppingBoardRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.MORTAR_AND_PESTLE.get(), MortarAndPestleRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.BASIN.get(), BasinRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(ModTileEntityTypes.PIZZA.get(), PizzaRenderer::new);
+        BlockEntityRenderers.register(ModBlockEntityTypes.CHOPPING_BOARD.get(), ChoppingBoardRenderer::new);
+        BlockEntityRenderers.register(ModBlockEntityTypes.MORTAR_AND_PESTLE.get(), MortarAndPestleRenderer::new);
+        BlockEntityRenderers.register(ModBlockEntityTypes.BASIN.get(), BasinRenderer::new);
+        BlockEntityRenderers.register(ModBlockEntityTypes.PIZZA.get(), PizzaRenderer::new);
+
+
 
         //RenderTypes
-        RenderTypeLookup.setRenderLayer(ModBlocks.PIZZA.get(), RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(ModBlocks.RAW_PIZZA.get(), RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(ModBlocks.OVEN.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.RED_PIZZA_BAG.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.PIZZA.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.RAW_PIZZA.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.OVEN.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.RED_PIZZA_BAG.get(), RenderType.cutout());
 
         //Trees
-        RenderTypeLookup.setRenderLayer(ModBlocks.OLIVE_SAPLING.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.OLIVE_LEAVES.get(), RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(ModBlocks.FRUIT_OLIVE_LEAVES.get(), RenderType.cutoutMipped());
-        RenderTypeLookup.setRenderLayer(ModBlocks.OLIVE_TRAPDOOR.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.OLIVE_SAPLING.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.OLIVE_LEAVES.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.FRUIT_OLIVE_LEAVES.get(), RenderType.cutoutMipped());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.OLIVE_TRAPDOOR.get(), RenderType.cutout());
 
         //Crops
-        RenderTypeLookup.setRenderLayer(ModBlocks.BROCCOLI.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.CORNS.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.CUCUMBERS.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.ONIONS.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.PEPPERS.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.PINEAPPLE.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.TOMATOES.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BROCCOLI.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.CORNS.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.CUCUMBERS.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.ONIONS.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.PEPPERS.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.PINEAPPLE.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.TOMATOES.get(), RenderType.cutout());
+
+        if(curiosLoaded)
+        {
+           registerCurioRenderer();
+        }
+    }
+
+    private void registerCurioRenderer()
+    {
+        CuriosRendererRegistry.register(ModItems.RED_PIZZA_BAG.get(), PizzaBagCurioRenderer::new);
     }
 
     private void onFinish(final FMLLoadCompleteEvent event)

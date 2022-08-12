@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "pizzacraft:stone_pizza_peel"
+            "items": [
+              "pizzacraft:stone_pizza_peel"
+            ]
           }
         ]
       }
@@ -31,7 +33,9 @@
       "conditions": {
         "items": [
           {
-            "item": "pizzacraft:golden_pizza_peel"
+            "items": [
+              "pizzacraft:golden_pizza_peel"
+            ]
           }
         ]
       }
@@ -41,7 +45,9 @@
       "conditions": {
         "items": [
           {
-            "item": "pizzacraft:iron_pizza_peel"
+            "items": [
+              "pizzacraft:iron_pizza_peel"
+            ]
           }
         ]
       }
@@ -51,7 +57,9 @@
       "conditions": {
         "items": [
           {
-            "item": "pizzacraft:diamond_pizza_peel"
+            "items": [
+              "pizzacraft:diamond_pizza_peel"
+            ]
           }
         ]
       }
@@ -61,7 +69,9 @@
       "conditions": {
         "items": [
           {
-            "item": "pizzacraft:netherite_pizza_peel"
+            "items": [
+              "pizzacraft:netherite_pizza_peel"
+            ]
           }
         ]
       }

@@ -21,7 +21,9 @@
       "conditions": {
         "location": {
           "block": {
-            "block": "pizzacraft:pizza"
+            "blocks": [
+              "pizzacraft:pizza"
+            ]
           }
         }
       }

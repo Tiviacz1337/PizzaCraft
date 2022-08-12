@@ -1,41 +1,46 @@
 package com.tiviacz.pizzacraft.blocks;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
-import com.tiviacz.pizzacraft.init.ModItems;
+import com.tiviacz.pizzacraft.blockentity.ChoppingBoardBlockEntity;
 import com.tiviacz.pizzacraft.items.KnifeItem;
-import com.tiviacz.pizzacraft.tileentity.ChoppingBoardTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.*;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.IItemHandler;
 
-public class ChoppingBoardBlock extends Block //HorizontalBlock
+public class ChoppingBoardBlock extends Block implements EntityBlock
 {
     //public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
-    public ChoppingBoardBlock(Properties properties)
+    public ChoppingBoardBlock(BlockBehaviour.Properties properties)
     {
         super(properties);
         //this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context)
     {
         return Block.box(2.0D, 0.0D, 2.0D, 14.0D, 1.0D, 14.0D);
     /*    switch(state.get(HORIZONTAL_FACING))
@@ -49,39 +54,25 @@ public class ChoppingBoardBlock extends Block //HorizontalBlock
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit)
     {
-        ItemStack[] possibleDrops = new ItemStack[]{
-                ModItems.BROCCOLI_SEEDS.get().getDefaultInstance(),
-                ModItems.CUCUMBER_SEEDS.get().getDefaultInstance(),
-                ModItems.PEPPER_SEEDS.get().getDefaultInstance(),
-                ModItems.PINEAPPLE_SEEDS.get().getDefaultInstance(),
-                ModItems.TOMATO_SEEDS.get().getDefaultInstance(),
-                ModItems.CORN.get().getDefaultInstance(),
-                ModItems.ONION.get().getDefaultInstance()};
-
-       // System.out.println(possibleDrops.length - 1);
-        //System.out.println(possibleDrops.size());
-        //System.out.println(possibleDrops.get(s));
-        System.out.println(worldIn.getRandom().nextInt(possibleDrops.length));
-
-        if(worldIn.getBlockEntity(pos) instanceof ChoppingBoardTileEntity)
+        if(level.getBlockEntity(pos) instanceof ChoppingBoardBlockEntity)
         {
-            ChoppingBoardTileEntity choppingBoardTile = (ChoppingBoardTileEntity)worldIn.getBlockEntity(pos);
+            ChoppingBoardBlockEntity choppingBoardTile = (ChoppingBoardBlockEntity)level.getBlockEntity(pos);
             ItemStack itemHeld = player.getItemInHand(handIn);
             ItemStack itemOffhand = player.getOffhandItem();
 
             // Placing items on the board. It should prefer off-hand placement, unless it's a BlockItem (since it never passes to off-hand...)
             if(choppingBoardTile.isEmpty())
             {
-                if(!itemOffhand.isEmpty() && handIn == Hand.MAIN_HAND && !(itemHeld.getItem() instanceof BlockItem))
+                if(!itemOffhand.isEmpty() && handIn == InteractionHand.MAIN_HAND && !(itemHeld.getItem() instanceof BlockItem))
                 {
-                    return ActionResultType.PASS; // main-hand passes to off-hand
+                    return InteractionResult.PASS; // main-hand passes to off-hand
                 }
 
                 if(itemHeld.isEmpty())
                 {
-                    return ActionResultType.PASS;
+                    return InteractionResult.PASS;
                 }
 
                 else if(choppingBoardTile.addItem(itemHeld))
@@ -96,8 +87,8 @@ public class ChoppingBoardBlock extends Block //HorizontalBlock
                         choppingBoardTile.setFacing(player.getDirection().getOpposite());
                         choppingBoardTile.getInventory().insertItem(0, itemHeld.copy(), false);
                     }
-                    worldIn.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + worldIn.random.nextFloat());
-                    return ActionResultType.SUCCESS;
+                    level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
+                    return InteractionResult.SUCCESS;
                 }
             }
             // Processing the item with the held tool
@@ -106,26 +97,26 @@ public class ChoppingBoardBlock extends Block //HorizontalBlock
                 if(choppingBoardTile.canChop(itemHeld))
                 {
                     choppingBoardTile.chop(itemHeld, player);
-                    return ActionResultType.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
-                return ActionResultType.PASS;
+                return InteractionResult.PASS;
             }
             // Removing the board's item
-            else if(handIn == Hand.MAIN_HAND && !choppingBoardTile.removeItem().isEmpty())
+            else if(handIn == InteractionHand.MAIN_HAND && !choppingBoardTile.removeItem().isEmpty())
             {
                 if(!player.isCreative())
                 {
-                    InventoryHelper.dropItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), choppingBoardTile.getInventory().extractItem(0, 64, false));
+                    Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), choppingBoardTile.getInventory().extractItem(0, 64, false));
                 }
                 else
                 {
                     choppingBoardTile.getInventory().extractItem(0, 64, false);
                 }
-                worldIn.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + worldIn.random.nextFloat());
-                return ActionResultType.SUCCESS;
+                level.playSound(player, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
+                return InteractionResult.SUCCESS;
             }
         }
-        return ActionResultType.FAIL;
+        return InteractionResult.FAIL;
 
      /*   if(worldIn.getTileEntity(pos) instanceof ChoppingBoardTileEntity)
         {
@@ -181,28 +172,28 @@ public class ChoppingBoardBlock extends Block //HorizontalBlock
     }
 
     @Override
-    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving)
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving)
     {
         if(state.getBlock() != newState.getBlock())
         {
-            if(world.getBlockEntity(pos) instanceof ChoppingBoardTileEntity)
+            if(level.getBlockEntity(pos) instanceof ChoppingBoardBlockEntity)
             {
-                IItemHandler inventory = ((ChoppingBoardTileEntity)world.getBlockEntity(pos)).getInventory();
+                IItemHandler inventory = ((ChoppingBoardBlockEntity)level.getBlockEntity(pos)).getInventory();
 
                 for(int i = 0; i < inventory.getSlots(); i++)
                 {
-                    InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(i));
+                    Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(i));
                 }
-                world.updateNeighbourForOutputSignal(pos, this);
+                level.updateNeighbourForOutputSignal(pos, this);
             }
-            super.onRemove(state, world, pos, newState, isMoving);
+            super.onRemove(state, level, pos, newState, isMoving);
         }
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos)
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos)
     {
-        return facing == Direction.DOWN && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return facing == Direction.DOWN && !stateIn.canSurvive(level, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);
     }
 
    // @Override
@@ -218,11 +209,11 @@ public class ChoppingBoardBlock extends Block //HorizontalBlock
     }
 
     @Override
-    public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side)
+    public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction)
     {
-        if(blockAccess.getBlockEntity(pos) instanceof ChoppingBoardTileEntity)
+        if(level.getBlockEntity(pos) instanceof ChoppingBoardBlockEntity)
         {
-            ItemStack storedStack = ((ChoppingBoardTileEntity)blockAccess.getBlockEntity(pos)).getStoredStack();
+            ItemStack storedStack = ((ChoppingBoardBlockEntity)level.getBlockEntity(pos)).getStoredStack();
             return !storedStack.isEmpty() ? 15 : 0;
         }
         return 0;
@@ -232,15 +223,9 @@ public class ChoppingBoardBlock extends Block //HorizontalBlock
     //protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) { builder.add(FACING); }
 
     @Override
-    public boolean hasTileEntity(BlockState state)
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
     {
-        return true;
-    }
-
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world)
-    {
-        return new ChoppingBoardTileEntity();
+        return new ChoppingBoardBlockEntity(pos, state);
     }
 
     @Mod.EventBusSubscriber(modid = PizzaCraft.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -249,24 +234,24 @@ public class ChoppingBoardBlock extends Block //HorizontalBlock
         @SubscribeEvent
         public static void onSneakPlaceTool(PlayerInteractEvent.RightClickBlock event)
         {
-            World world = event.getWorld();
+            Level level = event.getWorld();
             BlockPos pos = event.getPos();
-            PlayerEntity player = event.getPlayer();
+            Player player = event.getPlayer();
             ItemStack heldItem = player.getMainHandItem();
-            TileEntity tile = world.getBlockEntity(event.getPos());
+            BlockEntity blockEntity = level.getBlockEntity(event.getPos());
 
-            if(player.isSecondaryUseActive() && !heldItem.isEmpty() && tile instanceof ChoppingBoardTileEntity)
+            if(player.isSecondaryUseActive() && !heldItem.isEmpty() && blockEntity instanceof ChoppingBoardBlockEntity)
             {
                 if(heldItem.getItem() instanceof KnifeItem || heldItem.getItem() instanceof TieredItem || heldItem.getItem() instanceof TridentItem || heldItem.getItem() instanceof ShearsItem)
                 {
-                    boolean success = ((ChoppingBoardTileEntity)tile).carveToolOnBoard(player.abilities.instabuild ? heldItem.copy() : heldItem);
+                    boolean success = ((ChoppingBoardBlockEntity)blockEntity).carveToolOnBoard(player.getAbilities().instabuild ? heldItem.copy() : heldItem);
 
                     if(success)
                     {
-                        ((ChoppingBoardTileEntity)tile).setFacing(player.getDirection().getOpposite());
-                        world.playSound(player, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.WOOD_PLACE, SoundCategory.BLOCKS, 1.0F, 0.8F);
+                        ((ChoppingBoardBlockEntity)blockEntity).setFacing(player.getDirection().getOpposite());
+                        level.playSound(player, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.WOOD_PLACE, SoundSource.BLOCKS, 1.0F, 0.8F);
                         event.setCanceled(true);
-                        event.setCancellationResult(ActionResultType.SUCCESS);
+                        event.setCancellationResult(InteractionResult.SUCCESS);
                     }
                 }
             }

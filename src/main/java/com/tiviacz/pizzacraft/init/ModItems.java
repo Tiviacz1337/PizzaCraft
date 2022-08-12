@@ -1,16 +1,15 @@
 package com.tiviacz.pizzacraft.init;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
-import com.tiviacz.pizzacraft.client.renderer.PizzaItemStackRenderer;
 import com.tiviacz.pizzacraft.common.PizzaCraftItemGroup;
 import com.tiviacz.pizzacraft.items.*;
-import net.minecraft.block.Block;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockNamedItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemTier;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemNameBlockItem;
+import net.minecraft.world.item.Tiers;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -18,8 +17,8 @@ public class ModItems
 {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, PizzaCraft.MODID);
 
-    public static final RegistryObject<Item> PIZZA = registerBlockItem("pizza", ModBlocks.PIZZA, pizzaProperties().stacksTo(1).setISTER(() -> PizzaItemStackRenderer::new));
-    public static final RegistryObject<Item> RAW_PIZZA = registerBlockItem("raw_pizza", ModBlocks.RAW_PIZZA, pizzaProperties().stacksTo(1).setISTER(() -> PizzaItemStackRenderer::new));
+    public static final RegistryObject<Item> PIZZA = ITEMS.register("pizza", () -> new PizzaBlockItem(ModBlocks.PIZZA.get(), pizzaProperties().stacksTo(1)));
+    public static final RegistryObject<Item> RAW_PIZZA = ITEMS.register("raw_pizza", () -> new RawPizzaBlockItem(ModBlocks.RAW_PIZZA.get(), pizzaProperties().stacksTo(1)));
     public static final RegistryObject<Item> DOUGH = registerBlockItem("dough", ModBlocks.DOUGH, pizzaProperties().stacksTo(16));
     public static final RegistryObject<Item> MORTAR_AND_PESTLE = registerBlockItem("mortar_and_pestle", ModBlocks.MORTAR_AND_PESTLE, pizzaProperties());
     public static final RegistryObject<Item> OVEN = registerBlockItem("oven", ModBlocks.OVEN, pizzaProperties());
@@ -53,31 +52,31 @@ public class ModItems
     public static final RegistryObject<Item> BLACKSTONE_BASIN = registerBlockItem("blackstone_basin", ModBlocks.BLACKSTONE_BASIN, pizzaProperties());
 
     //Outfits
-    public static final RegistryObject<Item> CHEF_HAT = ITEMS.register("chef_hat", () -> new ChefArmor(ArmorMaterials.CHEF, EquipmentSlotType.HEAD, pizzaProperties()));
-    public static final RegistryObject<Item> CHEF_SHIRT = ITEMS.register("chef_shirt", () -> new ChefArmor(ArmorMaterials.CHEF, EquipmentSlotType.CHEST, pizzaProperties()));
-    public static final RegistryObject<Item> CHEF_LEGGINGS = ITEMS.register("chef_leggings", () -> new ChefArmor(ArmorMaterials.CHEF, EquipmentSlotType.LEGS, pizzaProperties()));
-    public static final RegistryObject<Item> CHEF_BOOTS = ITEMS.register("chef_boots", () -> new ChefArmor(ArmorMaterials.CHEF, EquipmentSlotType.FEET, pizzaProperties()));
+    public static final RegistryObject<Item> CHEF_HAT = ITEMS.register("chef_hat", () -> new ChefArmor(ArmorMaterials.CHEF, EquipmentSlot.HEAD, pizzaProperties()));
+    public static final RegistryObject<Item> CHEF_SHIRT = ITEMS.register("chef_shirt", () -> new ChefArmor(ArmorMaterials.CHEF, EquipmentSlot.CHEST, pizzaProperties()));
+    public static final RegistryObject<Item> CHEF_LEGGINGS = ITEMS.register("chef_leggings", () -> new ChefArmor(ArmorMaterials.CHEF, EquipmentSlot.LEGS, pizzaProperties()));
+    public static final RegistryObject<Item> CHEF_BOOTS = ITEMS.register("chef_boots", () -> new ChefArmor(ArmorMaterials.CHEF, EquipmentSlot.FEET, pizzaProperties()));
 
-    public static final RegistryObject<Item> PIZZA_DELIVERY_CAP = ITEMS.register("pizza_delivery_cap", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, EquipmentSlotType.HEAD, pizzaProperties()));
-    public static final RegistryObject<Item> PIZZA_DELIVERY_SHIRT = ITEMS.register("pizza_delivery_shirt", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, EquipmentSlotType.CHEST, pizzaProperties()));
-    public static final RegistryObject<Item> PIZZA_DELIVERY_LEGGINGS = ITEMS.register("pizza_delivery_leggings", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, EquipmentSlotType.LEGS, pizzaProperties()));
-    public static final RegistryObject<Item> PIZZA_DELIVERY_BOOTS = ITEMS.register("pizza_delivery_boots", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, EquipmentSlotType.FEET, pizzaProperties()));
+    public static final RegistryObject<Item> PIZZA_DELIVERY_CAP = ITEMS.register("pizza_delivery_cap", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, EquipmentSlot.HEAD, pizzaProperties()));
+    public static final RegistryObject<Item> PIZZA_DELIVERY_SHIRT = ITEMS.register("pizza_delivery_shirt", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, EquipmentSlot.CHEST, pizzaProperties()));
+    public static final RegistryObject<Item> PIZZA_DELIVERY_LEGGINGS = ITEMS.register("pizza_delivery_leggings", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, EquipmentSlot.LEGS, pizzaProperties()));
+    public static final RegistryObject<Item> PIZZA_DELIVERY_BOOTS = ITEMS.register("pizza_delivery_boots", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, EquipmentSlot.FEET, pizzaProperties()));
 
     //Gear
     public static final RegistryObject<Item> RED_PIZZA_BAG = ITEMS.register("red_pizza_bag", () -> new PizzaBagItem(ModBlocks.RED_PIZZA_BAG.get(), pizzaProperties().stacksTo(1)));
 
     //Tools
     public static final RegistryObject<Item> ROLLING_PIN = ITEMS.register("rolling_pin", () -> new Item(pizzaProperties().stacksTo(1).durability(60)));
-    public static final RegistryObject<Item> STONE_KNIFE = ITEMS.register("stone_knife", () -> new KnifeItem(ItemTier.STONE, 1, -2.0F, pizzaProperties().stacksTo(1)));
-    public static final RegistryObject<Item> GOLDEN_KNIFE = ITEMS.register("golden_knife", () -> new KnifeItem(ItemTier.GOLD, 1, -2.0F, pizzaProperties().stacksTo(1)));
-    public static final RegistryObject<Item> IRON_KNIFE = ITEMS.register("iron_knife", () -> new KnifeItem(ItemTier.IRON, 1, -2.0F, pizzaProperties().stacksTo(1)));
-    public static final RegistryObject<Item> DIAMOND_KNIFE = ITEMS.register("diamond_knife", () -> new KnifeItem(ItemTier.DIAMOND, 1, -2.0F, pizzaProperties().stacksTo(1)));
-    public static final RegistryObject<Item> NETHERITE_KNIFE = ITEMS.register("netherite_knife", () -> new KnifeItem(ItemTier.NETHERITE, 1, -2.0F, pizzaProperties().stacksTo(1)));
-    public static final RegistryObject<Item> STONE_PIZZA_PEEL = ITEMS.register("stone_pizza_peel", () -> new PizzaPeelItem(ItemTier.STONE,1.5F, -3.0F, pizzaProperties().stacksTo(1)));
-    public static final RegistryObject<Item> GOLDEN_PIZZA_PEEL = ITEMS.register("golden_pizza_peel", () -> new PizzaPeelItem( ItemTier.GOLD,1.5F, -3.0F, pizzaProperties().stacksTo(1)));
-    public static final RegistryObject<Item> IRON_PIZZA_PEEL = ITEMS.register("iron_pizza_peel", () -> new PizzaPeelItem(ItemTier.IRON, 1.5F, -3.0F, pizzaProperties().stacksTo(1)));
-    public static final RegistryObject<Item> DIAMOND_PIZZA_PEEL = ITEMS.register("diamond_pizza_peel", () -> new PizzaPeelItem(ItemTier.DIAMOND, 1.5F, -3.0F, pizzaProperties().stacksTo(1)));
-    public static final RegistryObject<Item> NETHERITE_PIZZA_PEEL = ITEMS.register("netherite_pizza_peel", () -> new PizzaPeelItem(ItemTier.NETHERITE, 1.5F, -3.0F, pizzaProperties().stacksTo(1)));
+    public static final RegistryObject<Item> STONE_KNIFE = ITEMS.register("stone_knife", () -> new KnifeItem(Tiers.STONE, 1, -2.0F, pizzaProperties().stacksTo(1)));
+    public static final RegistryObject<Item> GOLDEN_KNIFE = ITEMS.register("golden_knife", () -> new KnifeItem(Tiers.GOLD, 1, -2.0F, pizzaProperties().stacksTo(1)));
+    public static final RegistryObject<Item> IRON_KNIFE = ITEMS.register("iron_knife", () -> new KnifeItem(Tiers.IRON, 1, -2.0F, pizzaProperties().stacksTo(1)));
+    public static final RegistryObject<Item> DIAMOND_KNIFE = ITEMS.register("diamond_knife", () -> new KnifeItem(Tiers.DIAMOND, 1, -2.0F, pizzaProperties().stacksTo(1)));
+    public static final RegistryObject<Item> NETHERITE_KNIFE = ITEMS.register("netherite_knife", () -> new KnifeItem(Tiers.NETHERITE, 1, -2.0F, pizzaProperties().stacksTo(1)));
+    public static final RegistryObject<Item> STONE_PIZZA_PEEL = ITEMS.register("stone_pizza_peel", () -> new PizzaPeelItem(Tiers.STONE,1.5F, -3.0F, pizzaProperties().stacksTo(1)));
+    public static final RegistryObject<Item> GOLDEN_PIZZA_PEEL = ITEMS.register("golden_pizza_peel", () -> new PizzaPeelItem( Tiers.GOLD,1.5F, -3.0F, pizzaProperties().stacksTo(1)));
+    public static final RegistryObject<Item> IRON_PIZZA_PEEL = ITEMS.register("iron_pizza_peel", () -> new PizzaPeelItem(Tiers.IRON, 1.5F, -3.0F, pizzaProperties().stacksTo(1)));
+    public static final RegistryObject<Item> DIAMOND_PIZZA_PEEL = ITEMS.register("diamond_pizza_peel", () -> new PizzaPeelItem(Tiers.DIAMOND, 1.5F, -3.0F, pizzaProperties().stacksTo(1)));
+    public static final RegistryObject<Item> NETHERITE_PIZZA_PEEL = ITEMS.register("netherite_pizza_peel", () -> new PizzaPeelItem(Tiers.NETHERITE, 1.5F, -3.0F, pizzaProperties().stacksTo(1)));
 
     //Pizza Slice
     public static final RegistryObject<Item> PIZZA_SLICE = ITEMS.register("pizza_slice", () -> new PizzaSliceItem(pizzaProperties()));
@@ -107,9 +106,9 @@ public class ModItems
 
     //Vegetables
     public static final RegistryObject<Item> BROCCOLI = ITEMS.register("broccoli", () -> new Item(pizzaProperties().food(ModFoods.BROCCOLI)));
-    public static final RegistryObject<Item> CORN = ITEMS.register("corn", () -> new BlockNamedItem(ModBlocks.CORNS.get(), pizzaProperties().food(ModFoods.CORN)));
+    public static final RegistryObject<Item> CORN = ITEMS.register("corn", () -> new ItemNameBlockItem(ModBlocks.CORNS.get(), pizzaProperties().food(ModFoods.CORN)));
     public static final RegistryObject<Item> CUCUMBER = ITEMS.register("cucumber", () -> new Item(pizzaProperties().food(ModFoods.CUCUMBER)));
-    public static final RegistryObject<Item> ONION = ITEMS.register("onion", () -> new BlockNamedItem(ModBlocks.ONIONS.get(), pizzaProperties().food(ModFoods.ONION)));
+    public static final RegistryObject<Item> ONION = ITEMS.register("onion", () -> new ItemNameBlockItem(ModBlocks.ONIONS.get(), pizzaProperties().food(ModFoods.ONION)));
     public static final RegistryObject<Item> PEPPER = ITEMS.register("pepper", () -> new Item(pizzaProperties().food(ModFoods.PEPPER)));
     public static final RegistryObject<Item> TOMATO = ITEMS.register("tomato", () -> new Item(pizzaProperties().food(ModFoods.TOMATO)));
 
@@ -136,13 +135,13 @@ public class ModItems
     public static final RegistryObject<Item> CHEESE = ITEMS.register("cheese", () -> new Item(pizzaProperties().food(ModFoods.CHEESE)));
 
     //Seeds
-    public static final RegistryObject<Item> BROCCOLI_SEEDS = ITEMS.register("broccoli_seeds", () -> new BlockNamedItem(ModBlocks.BROCCOLI.get(), pizzaProperties()));
+    public static final RegistryObject<Item> BROCCOLI_SEEDS = ITEMS.register("broccoli_seeds", () -> new ItemNameBlockItem(ModBlocks.BROCCOLI.get(), pizzaProperties()));
     //public static final RegistryObject<Item> CORN_SEED = ITEMS.register("corn_seed", () -> new BlockNamedItem(ModBlocks.CORN_CROP.get(), pizzaProperties()));
-    public static final RegistryObject<Item> CUCUMBER_SEEDS = ITEMS.register("cucumber_seeds", () -> new BlockNamedItem(ModBlocks.CUCUMBERS.get(), pizzaProperties()));
+    public static final RegistryObject<Item> CUCUMBER_SEEDS = ITEMS.register("cucumber_seeds", () -> new ItemNameBlockItem(ModBlocks.CUCUMBERS.get(), pizzaProperties()));
     //public static final RegistryObject<Item> ONION_SEED = ITEMS.register("onion_seed", () -> new BlockNamedItem(ModBlocks.ONION_CROP.get(), pizzaProperties()));
-    public static final RegistryObject<Item> PEPPER_SEEDS = ITEMS.register("pepper_seeds", () -> new BlockNamedItem(ModBlocks.PEPPERS.get(), pizzaProperties()));
-    public static final RegistryObject<Item> PINEAPPLE_SEEDS = ITEMS.register("pineapple_seeds", () -> new BlockNamedItem(ModBlocks.PINEAPPLE.get(), pizzaProperties()));
-    public static final RegistryObject<Item> TOMATO_SEEDS = ITEMS.register("tomato_seeds", () -> new BlockNamedItem(ModBlocks.TOMATOES.get(), pizzaProperties()));
+    public static final RegistryObject<Item> PEPPER_SEEDS = ITEMS.register("pepper_seeds", () -> new ItemNameBlockItem(ModBlocks.PEPPERS.get(), pizzaProperties()));
+    public static final RegistryObject<Item> PINEAPPLE_SEEDS = ITEMS.register("pineapple_seeds", () -> new ItemNameBlockItem(ModBlocks.PINEAPPLE.get(), pizzaProperties()));
+    public static final RegistryObject<Item> TOMATO_SEEDS = ITEMS.register("tomato_seeds", () -> new ItemNameBlockItem(ModBlocks.TOMATOES.get(), pizzaProperties()));
 
     public static RegistryObject<Item> registerBlockItem(final String name, RegistryObject<Block> block, Item.Properties properties)
     {
