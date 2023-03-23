@@ -11,15 +11,17 @@ import net.minecraft.world.level.levelgen.placement.RarityFilter;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.List;
+
 public class ModPlacedFeatures
 {
     public static final DeferredRegister<PlacedFeature> PLACED_FEATURES = DeferredRegister.create(Registry.PLACED_FEATURE_REGISTRY, PizzaCraft.MODID);
 
-    public static final RegistryObject<PlacedFeature> OLIVE_PLACED = PLACED_FEATURES.register("olive_placed", () -> new PlacedFeature(
-            (Holder<ConfiguredFeature<?,?>>)(Holder<? extends ConfiguredFeature<?, ?>>)ModFeatures.OLIVE_SPAWN, VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(5))));
-    //public static final Holder<PlacedFeature> OLIVE_CHECKED = PlacementUtils.register("olive_checked", ModFeatures.OLIVE,
-    //        PlacementUtils.filteredByBlockSurvival(ModBlocks.OLIVE_SAPLING.get()));
+    public static final RegistryObject<PlacedFeature> OLIVE_CHECKED = PLACED_FEATURES.register("olive_checked",
+            () -> new PlacedFeature(ModConfiguredFeatures.OLIVE.getHolder().get(),
+                    List.of(PlacementUtils.filteredByBlockSurvival(ModBlocks.OLIVE_SAPLING.get()))));
 
-  //  public static final Holder<PlacedFeature> OLIVE_PLACED = PlacementUtils.register("olive_placed", ModFeatures.OLIVE_SPAWN,
-   //         VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(5))); //PlacementUtils.countExtra(1, 0.1F, 2)));
+    public static final RegistryObject<PlacedFeature> OLIVE_PLACED = PLACED_FEATURES.register("olive_placed",
+            () -> new PlacedFeature(ModConfiguredFeatures.OLIVE_SPAWN.getHolder().get(), VegetationPlacements.treePlacement(
+                    PlacementUtils.countExtra(1, 0.01f, 2))));
 }

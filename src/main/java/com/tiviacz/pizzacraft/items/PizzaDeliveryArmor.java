@@ -44,7 +44,7 @@ public class PizzaDeliveryArmor extends ArmorItem
         consumer.accept(new IClientItemExtensions()
         {
             @Override
-            public HumanoidModel<?> getGenericArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> humanoid)
+            public HumanoidModel<?> getHumanoidArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> humanoid)
             {
                 if(armorSlot == EquipmentSlot.HEAD)
                 {
@@ -53,7 +53,7 @@ public class PizzaDeliveryArmor extends ArmorItem
 
                     return hat;
                 }
-                return null;
+                return humanoid;
             }
         });
     }

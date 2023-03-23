@@ -94,7 +94,11 @@ public class KnifeItem extends SwordItem
                                 float newDamage = event.getAmount() * 1.25F;
                                 event.setAmount(newDamage);
                                 attacker.level.playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(), SoundEvents.PLAYER_ATTACK_CRIT, attacker.getSoundSource(), 1.0F, 1.2F);
-                                Minecraft.getInstance().particleEngine.createTrackingEmitter(victim, ParticleTypes.CRIT, 10);
+
+                                if(attacker.level.isClientSide)
+                                {
+                                    Minecraft.getInstance().particleEngine.createTrackingEmitter(victim, ParticleTypes.CRIT, 10);
+                                }
                             }
                         }
                     }

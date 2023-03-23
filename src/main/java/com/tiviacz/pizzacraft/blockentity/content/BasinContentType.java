@@ -1,4 +1,4 @@
-package com.tiviacz.pizzacraft.blockentity;
+package com.tiviacz.pizzacraft.blockentity.content;
 
 public enum BasinContentType
 {

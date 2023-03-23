@@ -34,10 +34,4 @@ public class ModFeatures
                     new BlobFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0), 3),
                     new TwoLayersFeatureSize(1, 0, 1)
             ).ignoreVines().decorators(ImmutableList.of(new BeehiveDecorator(0.002F))).build());
-
-    public static final Holder<PlacedFeature> OLIVE_CHECKED = PlacementUtils.register("olive_checked", OLIVE,
-            PlacementUtils.filteredByBlockSurvival(ModBlocks.OLIVE_SAPLING.get()));
-
-    public static final Holder<ConfiguredFeature<RandomFeatureConfiguration, ?>> OLIVE_SPAWN = FeatureUtils.register("olive_spawn", Feature.RANDOM_SELECTOR,
-            new RandomFeatureConfiguration(ImmutableList.of(new WeightedPlacedFeature(OLIVE_CHECKED, 0.01F)), OLIVE_CHECKED));
 }

@@ -1,6 +1,7 @@
 package com.tiviacz.pizzacraft.init;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
+import com.tiviacz.pizzacraft.blockentity.content.SauceType;
 import com.tiviacz.pizzacraft.common.PizzaCraftItemGroup;
 import com.tiviacz.pizzacraft.items.*;
 import net.minecraft.world.entity.EquipmentSlot;
