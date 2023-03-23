@@ -1,4 +1,4 @@
-package com.tiviacz.pizzacraft.tileentity;
+package com.tiviacz.pizzacraft.tileentity.content;
 
 public enum BasinContentType
 {

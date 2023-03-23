@@ -4,6 +4,7 @@ import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.client.renderer.PizzaItemStackRenderer;
 import com.tiviacz.pizzacraft.common.PizzaCraftItemGroup;
 import com.tiviacz.pizzacraft.items.*;
+import com.tiviacz.pizzacraft.tileentity.content.SauceType;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.BlockItem;

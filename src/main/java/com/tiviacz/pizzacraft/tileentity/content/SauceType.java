@@ -1,4 +1,4 @@
-package com.tiviacz.pizzacraft.init;
+package com.tiviacz.pizzacraft.tileentity.content;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
 import net.minecraft.util.ResourceLocation;
@@ -11,10 +11,10 @@ public enum SauceType
     HOT("hot", 5, 1.2F, new float[] {0.8F, 0.01F, 0.01F});
     //OLIVE_OIL("olive_oil", 0, 0.0F, new float[] {1.0F, 1.0F, 1.0F}); //¯\_( ͡° ͜ʖ ͡°)_/¯ //#TODO OLIVE RENDERING
 
-    String name;
-    int hunger;
-    float saturation;
-    float[] particleColorRGB;
+    final String name;
+    final int hunger;
+    final float saturation;
+    final float[] particleColorRGB;
 
     SauceType(String name, int hunger, float satModifier, float[] particleColorRGB)
     {
@@ -22,7 +22,7 @@ public enum SauceType
         this.hunger = hunger;
         this.saturation = satModifier;
         this.particleColorRGB = particleColorRGB;
-        SauceRegistry.INSTANCE.register(this);
+        SauceRegistry.REGISTRY.register(this);
     }
 
     @Override

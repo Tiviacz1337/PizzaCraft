@@ -13,10 +13,6 @@ public class ModRecipes
 {
     public static final DeferredRegister<IRecipeSerializer<?>> SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, PizzaCraft.MODID);
 
-    //public static final IRecipeType<ChoppingRecipe> CHOPPING = IRecipeType.register(new ResourceLocation(PizzaCraft.MODID, "chopping").toString());
-    //public static final IRecipeType<MortarRecipe> MORTAR = IRecipeType.register(new ResourceLocation(PizzaCraft.MODID, "mortar").toString());
-    ///public static final IRecipeType<CrushingRecipe> CRUSHING = IRecipeType.register(new ResourceLocation(PizzaCraft.MODID, "crushing").toString());
-
     public static final RegistryObject<IRecipeSerializer<?>> CHOPPING_RECIPE_SERIALIZER = SERIALIZERS.register(ChoppingRecipeSerializer.ID.getPath(), () -> ChoppingRecipeSerializer.INSTANCE);
     public static final RegistryObject<IRecipeSerializer<?>> MORTAR_RECIPE_SERIALIZER = SERIALIZERS.register(MortarRecipeSerializer.ID.getPath(), () -> MortarRecipeSerializer.INSTANCE);
     public static final RegistryObject<IRecipeSerializer<?>> CRUSHING_RECIPE_SERIALIZER = SERIALIZERS.register(CrushingRecipeSerializer.ID.getPath(), () -> CrushingRecipeSerializer.INSTANCE);

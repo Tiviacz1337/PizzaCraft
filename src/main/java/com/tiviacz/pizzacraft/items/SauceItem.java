@@ -1,6 +1,6 @@
 package com.tiviacz.pizzacraft.items;
 
-import com.tiviacz.pizzacraft.init.SauceType;
+import com.tiviacz.pizzacraft.tileentity.content.SauceType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.UseAction;

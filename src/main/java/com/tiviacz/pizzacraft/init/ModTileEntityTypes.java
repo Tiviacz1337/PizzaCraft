@@ -27,9 +27,6 @@ public class ModTileEntityTypes
             () -> TileEntityType.Builder.of(PizzaBoardTileEntity::new,
                     ModBlocks.TOMATOES.get()).build(null));
 
- /*   public static final RegistryObject<TileEntityType<PizzaTileEntity>> PIZZA = TILE_ENTITY_TYPES.register("pizza",
-            () -> TileEntityType.Builder.create(PizzaTileEntity::new, ModBlocks.PIZZA.get()).build(null));
- */
     public static final RegistryObject<TileEntityType<PizzaTileEntity>> PIZZA = TILE_ENTITY_TYPES.register("pizza",
             () -> TileEntityType.Builder.of(PizzaTileEntity::new, ModBlocks.RAW_PIZZA.get(), ModBlocks.PIZZA.get()).build(null));
 
@@ -47,6 +44,4 @@ public class ModTileEntityTypes
     public static final RegistryObject<TileEntityType<PizzaBagTileEntity>> PIZZA_BAG = TILE_ENTITY_TYPES.register("pizza_bag",
             () -> TileEntityType.Builder.of(PizzaBagTileEntity::new,
                     ModBlocks.RED_PIZZA_BAG.get()).build(null));
-    //public static final RegistryObject<TileEntityType<OvenTileEntity>> OVEN = TILE_ENTITY_TYPES.register("oven",
-    //        () -> TileEntityType.Builder.create(OvenTileEntity::new, ModBlocks.OVEN.get()).build(null));
 }

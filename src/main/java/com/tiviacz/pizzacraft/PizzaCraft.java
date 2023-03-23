@@ -68,9 +68,11 @@ public class PizzaCraft
 
     private void setup(final FMLCommonSetupEvent event)
     {
-        event.enqueueWork(ModVanillaCompat::setup);
+        event.enqueueWork(() -> {
+            ModAdvancements.register();
+            ModVanillaCompat.setup();
+        });
 
-        ModAdvancements.register();
         TreeGenerator.setup(event);
     }
 

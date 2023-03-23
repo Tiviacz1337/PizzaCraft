@@ -67,25 +67,6 @@ public class PizzaHungerSystem //#TODO needs tweaks
             }
         }
 
-
-        //Little boost, if all ingredients are different :)
-  /*      if(ingredients.size() == 9)
-        {
-            for(int i = 0; i < ingredients.size(); i++)
-            {
-                for(int j = i + 1; j < ingredients.size(); j++)
-                {
-                    if(ingredients.get(i).getItem() != ingredients.get(j).getItem())
-                    {
-                        //this.effects.add(Pair.of(new EffectInstance(Effects.ABSORPTION, 3600, 2, true, false), 1.0F));
-                    }
-                }
-            }
-        } */
-
-        //baseHunger += 2;
-        //baseSaturation += 1.0F;
-
         this.hunger = baseHunger;
         this.saturation = baseSaturation;
         this.effects = effects;
