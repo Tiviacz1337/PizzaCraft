@@ -30,8 +30,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import java.util.Random;
-
 public class OvenBlock extends Block
 {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
@@ -95,7 +93,7 @@ public class OvenBlock extends Block
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entityIn)
     {
         boolean isLit = level.getBlockState(pos).getValue(LIT);
-        if(isLit && !entityIn.fireImmune() && entityIn instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entityIn))
+        if(isLit && !entityIn.fireImmune() && entityIn instanceof LivingEntity livingEntity && !EnchantmentHelper.hasFrostWalker(livingEntity))
         {
             entityIn.hurt(DamageSource.HOT_FLOOR, 1.0F);
         }
@@ -110,9 +108,9 @@ public class OvenBlock extends Block
 
         if(state.getValue(LIT))
         {
-            if(itemstack.getItem() instanceof BucketItem)
+            if(itemstack.getItem() instanceof BucketItem bucket)
             {
-                if(((BucketItem)itemstack.getItem()).getFluid().is(FluidTags.WATER))
+                if(bucket.getFluid().is(FluidTags.WATER))
                 {
                     extinguish(state, level, pos);
                     player.setItemInHand(handIn, new ItemStack(Items.BUCKET));

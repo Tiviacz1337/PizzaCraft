@@ -5,14 +5,14 @@ import com.tiviacz.pizzacraft.blocks.OvenBlock;
 import com.tiviacz.pizzacraft.blocks.PizzaBlock;
 import com.tiviacz.pizzacraft.blocks.RawPizzaBlock;
 import com.tiviacz.pizzacraft.client.PizzaBakedModel;
+import com.tiviacz.pizzacraft.common.PizzaBlockCalculator;
 import com.tiviacz.pizzacraft.container.PizzaMenu;
 import com.tiviacz.pizzacraft.init.ModBlockEntityTypes;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.init.PizzaLayers;
-import com.tiviacz.pizzacraft.util.FoodUtils;
+import com.tiviacz.pizzacraft.items.SauceItem;
+import com.tiviacz.pizzacraft.tags.ModTags;
 import com.tiviacz.pizzacraft.util.NBTUtils;
-import com.tiviacz.pizzacraft.util.Utils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -20,49 +20,47 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //#TODO sauce application has to be done
+public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
 {
-    private final ItemStackHandler inventory = createHandler();
-    private int leftBakingTime = -1;
-    private int leftFreshTime = -1;
+    public final ItemStackHandler inventory = createHandler();
+    private int bakingTime = -1;
     private final int baseBakingTime = 600;
-    private final int baseFreshTime = 1800;
     private int selectedSlot = 0;
-    private Pair<Integer, Float> refillment = Pair.of(0, 0.0F);
+
+    private int uniqueness = 0;
+    private int hunger = 0;
+    private float saturation = 0.0F;
     private List<Pair<MobEffectInstance, Float>> effects = new ArrayList<>();
+
     private final LazyOptional<ItemStackHandler> inventoryCapability = LazyOptional.of(() -> this.inventory);
 
-    private final String LEFT_BAKING_TIME = "LeftBakingTime";
-    private final String LEFT_FRESH_TIME = "LeftFreshTime";
-    private final String HUNGER = "Hunger";
-    private final String SATURATION = "Saturation";
-    private final String EFFECTS = "Effects";
+    private final String BAKING_TIME = "BakingTime";
 
     public PizzaBlockEntity(BlockPos pos, BlockState state)
     {
@@ -73,33 +71,29 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
     public void load(CompoundTag compound)
     {
         super.load(compound);
-        this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
-        this.leftBakingTime = compound.getInt(LEFT_BAKING_TIME);
-        this.leftFreshTime = compound.getInt(LEFT_FRESH_TIME);
-        this.refillment = Pair.of(compound.getInt(HUNGER), compound.getFloat(SATURATION));
-        this.effects = NBTUtils.readEffectsFromTag(compound);
+        this.inventory.deserializeNBT(compound.getCompound(NBTUtils.TAG_INVENTORY));
+        this.uniqueness = compound.getInt(NBTUtils.TAG_UNIQUENESS);
+        this.hunger = compound.getInt(NBTUtils.TAG_HUNGER);
+        this.saturation = compound.getFloat(NBTUtils.TAG_SATURATION);
+
+        this.bakingTime = compound.getInt(BAKING_TIME);
     }
 
     @Override
     public void saveAdditional(CompoundTag compound)
     {
         super.saveAdditional(compound);
-        compound.put(INVENTORY, this.inventory.serializeNBT());
-        compound.putInt(LEFT_BAKING_TIME, this.leftBakingTime);
-        compound.putInt(LEFT_FRESH_TIME, this.leftFreshTime);
-        compound.putInt(HUNGER, this.refillment.getFirst());
-        compound.putFloat(SATURATION, this.refillment.getSecond());
-        compound.put(EFFECTS, NBTUtils.writeEffectsToTag(this.effects));
-    }
+        compound.put(NBTUtils.TAG_INVENTORY, this.inventory.serializeNBT());
+        compound.putInt(NBTUtils.TAG_UNIQUENESS, this.uniqueness);
+        compound.putInt(NBTUtils.TAG_HUNGER, this.hunger);
+        compound.putFloat(NBTUtils.TAG_SATURATION, this.saturation);
 
-    /**
-     * Base Ingredients can be added to this list
-     */
-    public static Set<Item> baseIngredients = new HashSet<>(Collections.singletonList(ModItems.CHEESE.get()));
+        compound.putInt(BAKING_TIME, this.bakingTime);
+    }
 
     public InteractionResult onBlockActivated(Player player, InteractionHand hand)
     {
-        if(hand == InteractionHand.MAIN_HAND) // && !player.level.isClientSide)
+        if(hand == InteractionHand.MAIN_HAND)
         {
             ItemStack stack = player.getItemInHand(hand);
 
@@ -131,14 +125,16 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
                         if(!inventory.getStackInSlot(this.selectedSlot).isEmpty())
                         {
                             ItemStack modifiedCopy = inventory.getStackInSlot(this.selectedSlot).copy();
-                            modifiedCopy.setCount(1);
 
-                            if(!player.getInventory().add(modifiedCopy))
+                            if(this.selectedSlot != 9)
                             {
-                                level.addFreshEntity(new ItemEntity(player.level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), modifiedCopy));
+                                if(!player.getInventory().add(modifiedCopy))
+                                {
+                                    Containers.dropItemStack(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), modifiedCopy);
+                                }
                             }
                             level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
-                            decreaseInSlot(this.selectedSlot, 1);
+                            removeFromSlot(this.selectedSlot);
                             this.setChanged();
                             return InteractionResult.SUCCESS;
                         }
@@ -146,46 +142,39 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
                 }
                 else
                 {
-                /*    //Adding base ingredient
-                    if(inventory.getStackInSlot(0).isEmpty() && canAddIngredient(stack, this.selectedSlot))
-                    {
-                        player.setHeldItem(hand, inventory.insertItem(0, stack, false));
-                        world.playSound(player, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.7F, 0.8F + world.rand.nextFloat());
-                        return ActionResultType.SUCCESS;
-                    } */
-
                     //Get first empty or same stack
                     for(int i = 0; i < inventory.getSlots(); i++)
                     {
                         ItemStack firstEmpty = inventory.getStackInSlot(i);
 
-                      /*  if(Utils.checkItemStacksAndCount(firstEmpty, new ItemStack(stack.getItem(), 1), PizzaLayers.getMaxStackSizeMap().get(firstEmpty.getItem()) == null ? 0 : PizzaLayers.getMaxStackSizeMap().get(firstEmpty.getItem())) || firstEmpty.isEmpty())
-                        {
-                            this.selectedSlot = i;
-                            break;
-                        } */
-                        if(Utils.checkItemStacksAndCount(firstEmpty, new ItemStack(stack.getItem(), 1), PizzaLayers.getMaxStackSizeForStack(firstEmpty)) || firstEmpty.isEmpty())
+                        if(firstEmpty.isEmpty())
                         {
                             this.selectedSlot = i;
                             break;
                         }
                     }
 
+                    if(stack.getItem() instanceof PotionItem || stack.getItem() instanceof SauceItem)
+                    {
+                        ItemStack modifiedCopy = stack.copy();
+                        modifiedCopy.setCount(1);
+                        inventory.setStackInSlot(9, modifiedCopy);
+
+                        stack.shrink(1);
+                        ItemStack container = PizzaMenu.getItemStack(modifiedCopy);
+                        player.addItem(container);
+                        level.playSound(player, getBlockPos(), SoundEvents.AXOLOTL_SPLASH, SoundSource.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
+                        this.setChanged();
+                        return InteractionResult.SUCCESS;
+                    }
+
                     //Insert to selected slot or add to same stack if possible
                     if(this.selectedSlot < 9 && canAddIngredient(stack, this.selectedSlot))
                     {
-                        if(!inventory.getStackInSlot(this.selectedSlot).isEmpty())
-                        {
-                            ItemStack modifiedCopy = inventory.getStackInSlot(this.selectedSlot).copy();
-                            modifiedCopy.setCount(modifiedCopy.getCount() + 1);
-                            inventory.setStackInSlot(this.selectedSlot, modifiedCopy);
-                        }
-                        else
-                        {
-                            ItemStack modifiedCopy = stack.copy();
-                            modifiedCopy.setCount(1);
-                            inventory.setStackInSlot(this.selectedSlot, modifiedCopy);
-                        }
+                        ItemStack modifiedCopy = stack.copy();
+                        modifiedCopy.setCount(1);
+                        inventory.setStackInSlot(this.selectedSlot, modifiedCopy);
+
                         stack.shrink(1);
                         level.playSound(player, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
                         this.setChanged();
@@ -193,68 +182,42 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
                     }
                 }
             }
-
-            if(!isRaw())
-            {
-                if(stack.isEmpty())
-                {
-                    if(player.isCrouching())
-                    {
-                        //Open Gui
-                        openGUI(player, this, getBlockPos());
-                        return InteractionResult.SUCCESS;
-                    }
-                    else
-                    {
-                        //#TODO item removal
-                    }
-                }
-            }
         }
         return InteractionResult.FAIL;
     }
 
-    public void writeToSliceItemStack(ItemStack stack, int sliceNumber)
+    public void writeToSliceItemStack(ItemStack stack)
     {
-        CompoundTag compound = new CompoundTag();
-        if(isEmpty(inventory))
-        {
-            return;
-        }
-        compound.put(INVENTORY, this.inventory.serializeNBT());
-
-        if(FoodUtils.requiresAddition(this.refillment.getFirst(), sliceNumber))
-        {
-            compound.putBoolean("RequiresAddition", true);
-        }
-        stack.setTag(compound);
+        NBTUtils.saveInventoryToStack(stack, this.inventory);
+        NBTUtils.setUniqueness(stack, this.uniqueness);
+        NBTUtils.setHunger(stack, this.hunger / 7);
+        NBTUtils.setSaturation(stack, this.saturation);
     }
 
-    public void writeToItemStack(ItemStack stack)
+    public ItemStack writeToItemStack(ItemStack stack)
     {
-        CompoundTag compound = new CompoundTag();
-        if(isEmpty(inventory))
-        {
-            return;
-        }
-        compound.put(INVENTORY, this.inventory.serializeNBT());
-        compound.putInt(LEFT_FRESH_TIME, this.leftFreshTime);
-        stack.setTag(compound);
+        NBTUtils.saveInventoryToStack(stack, this.inventory);
+        NBTUtils.setUniqueness(stack, this.uniqueness);
+        NBTUtils.setHunger(stack, this.hunger);
+        NBTUtils.setSaturation(stack, this.saturation);
+
+        return stack;
     }
 
     public void readFromStack(ItemStack stack)
     {
         if(stack.getTag() != null)
         {
-            this.inventory.deserializeNBT(stack.getTag().getCompound(INVENTORY));
-            this.leftFreshTime = stack.getTag().getInt(LEFT_FRESH_TIME);
-            this.setHungerAndSaturationRefillment();
+            this.inventory.deserializeNBT(stack.getTag().getCompound(NBTUtils.TAG_INVENTORY));
+            this.uniqueness = stack.getTag().getInt(NBTUtils.TAG_UNIQUENESS);
+            this.hunger = stack.getTag().getInt(NBTUtils.TAG_HUNGER);
+            this.saturation = stack.getTag().getFloat(NBTUtils.TAG_SATURATION);
         }
     }
 
     // ======== BAKING ========
 
-    public boolean isFresh() {
+  /*  public boolean isFresh() {
         return this.leftFreshTime > 0;
     }
 
@@ -265,16 +228,16 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
 
     public int getDefaultFreshTime() {
         return this.baseFreshTime;
-    }
+    } */
 
     public boolean isBaking()
     {
-        return this.leftBakingTime > 0;
+        return this.bakingTime > 0;
     }
 
-    public int getLeftBakingTime()
+    public int getBakingTime()
     {
-        return this.leftBakingTime;
+        return this.bakingTime;
     }
 
     public int getDefaultBakingTime()
@@ -294,7 +257,7 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
     /**
      * Each stack increases baking time adding 20 * stack#getCount() to baseBakingTime
      */
-    public int getBakingTime()
+    public int getCalculatedBakingTime()
     {
         int bakingTime = this.getDefaultBakingTime();
 
@@ -308,17 +271,16 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
         return bakingTime;
     }
 
-    //@Override
     public static void tick(Level level, BlockPos pos, BlockState state, PizzaBlockEntity blockEntity)
     {
-        if(!blockEntity.isRaw() && blockEntity.isFresh())
+       /* if(!blockEntity.isRaw() && blockEntity.isFresh())
         {
             blockEntity.leftFreshTime--;
 
             if(blockEntity.leftFreshTime == 0) {
                 blockEntity.leftFreshTime = -1;
             }
-        }
+        } */
 
         if(blockEntity.isRaw())
         {
@@ -326,64 +288,60 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
             {
                // world.playSound(null, pos, ModSounds.SIZZLING_SOUND.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
 
-                blockEntity.leftBakingTime--;
+                blockEntity.bakingTime--;
 
-                if(blockEntity.leftBakingTime == 0 || !(level.getBlockState(blockEntity.getBlockPos().below()).getBlock() instanceof OvenBlock))
+                if(blockEntity.bakingTime == 0 || !(level.getBlockState(blockEntity.getBlockPos().below()).getBlock() instanceof OvenBlock))
                 {
-                    if(blockEntity.leftBakingTime == 0)
+                    if(blockEntity.bakingTime == 0)
                     {
                         if(!level.isClientSide)
                         {
                             level.setBlockAndUpdate(blockEntity.getBlockPos(), ModBlocks.PIZZA.get().defaultBlockState());
                         }
-                        blockEntity.leftFreshTime = blockEntity.baseFreshTime;
+                       // blockEntity.leftFreshTime = blockEntity.baseFreshTime;
                     }
-                    blockEntity.leftBakingTime = -1;
+                    blockEntity.bakingTime = -1;
                 }
             }
 
             else if(!blockEntity.isBaking() && level.getBlockState(blockEntity.getBlockPos().below()).getBlock() instanceof OvenBlock)
             {
-                blockEntity.leftBakingTime = blockEntity.getBakingTime();
+                blockEntity.bakingTime = blockEntity.getCalculatedBakingTime();
             }
         }
     }
 
-    /**
-     * Probably needs tweak
-     */
-    public void setHungerAndSaturationRefillment()
+    public void updateFoodProperties(int hunger, float saturation, int uniqueness, List<Pair<MobEffectInstance, Float>> effects)
     {
-        PizzaHungerSystem instance = new PizzaHungerSystem(this.inventory);
-        this.refillment = Pair.of(instance.getHunger(), instance.getSaturation());
-        this.effects = instance.getEffects();
+        this.hunger = hunger;
+        this.saturation = saturation;
+        this.uniqueness = uniqueness;
+        this.effects = effects;
     }
 
-   // public List<com.mojang.datafixers.util.Pair<EffectInstance, Float>> getEffects()
-   // {
-   //     PizzaHungerSystem instance = new PizzaHungerSystem(this.inventory);
-    //    this.effects = instance.getEffects();
-        //return instance.getEffects();
-  //  }
-
-    public List<Pair<MobEffectInstance, Float>> getEffects()
+    public int getUniqueness()
     {
-        return this.effects;
+        return this.uniqueness;
     }
 
-    public Pair<Integer, Float> getRefillmentValues()
+    public int getHunger()
     {
-        return this.refillment;
+        return this.hunger;
     }
 
-    public int getHungerForSlice(int slice)
+    public float getSaturation()
     {
-        return FoodUtils.getHungerForSlice(this.refillment.getFirst(), slice);
+        return this.saturation;
+    }
+
+    public int getHungerForSlice()
+    {
+        return this.hunger / 7;
     }
 
     public float getSaturationForSlice()
     {
-        return this.refillment.getSecond() / 7;
+        return this.saturation;
     }
 
     // ======== ITEMHANDLER ========
@@ -393,89 +351,30 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
         return inventory;
     }
 
-    public void dropItemStack(int slot)
-    {
-        Containers.dropItemStack(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), inventory.getStackInSlot(slot));
-    }
-
     public boolean canAddIngredient(ItemStack stack, int slot)
     {
-        List<TagKey<Item>> tags = stack.getTags().toList();
-        for(TagKey<Item> tag : tags)
+        if(stack.isEdible() || stack.is(ModTags.INGREDIENTS))
         {
-            if(PizzaLayers.VALID_TAGS.contains(tag))// && inventory.getStackInSlot(slot).getCount() + 1 <= PizzaLayers.getMaxStackSizeForStack(stack))
-            {
-                if(inventory.getStackInSlot(slot).isEmpty())
-                {
-                    return true;
-                }
-                else
-                {
-                    if(inventory.getStackInSlot(slot).getCount() + 1 <= PizzaLayers.getMaxStackSizeForStack(inventory.getStackInSlot(slot)))
-                    {
-                        return true;
-                    }
-                }
-            }
+            return inventory.getStackInSlot(slot).isEmpty();
         }
         return false;
-        //return stack.getTags().anyMatch(t -> PizzaLayers.VALID_TAGS.contains(t.location()));
-       /* for(ResourceLocation tagLocation : stack.getTags())
-        {
-            if(PizzaLayers.VALID_TAGS.contains(tagLocation))
-            {
-                return true;
-            }
-        }
-        return false; */
     }
-  /*  public boolean canAddIngredient(ItemStack stack, int slot)
-    {
-        if(slot == 0)
-        {
-            return baseIngredients.contains(stack.getItem());
-        }
-        if(slot == 9)
-        {
-            return !isRaw();
-        }
-        else
-        {
-            if(!this.inventory.getStackInSlot(0).isEmpty() && !baseIngredients.contains(stack.getItem()))
-            {
-                return PizzaLayers.getItemToLayerMap().containsKey(stack.getItem());
-            }
-        }
-        return false;
-    } */
 
-    public void decreaseInSlot(int slot, int count)
+    public void removeFromSlot(int slot)
     {
-        ItemStack stack = inventory.getStackInSlot(slot);
-        if(stack.getCount() >= 2)
-        {
-            stack.setCount(stack.getCount() - count);
-        }
-        else
-        {
-            inventory.setStackInSlot(slot, ItemStack.EMPTY);
-        }
+        inventory.setStackInSlot(slot, ItemStack.EMPTY);
     }
 
     private ItemStackHandler createHandler()
     {
-        return new ItemStackHandler(9)
+        return new ItemStackHandler(10)
         {
-            @Override
-            protected int getStackLimit(int slot, @Nonnull ItemStack stack)
-            {
-                return PizzaLayers.getMaxStackSizeForStack(stack);
-            }
+            final PizzaBlockCalculator calculator = new PizzaBlockCalculator(this);
 
             @Override
             public int getSlotLimit(int slot)
             {
-                return getStackInSlot(slot).isEmpty() ? 1 : PizzaLayers.getMaxStackSizeForStack(getStackInSlot(slot));
+                return 1;
             }
 
             @Override
@@ -493,7 +392,10 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
             {
                 setChanged();
                 requestModelDataUpdate();
-                setHungerAndSaturationRefillment();
+
+                calculator.resetStats();
+                calculator.process();
+                updateFoodProperties(calculator.getHunger(), calculator.getSaturation(), calculator.getUniqueness(), calculator.getEffects());
             }
         };
     }
@@ -502,7 +404,7 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> cap, @Nullable final Direction side)
     {
-        if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if(cap == ForgeCapabilities.ITEM_HANDLER)
             return inventoryCapability.cast();
         return super.getCapability(cap, side);
     }
@@ -524,7 +426,7 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
 
     public void openGUI(Player player, MenuProvider menuSupplier, BlockPos pos)
     {
-        if(!player.level.isClientSide)
+        if(!player.getLevel().isClientSide)
         {
             NetworkHooks.openScreen((ServerPlayer)player, menuSupplier, pos);
         }
@@ -532,7 +434,6 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider //
 
     // ======== MODELDATA ========
 
-    @Nonnull
     @Override
     public ModelData getModelData()
     {

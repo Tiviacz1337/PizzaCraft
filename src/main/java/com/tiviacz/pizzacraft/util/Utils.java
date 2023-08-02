@@ -2,7 +2,9 @@ package com.tiviacz.pizzacraft.util;
 
 import com.tiviacz.pizzacraft.blockentity.PizzaBagBlockEntity;
 import com.tiviacz.pizzacraft.container.PizzaBagMenu;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.Containers;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -13,8 +15,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nullable;
+import java.util.stream.IntStream;
 
 public class Utils
 {
@@ -23,26 +27,9 @@ public class Utils
         return targetType == type ? (BlockEntityTicker<A>) ticker : null;
     }
 
-   /* public static ResourceLocation matchRecipeTag(Map<?, ?> recipe, ItemStack stack)
+    public static void dropContents(Level pLevel, BlockPos pPos, ItemStackHandler handler)
     {
-        for(ResourceLocation tagLocation : stack.getItem().getTags())
-        {
-            if(recipe.containsKey(tagLocation))
-            {
-                return tagLocation;
-            }
-        }
-        return null;
-    } */
-
-    public static ItemStackHandler createHandlerFromStack(ItemStack stack, int size)
-    {
-        ItemStackHandler handler = new ItemStackHandler(size);
-        if(stack.getTag() != null)
-        {
-            handler.deserializeNBT(stack.getTag().getCompound("Inventory"));
-        }
-        return handler;
+        IntStream.range(0, handler.getSlots() - 1).forEach(i -> Containers.dropItemStack(pLevel, (double)pPos.getX(), (double)pPos.getY(), (double)pPos.getZ(), handler.getStackInSlot(i)));
     }
 
     public static void spawnItemStackInWorld(Level level, BlockPos pos, ItemStack stack)
@@ -50,6 +37,18 @@ public class Utils
         ItemEntity itemEntity = new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
         itemEntity.setDefaultPickUpDelay();
         level.addFreshEntity(itemEntity);
+    }
+
+    public static boolean isEmpty(ItemStackHandler handler)
+    {
+        for(int i = 0; i < handler.getSlots(); i++)
+        {
+            if(!handler.getStackInSlot(i).isEmpty())
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static int calculatePlayersUsing(Level level, PizzaBagBlockEntity tile, int p_213976_2_, int p_213976_3_, int p_213976_4_)
@@ -104,5 +103,10 @@ public class Utils
             }
         }
         return 0;
+    }
+
+    public static boolean isShiftPressed()
+    {
+        return GLFW.glfwGetKey(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_LEFT_SHIFT) == GLFW.GLFW_PRESS || GLFW.glfwGetKey(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_KEY_RIGHT_SHIFT) == GLFW.GLFW_PRESS;
     }
 }

@@ -2,14 +2,13 @@ package com.tiviacz.pizzacraft;
 
 import com.tiviacz.pizzacraft.client.gui.ScreenPizza;
 import com.tiviacz.pizzacraft.client.gui.ScreenPizzaBag;
+import com.tiviacz.pizzacraft.client.gui.ScreenPizzaStation;
 import com.tiviacz.pizzacraft.client.renderer.BasinRenderer;
 import com.tiviacz.pizzacraft.client.renderer.ChoppingBoardRenderer;
-import com.tiviacz.pizzacraft.client.renderer.MortarAndPestleRenderer;
 import com.tiviacz.pizzacraft.client.renderer.PizzaRenderer;
 import com.tiviacz.pizzacraft.compat.curios.PizzaBagCurioRenderer;
 import com.tiviacz.pizzacraft.config.PizzaCraftConfig;
 import com.tiviacz.pizzacraft.init.*;
-import com.tiviacz.pizzacraft.recipes.BasinRecipeRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -57,10 +56,9 @@ public class PizzaCraft
         ModRecipes.SERIALIZERS.register(modEventBus);
         ModRecipes.RECIPE_TYPES.register(modEventBus);
         ModSounds.SOUND_EVENTS.register(modEventBus);
-        ModPlacedFeatures.PLACED_FEATURES.register(modEventBus);
         ModLootModifiers.LOOT_MODIFIERS.register(modEventBus);
+        ModPlacedFeatures.PLACED_FEATURES.register(modEventBus);
         ModConfiguredFeatures.CONFIGURED_FEATURES.register(modEventBus);
-       // ModFeatures.FEATURES.register(modEventBus);
 
         curiosLoaded = ModList.get().isLoaded("curios");
     }
@@ -77,23 +75,19 @@ public class PizzaCraft
             ModAdvancements.register();
             ModVanillaCompat.setup();
         });
-        //TreeGenerator.setup(event);
     }
 
     private void doClientStuff(final FMLClientSetupEvent event)
     {
         //Screens
         MenuScreens.register(ModMenuTypes.PIZZA.get(), ScreenPizza::new);
+        MenuScreens.register(ModMenuTypes.PIZZA_STATION.get(), ScreenPizzaStation::new);
         MenuScreens.register(ModMenuTypes.PIZZA_BAG.get(), ScreenPizzaBag::new);
-        //ScreenManager.registerFactory(ModContainerTypes.OVEN.get(), ScreenOven::new);
 
-        //TESRs
+        //BlockEntityRenderers
         BlockEntityRenderers.register(ModBlockEntityTypes.CHOPPING_BOARD.get(), ChoppingBoardRenderer::new);
-        BlockEntityRenderers.register(ModBlockEntityTypes.MORTAR_AND_PESTLE.get(), MortarAndPestleRenderer::new);
         BlockEntityRenderers.register(ModBlockEntityTypes.BASIN.get(), BasinRenderer::new);
         BlockEntityRenderers.register(ModBlockEntityTypes.PIZZA.get(), PizzaRenderer::new);
-
-
 
         //RenderTypes
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.PIZZA.get(), RenderType.cutoutMipped());
@@ -129,7 +123,6 @@ public class PizzaCraft
 
     private void onFinish(final FMLLoadCompleteEvent event)
     {
-        BasinRecipeRegistry.addRecipesToRegistry();
         PizzaLayers.setMaps();
     }
 }

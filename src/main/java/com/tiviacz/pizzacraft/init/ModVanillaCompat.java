@@ -41,6 +41,7 @@ public class ModVanillaCompat
         registerCompostable(0.3F, ModItems.ONION_SLICE.get());
         registerCompostable(0.3F, ModItems.PEPPER_SLICE.get());
         registerCompostable(0.3F, ModItems.PINEAPPLE_SLICE.get());
+        registerCompostable(0.3F, ModItems.MUSHROOM_SLICE.get());
         registerCompostable(0.5F, ModItems.OLIVE.get());
         registerCompostable(0.65F, ModItems.BROCCOLI.get());
         registerCompostable(0.65F, ModItems.CUCUMBER.get());

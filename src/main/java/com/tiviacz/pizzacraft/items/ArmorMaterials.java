@@ -5,6 +5,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.LazyLoadedValue;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -37,15 +38,15 @@ public class ArmorMaterials implements ArmorMaterial
     }
 
     @Override
-    public int getDurabilityForSlot(EquipmentSlot slotIn)
+    public int getDurabilityForSlot(EquipmentSlot equipmentSlot)
     {
-        return MAX_DAMAGE_ARRAY[slotIn.getIndex()] * this.durability;
+        return MAX_DAMAGE_ARRAY[equipmentSlot.getIndex()] * this.durability;
     }
 
     @Override
-    public int getDefenseForSlot(EquipmentSlot slotIn)
+    public int getDefenseForSlot(EquipmentSlot equipmentSlot)
     {
-        return this.defense[slotIn.getIndex()];
+        return this.defense[equipmentSlot.getIndex()];
     }
 
     @Override

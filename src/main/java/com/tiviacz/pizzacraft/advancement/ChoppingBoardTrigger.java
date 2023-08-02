@@ -23,7 +23,7 @@ public class ChoppingBoardTrigger extends SimpleCriterionTrigger<ChoppingBoardTr
 
     @Override
     protected Instance createInstance(JsonObject json, EntityPredicate.Composite player, DeserializationContext conditionsParser) {
-        return new ChoppingBoardTrigger.Instance(player);
+        return new Instance(player);
     }
 
     public static class Instance extends AbstractCriterionTriggerInstance
@@ -32,8 +32,8 @@ public class ChoppingBoardTrigger extends SimpleCriterionTrigger<ChoppingBoardTr
             super(ChoppingBoardTrigger.ID, player);
         }
 
-        public static ChoppingBoardTrigger.Instance simple() {
-            return new ChoppingBoardTrigger.Instance(EntityPredicate.Composite.ANY);
+        public static Instance simple() {
+            return new Instance(EntityPredicate.Composite.ANY);
         }
 
         public boolean test() {

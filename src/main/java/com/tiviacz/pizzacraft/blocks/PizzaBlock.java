@@ -2,20 +2,16 @@ package com.tiviacz.pizzacraft.blocks;
 
 import com.mojang.datafixers.util.Pair;
 import com.tiviacz.pizzacraft.blockentity.PizzaBlockEntity;
-import com.tiviacz.pizzacraft.blockentity.PizzaHungerSystem;
+import com.tiviacz.pizzacraft.common.TasteHandler;
 import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.items.KnifeItem;
 import com.tiviacz.pizzacraft.items.PizzaPeelItem;
-import com.tiviacz.pizzacraft.util.FoodUtils;
-import com.tiviacz.pizzacraft.util.RenderUtils;
+import com.tiviacz.pizzacraft.util.NBTUtils;
 import com.tiviacz.pizzacraft.util.Utils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -23,8 +19,10 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -32,6 +30,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -43,11 +42,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
+import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Random;
 
 public class PizzaBlock extends Block implements EntityBlock
 {
@@ -74,12 +72,18 @@ public class PizzaBlock extends Block implements EntityBlock
     }
 
     @Override
+    public RenderShape getRenderShape(BlockState pState)
+    {
+        return RenderShape.MODEL;
+    }
+
+  /*  @Override
     @OnlyIn(Dist.CLIENT)
     public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) //#TODO add particle for cooked pizza
     {
-        if(rand.nextInt(3) == 0 && level.getBlockEntity(pos) instanceof PizzaBlockEntity)
+        if(rand.nextInt(3) == 0 && level.getBlockEntity(pos) instanceof PizzaBlockEntity blockEntity)
         {
-            if(((PizzaBlockEntity)level.getBlockEntity(pos)).isFresh())
+            //if(blockEntity.isFresh())
             {
                 double[] particlePos = RenderUtils.getPosRandomAboveBlockHorizontal(level, pos);
                 //worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(), ModSounds.SIZZLING_SOUND.get(), SoundCategory.BLOCKS, 1.0F, 1.0F);
@@ -91,26 +95,26 @@ public class PizzaBlock extends Block implements EntityBlock
                 level.addParticle(ParticleTypes.HAPPY_VILLAGER, particlePos[0], pos.getY() + 0.3D, particlePos[1], 0D, 3.0D + rand.nextDouble(), 0.0D);
             }
         }
-    }
+    } */
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit)
     {
         ItemStack itemstack = player.getItemInHand(handIn);
 
-        if(level.getBlockEntity(pos) instanceof PizzaBlockEntity)
+        if(level.getBlockEntity(pos) instanceof PizzaBlockEntity blockEntity)
         {
             if(itemstack.getItem() instanceof PizzaPeelItem && state.getValue(BITES) == 0)
             {
                 ItemStack stack = asItem().getDefaultInstance();
-                ((PizzaBlockEntity)level.getBlockEntity(pos)).writeToItemStack(stack);
+                stack = blockEntity.writeToItemStack(stack);
 
                 if(!level.isClientSide)
                 {
                     level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), stack));
                 }
 
-                level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 
                 return InteractionResult.SUCCESS;
             }
@@ -120,8 +124,7 @@ public class PizzaBlock extends Block implements EntityBlock
                 int i = state.getValue(BITES);
 
                 ItemStack stack = ModItems.PIZZA_SLICE.get().getDefaultInstance();
-                PizzaBlockEntity tile = (PizzaBlockEntity)level.getBlockEntity(pos);
-                tile.writeToSliceItemStack(stack, i);
+                blockEntity.writeToSliceItemStack(stack);
 
                 if(i < 6)
                 {
@@ -137,16 +140,10 @@ public class PizzaBlock extends Block implements EntityBlock
 
                 level.addFreshEntity(itemEntity);
 
-                tile.requestModelDataUpdate();
+                blockEntity.requestModelDataUpdate();
 
                 itemstack.hurtAndBreak(1, player, (entity) -> entity.broadcastBreakEvent(EquipmentSlot.MAINHAND));
 
-                return InteractionResult.SUCCESS;
-            }
-
-            if(itemstack.isEmpty() && player.isCrouching())
-            {
-                ((PizzaBlockEntity)level.getBlockEntity(pos)).openGUI(player, (PizzaBlockEntity)level.getBlockEntity(pos), pos);
                 return InteractionResult.SUCCESS;
             }
         }
@@ -165,13 +162,6 @@ public class PizzaBlock extends Block implements EntityBlock
 
     private InteractionResult eatPizza(LevelAccessor level, BlockPos pos, BlockState state, Player player)
     {
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-
-        if(blockEntity instanceof PizzaBlockEntity)
-        {
-            blockEntity.requestModelDataUpdate();
-        }
-
         if(!player.canEat(false))
         {
             return InteractionResult.PASS;
@@ -180,20 +170,20 @@ public class PizzaBlock extends Block implements EntityBlock
         {
             int i = state.getValue(BITES);
 
-            if(blockEntity instanceof PizzaBlockEntity)
+            if(level.getBlockEntity(pos) instanceof PizzaBlockEntity blockEntity)
             {
-                //player.addStat(Stats.EAT_CAKE_SLICE);
-                ((PizzaBlockEntity)blockEntity).setHungerAndSaturationRefillment();
+                ItemStack stack = ModItems.PIZZA_SLICE.get().getDefaultInstance();
+                blockEntity.writeToSliceItemStack(stack);
+                FoodProperties props = stack.getFoodProperties(player);
 
-                for(Pair<MobEffectInstance, Float> pair : ((PizzaBlockEntity) blockEntity).getEffects())
+                for(Pair<MobEffectInstance, Float> pair : props.getEffects())
                 {
                     if(!level.isClientSide() && pair.getFirst() != null && level.getRandom().nextFloat() < pair.getSecond())
                     {
                         player.addEffect(new MobEffectInstance(pair.getFirst()));
                     }
                 }
-
-                player.getFoodData().eat(((PizzaBlockEntity)blockEntity).getHungerForSlice(i), ((PizzaBlockEntity)blockEntity).getSaturationForSlice());
+                player.getFoodData().eat(props.getNutrition(), props.getSaturationModifier());
             }
 
             if(i < 6)
@@ -205,6 +195,11 @@ public class PizzaBlock extends Block implements EntityBlock
                 level.removeBlock(pos, false);
             }
 
+            if(level.getBlockEntity(pos) instanceof PizzaBlockEntity blockEntity)
+            {
+                blockEntity.requestModelDataUpdate();
+            }
+
             return InteractionResult.SUCCESS;
         }
     }
@@ -212,11 +207,11 @@ public class PizzaBlock extends Block implements EntityBlock
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
     {
-        if(level.getBlockEntity(pos) instanceof PizzaBlockEntity)
+        if(level.getBlockEntity(pos) instanceof PizzaBlockEntity blockEntity)
         {
             if(stack.getTag() != null)
             {
-                ((PizzaBlockEntity)level.getBlockEntity(pos)).readFromStack(stack);
+                blockEntity.readFromStack(stack);
             }
         }
     }
@@ -224,10 +219,10 @@ public class PizzaBlock extends Block implements EntityBlock
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player)
     {
-        if(world.getBlockEntity(pos) instanceof PizzaBlockEntity)
+        if(world.getBlockEntity(pos) instanceof PizzaBlockEntity blockEntity)
         {
             ItemStack stack = this.getCloneItemStack(world, pos, state);
-            ((PizzaBlockEntity)world.getBlockEntity(pos)).writeToItemStack(stack);
+            stack = blockEntity.writeToItemStack(stack);
             return stack;
         }
         return this.getCloneItemStack(state, target, world, pos, player);
@@ -246,7 +241,8 @@ public class PizzaBlock extends Block implements EntityBlock
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
+    {
         builder.add(BITES);
     }
 
@@ -272,51 +268,24 @@ public class PizzaBlock extends Block implements EntityBlock
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter level, List<Component> tooltip, TooltipFlag flagIn)
     {
         addInformationForPizza(stack, tooltip);
-      /*  ItemStackHandler handler = Utils.createHandlerFromStack(stack, 9);
-
-        for(int i = 0; i < handler.getSlots(); i++)
-        {
-            if(!handler.getStackInSlot(i).isEmpty())
-            {
-                ItemStack stackInSlot = handler.getStackInSlot(i);
-                TranslationTextComponent translatedText = new TranslationTextComponent(stackInSlot.getTranslationKey());
-                StringTextComponent textComponent = new StringTextComponent(stackInSlot.getCount() > 1 ? stackInSlot.getCount() + "x " : "");
-                tooltip.add(textComponent.append(translatedText).mergeStyle(TextFormatting.BLUE));
-            }
-        }
-        PizzaHungerSystem instance = new PizzaHungerSystem(handler);
-        tooltip.add(new StringTextComponent("Restores: " + FoodUtils.getHungerForSlice(instance.getHunger(), false) + ((instance.getHunger() % 7 != 0) ? " (+" + instance.getHunger() % 7 + ")" : "") + " Hunger per Slice").mergeStyle(TextFormatting.BLUE));
-        tooltip.add(new StringTextComponent("Restores: " + (float)(Math.round(instance.getSaturation() / 7 * 100.0) / 100.0) + " Saturation per Slice").mergeStyle(TextFormatting.BLUE)); */
     }
+
+    private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     public static void addInformationForPizza(ItemStack stack, List<Component> tooltip)
     {
-        ItemStackHandler handler = Utils.createHandlerFromStack(stack, 9);
-
-        for(int i = 0; i < handler.getSlots(); i++)
+        if(!Utils.isShiftPressed())
         {
-            if(!handler.getStackInSlot(i).isEmpty())
-            {
-                ItemStack stackInSlot = handler.getStackInSlot(i);
-                MutableComponent translatedText = Component.translatable(stackInSlot.getDescriptionId());
-                MutableComponent textComponent = Component.literal(stackInSlot.getCount() > 1 ? stackInSlot.getCount() + "x " : "");
-                tooltip.add(textComponent.append(translatedText).withStyle(ChatFormatting.BLUE));
-            }
+            tooltip.add(Component.translatable("information.pizzacraft.view_ingredients"));
         }
-        PizzaHungerSystem instance = new PizzaHungerSystem(handler);
-        tooltip.add(Component.translatable("information.pizzacraft.hunger", FoodUtils.getHungerForSlice(instance.getHunger(), false), ((instance.getHunger() % 7 != 0) ? " (+" + instance.getHunger() % 7 + ")" : ""), instance.getHunger()).withStyle(ChatFormatting.BLUE));
-        tooltip.add(Component.translatable("information.pizzacraft.saturation", (float)(Math.round(instance.getSaturation() / 7 * 100.0) / 100.0), (float)(Math.round(instance.getSaturation() * 100.0) / 100.0)).withStyle(ChatFormatting.BLUE));
 
-        if(!instance.getEffects().isEmpty())
+        tooltip.add(Component.translatable("information.pizzacraft.taste", new TasteHandler(NBTUtils.getUniqueness(stack), 9).getTaste().toString()));
+        tooltip.add(Component.translatable("information.pizzacraft.hunger", NBTUtils.getHunger(stack) / 7, NBTUtils.getHunger(stack)).withStyle(ChatFormatting.BLUE));
+        tooltip.add(Component.translatable("information.pizzacraft.saturation", decimalFormat.format(NBTUtils.getSaturation(stack))).withStyle(ChatFormatting.BLUE));
+
+        if(!NBTUtils.getSauceStack(stack).isEmpty())
         {
-            tooltip.add(Component.translatable("information.pizzacraft.effects").withStyle(ChatFormatting.GOLD));
-
-            for(Pair<MobEffectInstance, Float> pair : instance.getEffects())
-            {
-                tooltip.add(Component.translatable(pair.getFirst().getDescriptionId()).withStyle(pair.getFirst().getEffect().getCategory().getTooltipFormatting()));
-            }
+            PotionUtils.addPotionTooltip(NBTUtils.getSauceStack(stack), tooltip, 1.0F);
         }
-        //tooltip.add(new StringTextComponent("Restores: " + FoodUtils.getHungerForSlice(instance.getHunger(), false) + ((instance.getHunger() % 7 != 0) ? " (+" + instance.getHunger() % 7 + ")" : "") + " Hunger per Slice").mergeStyle(TextFormatting.BLUE));
-        //tooltip.add(new StringTextComponent("Restores: " + (float)(Math.round(instance.getSaturation() / 7 * 100.0) / 100.0) + " Saturation per Slice").mergeStyle(TextFormatting.BLUE));
     }
 }

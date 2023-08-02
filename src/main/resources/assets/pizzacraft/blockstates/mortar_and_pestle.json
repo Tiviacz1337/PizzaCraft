@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "age=0": { "model": "pizzacraft:block/mortar_and_pestle" },
-    "age=1": { "model": "pizzacraft:block/mortar_and_pestle_1" },
-    "age=2": { "model": "pizzacraft:block/mortar_and_pestle_2" },
-    "age=3": { "model": "pizzacraft:block/mortar_and_pestle_3" }
-  }
-}

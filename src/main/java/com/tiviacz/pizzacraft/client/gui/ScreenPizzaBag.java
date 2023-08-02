@@ -30,8 +30,8 @@ public class ScreenPizzaBag extends AbstractContainerScreen<PizzaBagMenu> implem
     @Override
     protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY)
     {
-        this.font.draw(poseStack, this.blockEntity.getDisplayName(), (float)8, (float)6, 4210752);
-        this.font.draw(poseStack, this.playerInventoryTitle, (float)8, (float)(this.imageHeight - 92), 4210752);
+        this.font.draw(poseStack, this.blockEntity.getDisplayName(), 8, 6, 4210752);
+        this.font.draw(poseStack, this.playerInventoryTitle, 8, (this.imageHeight - 92), 4210752);
     }
 
     @Override
@@ -50,7 +50,6 @@ public class ScreenPizzaBag extends AbstractContainerScreen<PizzaBagMenu> implem
         RenderSystem.setShaderTexture(0, SCREEN_PIZZA_BAG);
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
-        this.blit(poseStack, x, y, 0, 0, this.imageWidth, this.imageHeight);
+        blit(poseStack, x, y, 0, 0, this.imageWidth, this.imageHeight);
     }
 }
-

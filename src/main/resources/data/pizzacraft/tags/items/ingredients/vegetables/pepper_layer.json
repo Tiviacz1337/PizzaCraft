@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "pizzacraft:pepper_slice"
+    "pizzacraft:pepper_slice",
+    "pizzacraft:pepper"
   ]
 }

@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "pizzacraft:ham"
+    "pizzacraft:ham",
+    "minecraft:porkchop",
+    "minecraft:cooked_porkchop"
   ]
 }

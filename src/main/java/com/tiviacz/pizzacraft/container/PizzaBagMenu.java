@@ -114,7 +114,7 @@ public class PizzaBagMenu extends AbstractContainerMenu
         Objects.requireNonNull(inv, "inv cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
 
-        final BlockEntity blockEntity = inv.player.level.getBlockEntity(data.readBlockPos());
+        final BlockEntity blockEntity = inv.player.getLevel().getBlockEntity(data.readBlockPos());
 
         if(blockEntity instanceof PizzaBagBlockEntity)
         {

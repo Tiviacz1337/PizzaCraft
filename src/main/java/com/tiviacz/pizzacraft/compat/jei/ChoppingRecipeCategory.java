@@ -3,7 +3,6 @@ package com.tiviacz.pizzacraft.compat.jei;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.recipes.chopping.ChoppingRecipe;
-import mezz.jei.api.constants.ModIds;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -14,11 +13,8 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class ChoppingRecipeCategory implements IRecipeCategory<ChoppingRecipe>
 {
@@ -66,7 +62,7 @@ public class ChoppingRecipeCategory implements IRecipeCategory<ChoppingRecipe>
     public void setRecipe(IRecipeLayoutBuilder builder, ChoppingRecipe choppingRecipe, IFocusGroup focuses)
     {
         builder.addSlot(RecipeIngredientRole.INPUT, 15, 7).addItemStacks(Arrays.asList(choppingRecipe.getInput().getItems()));
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 64, 7).addItemStack(choppingRecipe.getResultItem());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 64, 7).addItemStack(choppingRecipe.output);
 
         //iIngredients.setInputIngredients(ingredients);
         //iIngredients.setOutput(VanillaTypes.ITEM, choppingRecipe.getResultItem());

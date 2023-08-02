@@ -24,7 +24,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 public class DoubleCropBlock extends CropBlock

@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 public class SimpleCropBlock extends CropBlock

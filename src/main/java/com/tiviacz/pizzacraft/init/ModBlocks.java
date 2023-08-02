@@ -26,22 +26,12 @@ public class ModBlocks
     public static final RegistryObject<Block> RAW_PIZZA = registerBlock("raw_pizza", () -> new RawPizzaBlock(Block.Properties.copy(Blocks.CAKE)));
     public static final RegistryObject<Block> DOUGH = registerBlock("dough", () -> new DoughBlock(Block.Properties.copy(Blocks.CAKE)));
     public static final RegistryObject<Block> CHEESE_BLOCK = registerBlock("cheese_block", () -> new CheeseBlock(Block.Properties.of(Material.CAKE, MaterialColor.COLOR_YELLOW).strength(0.5F).sound(SoundType.FUNGUS)));
-    public static final RegistryObject<Block> MORTAR_AND_PESTLE = registerBlock("mortar_and_pestle", () -> new MortarAndPestleBlock(Block.Properties.of(Material.STONE, MaterialColor.STONE).strength(1.5F, 6.0F)));
+    public static final RegistryObject<Block> PIZZA_STATION = registerBlock("pizza_station", () -> new PizzaStationBlock(Block.Properties.of(Material.STONE, MaterialColor.STONE).strength(1.5F, 6.0F)));
     public static final RegistryObject<Block> OVEN = registerBlock("oven", () -> new OvenBlock(Block.Properties.of(Material.STONE, MaterialColor.STONE).strength(1.5F, 6.0F).noOcclusion().lightLevel(getLightValueLit(9))));
 
-    //GEAR
+    //Gear
     public static final RegistryObject<Block> RED_PIZZA_BAG = registerBlock("red_pizza_bag", () -> new PizzaBagBlock(Block.Properties.copy(Blocks.RED_WOOL)));
 
-    //Pizza Boards
-  /*  public static final RegistryObject<Block> OAK_PIZZA_BOARD = registerBlock("oak_pizza_board", new PizzaBoard(Block.Properties.copy(Blocks.OAK_PLANKS)));
-    public static final RegistryObject<Block> BIRCH_PIZZA_BOARD = registerBlock("birch_pizza_board", new PizzaBoard(Block.Properties.copy(Blocks.BIRCH_PLANKS)));
-    public static final RegistryObject<Block> SPRUCE_PIZZA_BOARD = registerBlock("spruce_pizza_board", new PizzaBoard(Block.Properties.copy(Blocks.SPRUCE_PLANKS)));
-    public static final RegistryObject<Block> JUNGLE_PIZZA_BOARD = registerBlock("jungle_pizza_board", new PizzaBoard(Block.Properties.copy(Blocks.JUNGLE_PLANKS)));
-    public static final RegistryObject<Block> ACACIA_PIZZA_BOARD = registerBlock("acacia_pizza_board", new PizzaBoard(Block.Properties.copy(Blocks.ACACIA_PLANKS)));
-    public static final RegistryObject<Block> DARK_OAK_PIZZA_BOARD = registerBlock("dark_oak_pizza_board", new PizzaBoard(Block.Properties.copy(Blocks.DARK_OAK_PLANKS)));
-    public static final RegistryObject<Block> CRIMSON_PIZZA_BOARD = registerBlock("crimson_pizza_board", new PizzaBoard(Block.Properties.copy(Blocks.CRIMSON_PLANKS)));
-    public static final RegistryObject<Block> WARPED_PIZZA_BOARD = registerBlock("warped_pizza_board", new PizzaBoard(Block.Properties.copy(Blocks.WARPED_PLANKS)));
- */
     //Basins
     public static final RegistryObject<Block> GRANITE_BASIN = registerBlock("granite_basin", () -> new BasinBlock(Block.Properties.of(Material.STONE, MaterialColor.DIRT).strength(1.5F, 6.0F)));
     public static final RegistryObject<Block> DIORITE_BASIN = registerBlock("diorite_basin", () -> new BasinBlock(Block.Properties.of(Material.STONE, MaterialColor.QUARTZ).strength(1.5F, 6.0F)));
@@ -88,14 +78,6 @@ public class ModBlocks
     public static final RegistryObject<Block> PINEAPPLE = registerBlock("pineapple", () -> new SimpleCropBlock(Block.Properties.copy(Blocks.WHEAT), () -> ModItems.PINEAPPLE_SEEDS.get()));
     public static final RegistryObject<Block> TOMATOES = registerBlock("tomatoes", () -> new SimpleCropBlock(Block.Properties.copy(Blocks.WHEAT), () -> ModItems.TOMATO_SEEDS.get()));
 
-    //public static final RegistryObject<Block> BROCCOLI_CROP = registerBlock("broccoli_crop", new SimpleCropBlock(Block.Properties.copy(Blocks.WHEAT), () -> ModItems.BROCCOLI_SEED.get()));
-    //public static final RegistryObject<Block> CORN_CROP = registerBlock("corn_crop", new DoubleCropBlock(Block.Properties.copy(Blocks.WHEAT), () -> ModItems.CORN_SEED.get()));
-    //public static final RegistryObject<Block> CUCUMBER_CROP = registerBlock("cucumber_crop", new SimpleCropBlock(Block.Properties.copy(Blocks.WHEAT), () -> ModItems.CUCUMBER_SEED.get()));
-    //public static final RegistryObject<Block> ONION_CROP = registerBlock("onion_crop", new SimpleCropBlock(Block.Properties.copy(Blocks.WHEAT), () -> ModItems.ONION_SEED.get()));
-    //public static final RegistryObject<Block> PEPPER_CROP = registerBlock("pepper_crop", new SimpleCropBlock(Block.Properties.copy(Blocks.WHEAT), () -> ModItems.PEPPER_SEED.get()));
-    //public static final RegistryObject<Block> PINEAPPLE_CROP = registerBlock("pineapple_crop", new SimpleCropBlock(Block.Properties.copy(Blocks.WHEAT), () -> ModItems.PINEAPPLE_SEED.get()));
-    //public static final RegistryObject<Block> TOMATO_CROP = registerBlock("tomato_crop", new SimpleCropBlock(Block.Properties.copy(Blocks.WHEAT), () -> ModItems.TOMATO_SEED.get()));
-
     public static Block[] getChoppingBoards()
     {
         return new Block[] {
@@ -135,9 +117,4 @@ public class ModBlocks
         return BLOCKS.register(name, () -> new RotatedPillarBlock(Block.Properties.of(Material.WOOD, (state) ->
                 state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? topColor : barkColor).strength(2.0F).sound(SoundType.WOOD)));
     }
-
-/*    private static ToIntFunction<BlockState> getLightValueLit(int lightValue)
-    {
-        return blockState -> blockState.get(OvenBlock.LIT) ? lightValue : 0;
-    } */
 }

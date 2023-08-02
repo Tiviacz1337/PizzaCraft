@@ -62,7 +62,7 @@ public class CrushingRecipeCategory implements IRecipeCategory<CrushingRecipe>
     public void setRecipe(IRecipeLayoutBuilder builder, CrushingRecipe recipe, IFocusGroup focuses)
     {
         builder.addSlot(RecipeIngredientRole.INPUT, 6, 10).addIngredients(recipe.getInput());
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 69, 10).addItemStack(recipe.getResultItem());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 69, 10).addItemStack(recipe.stackOutput);
     }
 
   /*  @Nonnull

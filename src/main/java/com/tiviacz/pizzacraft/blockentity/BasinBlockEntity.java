@@ -6,8 +6,11 @@ import com.mojang.math.Vector3f;
 import com.tiviacz.pizzacraft.blockentity.content.BasinContent;
 import com.tiviacz.pizzacraft.blockentity.content.BasinContentType;
 import com.tiviacz.pizzacraft.blockentity.content.SauceType;
-import com.tiviacz.pizzacraft.init.*;
+import com.tiviacz.pizzacraft.init.ModBlockEntityTypes;
+import com.tiviacz.pizzacraft.init.ModBlocks;
+import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.recipes.crushing.CrushingRecipe;
+import com.tiviacz.pizzacraft.tags.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -26,8 +29,8 @@ import net.minecraft.world.item.MilkBucketItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -62,7 +65,8 @@ public class BasinBlockEntity extends BaseBlockEntity
         this.content = BasinContent.BasinContentRegistry.REGISTRY.fromString(compound.getString(BASIN_CONTENT));
         this.inventory.deserializeNBT(compound.getCompound(INVENTORY));
         this.squashedStack = ItemStack.of(compound.getCompound(SQUASHED_STACK));
-        //if(this.getBasinContent() != null && this.getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK) this.fermentProgress = compound.getInt(FERMENT_PROGRESS);
+
+        this.fermentProgress = compound.getInt(FERMENT_PROGRESS);
     }
 
     @Override
@@ -71,58 +75,13 @@ public class BasinBlockEntity extends BaseBlockEntity
         super.saveAdditional(compound);
         compound.putString(BASIN_CONTENT, content.toString());
         compound.put(INVENTORY, this.inventory.serializeNBT());
+
         CompoundTag squashedStack = new CompoundTag();
         this.squashedStack.save(squashedStack);
         compound.put(SQUASHED_STACK, squashedStack);
-        //if(this.getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK) compound.putInt(FERMENT_PROGRESS, this.fermentProgress);
+
+        compound.putInt(FERMENT_PROGRESS, this.fermentProgress);
     }
-
- /*   public boolean canRender()
-    {
-        PlayerEntity player = getWorld().getClosestPlayer(getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, 5.0D, false);
-
-        if(player != null && getWorld() != null)
-        {
-            BlockRayTraceResult result = RenderUtils.getBlockRayTraceResult(player, getWorld());
-            BlockPos resultPos = result.getPos();
-
-            if(result.getType() == RayTraceResult.Type.BLOCK && player.isSneaking())
-            {
-                return world.getBlockState(resultPos).getBlockState() == world.getBlockState(getPos()) && world.getTileEntity(resultPos) == this;
-            }
-        }
-        return false;
-    } */
-
-  /*  public List<ITextComponent> getTextComponentsForRenderer()
-    {
-        List<ITextComponent> textComponents = new ArrayList<>();
-
-        if(getBasinContent().getContentType() == BasinContentType.EMPTY)
-        {
-            return textComponents;
-        }
-        else
-        {
-            textComponents.add(0, new TranslationTextComponent(getBasinContent().getTranslationKey()));
-        }
-
-        StringBuilder b = new StringBuilder();
-
-        if(getBasinContent().getContentType() == BasinContentType.MILK || getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK || getBasinContent().getContentType() == BasinContentType.CHEESE)
-        {
-            int fermentSeconds = getFermentProgress() / 20;
-            b.append("Ferment Progress: ").append(fermentSeconds);
-        }
-
-        else if(!getSquashedStack().isEmpty())
-        {
-            b.append("Squashed ").append(getSquashedStack().getDisplayName().getString()).append(": ").append(getSquashedStackCount());
-        }
-
-        textComponents.add(1, new StringTextComponent(b.toString()));
-        return textComponents;
-    } */
 
     public float getAmount()
     {
@@ -131,10 +90,6 @@ public class BasinBlockEntity extends BaseBlockEntity
 
     public BasinContent getBasinContent()
     {
-        if(this.content == null) //dont know why this happens lol
-        {
-            return BasinContent.FERMENTING_MILK;
-        }
         return this.content;
     }
 
@@ -156,6 +111,7 @@ public class BasinBlockEntity extends BaseBlockEntity
         map.put(BasinContent.FERMENTING_MILK, ItemStack.EMPTY);
         map.put(BasinContent.CHEESE, new ItemStack(ModBlocks.CHEESE_BLOCK.get()));
         map.put(BasinContent.TOMATO_SAUCE, new ItemStack(ModItems.TOMATO_SAUCE.get()));
+        map.put(BasinContent.HOT_SAUCE, new ItemStack(ModItems.HOT_SAUCE.get()));
         map.put(BasinContent.OLIVE_OIL, new ItemStack(ModItems.OLIVE_OIL.get()));
         return map;
     }
@@ -168,6 +124,7 @@ public class BasinBlockEntity extends BaseBlockEntity
         map.put(BasinContent.FERMENTING_MILK, 999);
         map.put(BasinContent.CHEESE, 1);
         map.put(BasinContent.TOMATO_SAUCE, 4);
+        map.put(BasinContent.HOT_SAUCE, 4);
         map.put(BasinContent.OLIVE_OIL, 4);
         return map;
     }
@@ -194,18 +151,16 @@ public class BasinBlockEntity extends BaseBlockEntity
                 //Check if player holds acceptable fermenting item, if so start fermenting process.
                 if(itemHeld.is(ModTags.FERMENTING_ITEMS_TAG))
                 {
-                    this.content = BasinContent.FERMENTING_MILK;
                     level.playSound(player, getBlockPos(), SoundEvents.COMPOSTER_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
 
                     if(!player.isCreative())
                     {
                         itemHeld.shrink(1);
-                       // if(player.inventory.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE, 1)))
-                       // {
-                       //     world.addEntity(new ItemEntity(world, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, new ItemStack(Items.GLASS_BOTTLE, 1)));
-                       // }
                     }
+
+                    this.content = BasinContent.FERMENTING_MILK;
                     this.setChanged();
+
                     return InteractionResult.SUCCESS;
                 }
 
@@ -217,7 +172,7 @@ public class BasinBlockEntity extends BaseBlockEntity
 
                     if(!player.addItem(new ItemStack(Items.MILK_BUCKET)))
                     {
-                        level.addFreshEntity(new ItemEntity(player.level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), new ItemStack(Items.MILK_BUCKET)));
+                        level.addFreshEntity(new ItemEntity(player.getLevel(), getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), new ItemStack(Items.MILK_BUCKET)));
                     }
 
                     level.playSound(player, getBlockPos(), SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.8F, 1.0F);
@@ -273,22 +228,18 @@ public class BasinBlockEntity extends BaseBlockEntity
                 }
                 else if(getBasinContent().getSauceType() != SauceType.NONE || basinContentType == BasinContentType.OIL) //#TODO IF NOT FIX OLIVE, ADD LINE HERE
                 {
-                    //if(itemHeld.getItem() == Items.GLASS_BOTTLE)
-                    //{
-                        if(getSquashedStackCount() >= basinContentExtractSize().get(getBasinContent()))
-                        {
-                            //itemHeld.shrink(1);
-                            ItemStack result = basinContentToItemStack().get(getBasinContent());
+                    if(getSquashedStackCount() >= basinContentExtractSize().get(getBasinContent()))
+                    {
+                        ItemStack result = basinContentToItemStack().get(getBasinContent());
 
-                            if(!player.getInventory().add(result))
-                            {
-                                level.addFreshEntity(new ItemEntity(player.level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), result));
-                            }
-                            level.playSound(player, getBlockPos(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.7F, 0.9F + level.random.nextFloat());
-                            setSquashedStackCount(getSquashedStackCount() - basinContentExtractSize().get(getBasinContent()));
-                            return InteractionResult.SUCCESS;
+                        if(!player.getInventory().add(result))
+                        {
+                            level.addFreshEntity(new ItemEntity(player.getLevel(), getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), result));
                         }
-                    //}
+                        level.playSound(player, getBlockPos(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.7F, 0.9F + level.random.nextFloat());
+                        setSquashedStackCount(getSquashedStackCount() - basinContentExtractSize().get(getBasinContent()));
+                        return InteractionResult.SUCCESS;
+                    }
 
                     else if(canInsert(itemHeld))
                     {
@@ -359,65 +310,7 @@ public class BasinBlockEntity extends BaseBlockEntity
                     level.playSound(player, getBlockPos(), SoundEvents.SLIME_BLOCK_FALL, SoundSource.BLOCKS, 0.7F, 0.9F + (0.1F * level.random.nextFloat()));
                 }
             }
-            //Check for possible recipes
-       /*     for(Map<ResourceLocation, String> recipe : BasinRecipeRegistry.RECIPES_REGISTRY2)
-            {
-                if(Utils.matchRecipeTag(recipe, stack) != null)
-                {
-                    ResourceLocation tagLocation = Utils.matchRecipeTag(recipe, stack);
-
-                    if(getBasinContent() == BasinContent.AIR || getBasinContent() == SauceRegistry.INSTANCE.basinContentFromString(recipe.get(tagLocation)))
-                    {
-                        if(getSquashedStack().isEmpty())
-                        {
-                            this.squashedStack = new ItemStack(stack.getItem(), 1);
-                        }
-                        else
-                        {
-                            setSquashedStackCount(getSquashedStackCount() + 1);
-                        }
-
-                        this.content = SauceRegistry.INSTANCE.basinContentFromString(recipe.get(tagLocation));
-                        decrStackSize(inventory, 0, 1);
-                        world.playSound(player, pos, SoundEvents.BLOCK_SLIME_BLOCK_FALL, SoundCategory.BLOCKS, 0.7F, 0.9F + (0.1F * world.rand.nextFloat()));
-                    }
-                } 8/
-            /*    if(Utils.recipeContainsTag(recipe, stack) && (getBasinContent() == BasinContent.AIR || getBasinContent() == SauceRegistry.INSTANCE.basinContentFromString(recipe.get(Ingredient.fromStacks(stack)))));
-                {
-                    if(getSquashedStack().isEmpty())
-                    {
-                        this.squashedStack = new ItemStack(stack.getItem(), 1);
-                    }
-                    else
-                    {
-                        setSquashedStackCount(getSquashedStackCount() + 1);
-                    }
-
-                    this.content = SauceRegistry.INSTANCE.basinContentFromString(recipe.get(Ingredient.fromStacks(stack)));
-                    decrStackSize(inventory, 0, 1);
-                    world.playSound(player, pos, SoundEvents.BLOCK_SLIME_BLOCK_FALL, SoundCategory.BLOCKS, 0.7F, 0.9F + (0.1F * world.rand.nextFloat()));
-                } */
-            }
-
-        /*    for(Map<Item, String> map : BasinRecipeRegistry.RECIPES_REGISTRY)
-            {
-                if(map.containsKey(stack.getItem()) && (getBasinContent() == BasinContent.AIR || getBasinContent() == SauceRegistry.INSTANCE.basinContentFromString(map.get(stack.getItem()))))
-                {
-                    if(getSquashedStack().isEmpty())
-                    {
-                        this.squashedStack = new ItemStack(stack.getItem(), 1);
-                    }
-                    else
-                    {
-                        setSquashedStackCount(getSquashedStackCount() + 1);
-                    }
-
-                    this.content = SauceRegistry.INSTANCE.basinContentFromString(map.get(stack.getItem()));
-                    decrStackSize(inventory, 0, 1);
-                    world.playSound(player, pos, SoundEvents.BLOCK_SLIME_BLOCK_FALL, SoundCategory.BLOCKS, 0.7F, 0.9F + (0.1F * world.rand.nextFloat()));
-                }
-            } */
-       // }
+        }
     }
 
     // ======== FERMENTING ========
@@ -446,55 +339,6 @@ public class BasinBlockEntity extends BaseBlockEntity
             this.content = BasinContent.CHEESE;
         }
         setChanged();
-    }
-
-  /*  @Override
-    public void setChanged()
-    {
-        super.setChanged();
-        notifyBlockUpdate();
-    }
-
-    private void notifyBlockUpdate()
-    {
-        BlockState blockstate = getLevel().getBlockState(getBlockPos());
-        level.setBlocksDirty(getBlockPos(), blockstate, blockstate);
-        level.sendBlockUpdated(getBlockPos(), blockstate, blockstate, Block.UPDATE_CLIENTS);
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket()
-    {
-        return new ClientboundBlockEntityDataPacket(this.getBlockPos(), 3, getUpdateTag());
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt)
-    {
-        super.onDataPacket(net, pkt);
-        this.handleUpdateTag(pkt.getTag());
-    } */
-
-    @Override
-    public void handleUpdateTag(CompoundTag tag)
-    {
-        if(getBasinContent() == BasinContent.FERMENTING_MILK)
-        {
-            this.fermentProgress = tag.getInt(FERMENT_PROGRESS);
-        }
-        else super.handleUpdateTag(tag);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag()
-    {
-        if(getBasinContent() == BasinContent.FERMENTING_MILK)
-        {
-            CompoundTag tag = new CompoundTag();
-            tag.putInt(FERMENT_PROGRESS, this.fermentProgress);
-            return tag;
-        }
-        return super.getUpdateTag();
     }
 
     private int tick = 0;
@@ -538,41 +382,6 @@ public class BasinBlockEntity extends BaseBlockEntity
             }
         }
     }
-/*    @Override
-    public void tick()
-    {
-        if(getBasinContent().getContentType() == BasinContentType.FERMENTING_MILK)
-        {
-            this.fermentProgress++;
-
-            if(fermentProgress % 60 == 0) {
-                //if(tick == 59)
-                //{
-                level.playSound(null, getBlockPos(), SoundEvents.FUNGUS_PLACE, SoundSource.BLOCKS, 0.8F, 0.9F + level.random.nextFloat());
-                //}
-            }
-        }
-        if(this.fermentProgress >= this.defaultFermentTime)
-        {
-            finishFermenting();
-        }
-
-        if(getBasinContent().getContentType() == BasinContentType.CHEESE)
-        {
-            if(this.tick % 20 == 0)
-            {
-                createCheeseParticle();
-            }
-            if(tick < 60)
-            {
-                tick++;
-            }
-            else if(tick == 60)
-            {
-                tick = 0;
-            }
-        }
-    } */
 
     private void createCheeseParticle()
     {
@@ -652,7 +461,7 @@ public class BasinBlockEntity extends BaseBlockEntity
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> cap, @Nullable final Direction side)
     {
-        if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if(cap == ForgeCapabilities.ITEM_HANDLER)
             return inventoryCapability.cast();
         return super.getCapability(cap, side);
     }

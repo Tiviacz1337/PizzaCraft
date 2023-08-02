@@ -1,5 +1,5 @@
 {
-  "parent": "pizzacraft:flour",
+  "parent": "pizzacraft:root",
   "display": {
     "icon": {
       "item": "pizzacraft:dough"
