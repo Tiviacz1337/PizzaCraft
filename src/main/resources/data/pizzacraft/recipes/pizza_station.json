@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XX",
+    "CC"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:bricks"
+    },
+    "X":
+    {
+      "tag": "minecraft:wooden_slabs"
+    }
+  },
+  "result": {
+    "item": "pizzacraft:pizza_station"
+  }
+}

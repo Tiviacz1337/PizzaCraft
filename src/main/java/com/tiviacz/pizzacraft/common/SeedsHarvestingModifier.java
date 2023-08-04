@@ -41,14 +41,6 @@ public class SeedsHarvestingModifier
                 ModItems.CORN.get().getDefaultInstance(),
                 ModItems.ONION.get().getDefaultInstance(),
                 Blocks.AIR.asItem().getDefaultInstance()};
-      /*  private final List<ItemStack> possibleDrops = Arrays.asList(
-            ModItems.BROCCOLI_SEEDS.get().getDefaultInstance(),
-            ModItems.CUCUMBER_SEEDS.get().getDefaultInstance(),
-            ModItems.PEPPER_SEEDS.get().getDefaultInstance(),
-            ModItems.PINEAPPLE_SEEDS.get().getDefaultInstance(),
-            ModItems.TOMATO_SEEDS.get().getDefaultInstance(),
-            ModItems.ONION.get().getDefaultInstance(),
-            ModItems.CORN.get().getDefaultInstance()); */
 
         protected SeedsModifier(LootItemCondition[] conditionsIn) {
             super(conditionsIn);
@@ -64,7 +56,6 @@ public class SeedsHarvestingModifier
             }
             else if(PizzaCraftConfig.seedDrops)
             {
-                //generatedLoot.add(possibleDrops.get(context.getRandom().nextInt(possibleDrops.size() - 1)));
                 generatedLoot.add(possibleDrops[context.getRandom().nextInt(possibleDrops.length)]);
             }
             return generatedLoot;

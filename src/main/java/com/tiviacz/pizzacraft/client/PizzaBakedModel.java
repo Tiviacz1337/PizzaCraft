@@ -1,11 +1,11 @@
 package com.tiviacz.pizzacraft.client;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
 import com.tiviacz.pizzacraft.init.PizzaLayers;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.*;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -16,8 +16,8 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.SimpleModelState;
+import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -25,10 +25,7 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public class PizzaBakedModel implements BakedModel
 {
@@ -88,7 +85,7 @@ public class PizzaBakedModel implements BakedModel
             return baseModel.getQuads(state, side, rand);
         }
 
-        List<BakedQuad> layerQuads = getLayerQuads(layerProviders.get(), integerProperty.get(), isRaw.get());
+        List<BakedQuad> layerQuads = getLayerQuads(layerProviders.get(), integerProperty.get(), isRaw.get(), rand);
 
         List<BakedQuad> allQuads = new LinkedList<>();
         allQuads.addAll(baseModel.getQuads(state, side, rand, data));
@@ -99,7 +96,8 @@ public class PizzaBakedModel implements BakedModel
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand)
     {
-        throw new AssertionError("IBakedModel::getQuads should never be called, only IForgeBakedModel::getQuads");
+        return getQuads(state, side, rand, EmptyModelData.INSTANCE);
+        //throw new AssertionError("IBakedModel::getQuads should never be called, only IForgeBakedModel::getQuads");
     }
 
     protected static final float[][] VECTORS = new float[][]
@@ -154,10 +152,19 @@ public class PizzaBakedModel implements BakedModel
                     }
             };
 
-    private List<BakedQuad> getLayerQuads(IItemHandler inventory, int integerProperty, boolean isRaw)
+    private List<BakedQuad> getLayerQuads(IItemHandler inventory, int integerProperty, boolean isRaw, Random random)
     {
         ImmutableList.Builder<BakedQuad> builder = new ImmutableList.Builder<>();
+        List<TagKey<Item>> stack = new ArrayList<>();
+        LayerSelector selector = new LayerSelector(false);
         int rotation = 0;
+
+        for(int i = 0; i < inventory.getSlots(); i++)
+        {
+            stack.add(null);
+        }
+
+        List<Integer> tintIndexes = initializeNullList(10);
 
         for(int i = 0; i < inventory.getSlots(); i++)
         {
@@ -170,63 +177,87 @@ public class PizzaBakedModel implements BakedModel
                         rotation += 90;
                     }
                 }
-                //rotation += 90;
-                for(Direction dir : Direction.values())
+
+                ResourceLocation layerLocation = null;
+                List<TagKey<Item>> tags = inventory.getStackInSlot(i).getTags().toList();
+
+                for(TagKey<Item> tag : tags)
                 {
-                    ResourceLocation layerLocation = null; // = new ResourceLocation("");
-
-                   // if(inventory.getStackInSlot(i).getTags().anyMatch(t -> PizzaLayers.VALID_TAGS.contains(t.location())))
-                    //{
-                   //     layerLocation = isRaw ? PizzaLayers.getTagToRawLayer().get(inventory.getStackInSlot(i).getTags().findFirst().get().location()) : PizzaLayers.getTagToLayer().get(inventory.getStackInSlot(i).getTags().findFirst().get().location());
-                   // }
-
-                    List<TagKey<Item>> tags = inventory.getStackInSlot(i).getTags().toList();
-                    for(TagKey<Item> tag : tags)
+                    if(PizzaLayers.VALID_TAGS.contains(tag))
                     {
-                        if(PizzaLayers.VALID_TAGS.contains(tag))
-                        {
-                            layerLocation = isRaw ? PizzaLayers.getTagToRawLayer().get(tag) : PizzaLayers.getTagToLayer().get(tag);
-                        }
+                        layerLocation = isRaw ? PizzaLayers.getTagToRawLayer().get(tag) : PizzaLayers.getTagToLayer().get(tag);
+                        stack.set(i, tag);
+                        tintIndexes.set(i, -1);
                     }
-                    //if(inventory.getStackInSlot(i).getTags().anyMatch(PizzaLayers.VALID_TAGS::contains))
-                    //{
-                    //    layerLocation = isRaw ? PizzaLayers.getTagToRawLayer().get(inventory.getStackInSlot(i).getTags().findFirst().get()) : PizzaLayers.getTagToLayer().get(inventory.getStackInSlot(i).getTags().findFirst().get());
-                    //}
-                   /* for(ResourceLocation location : inventory.getStackInSlot(i).getItem().getTags())
-                    {
-                        if(PizzaLayers.VALID_TAGS.contains(location))
-                        {
-                            layerLocation = isRaw ? PizzaLayers.getTagToRawLayer().get(location) : PizzaLayers.getTagToLayer().get(location);
-                        }
-                        //layerLocation = isRaw ? PizzaLayers.TAG_TO_RAW_LAYER.get(location) : PizzaLayers.getTagToLayer().get(location);
-                    } */
+                }
 
-                    if(layerLocation == null)
-                    {
-                        layerLocation = MissingTextureAtlasSprite.getLocation();
-                    }
-
-                    //layerLocation = isRaw ? PizzaLayers.getItemToRawLayerMap().get(inventory.getStackInSlot(i).getItem()) : PizzaLayers.getTagToLayer().get(inventory.getStackInSlot(i).getItem().getTags())//PizzaLayers.getItemToLayerMap().get(inventory.getStackInSlot(i).getItem());
-                    builder.add(getQuadForLayer(layerLocation, dir, rotation, UV[(rotation / 90) % 4][integerProperty], VECTORS[integerProperty][0], VECTORS[integerProperty][1], VECTORS[integerProperty][2], VECTORS[7][0], VECTORS[7][1], VECTORS[7][2]));
+                if(layerLocation == null)
+                {
+                    stack.set(i, null);
+                    tintIndexes.set(i, i);
                 }
             }
         }
+
+        List<ResourceLocation> layers = new ArrayList<>(stack.size());
+
+        for(int i = 0; i < stack.size(); i++)
+        {
+            TagKey<Item> tagKey = stack.get(i);
+
+            if(tagKey != null)
+            {
+                selector.processLayer(tagKey);
+                layers.add(i, isRaw ? PizzaLayers.getTagToRawLayer().get(tagKey) : PizzaLayers.getTagToLayer().get(tagKey));
+            }
+            else
+            {
+                layers.add(i, null);
+            }
+        }
+
+        for(int i = 0; i < layers.size(); i++)
+        {
+            if(layers.get(i) == null && !inventory.getStackInSlot(i).isEmpty())
+            {
+                layers.set(i, selector.selectLayer());
+            }
+        }
+
+        for(int i = 0; i < layers.size(); i++)
+        {
+            if(layers.get(i) == null) continue;
+
+            builder.add(getQuadForLayer(layers.get(i), Direction.UP, rotation, UV[(rotation / 90) % 4][integerProperty], VECTORS[integerProperty][0], VECTORS[integerProperty][1], VECTORS[integerProperty][2], VECTORS[7][0], VECTORS[7][1], VECTORS[7][2], tintIndexes.get(i)));
+        }
+
         return builder.build();
     }
 
-    private BakedQuad getQuadForLayer(ResourceLocation layerLocation, Direction face, int rotation, float[] uvArray, double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
+    public List initializeNullList(int size)
+    {
+        List list = new ArrayList();
+
+        for(int i = 0; i < size; i++)
+        {
+            list.add(null);
+        }
+        return list;
+    }
+
+    private BakedQuad getQuadForLayer(ResourceLocation layerLocation, Direction face, int rotation, float[] uvArray, double minX, double minY, double minZ, double maxX, double maxY, double maxZ, int tintIndex)
     {
         Vector3f from = new Vector3f((float)minX, (float)minY, (float)minZ);
         Vector3f to = new Vector3f((float)maxX, (float)maxY, (float)maxZ);
 
         BlockFaceUV blockFaceUV = new BlockFaceUV(uvArray, rotation);
-        BlockElementFace blockElementFace = new BlockElementFace(face, -1, "",  blockFaceUV);
+        BlockElementFace blockElementFace = new BlockElementFace(face, tintIndex, "",  blockFaceUV);
 
-        TextureAtlas blocksStitchedTextures = ForgeModelBakery.instance().getSpriteMap().getAtlas(InventoryMenu.BLOCK_ATLAS);
-        TextureAtlasSprite layersTextures = blocksStitchedTextures.getSprite(layerLocation);
+        TextureAtlasSprite layersTextures = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(layerLocation);
 
         final ResourceLocation DUMMY_RL = new ResourceLocation("dummy_name");
-        BakedQuad bakedQuad = faceBakery.bakeQuad(from, to, blockElementFace, layersTextures, face, SimpleModelState.IDENTITY, null, true, DUMMY_RL);
+        BakedQuad bakedQuad = faceBakery.bakeQuad(from, to, blockElementFace, layersTextures, face, new SimpleModelState(Transformation.identity()), null, true, DUMMY_RL);
+
         return bakedQuad;
     }
 

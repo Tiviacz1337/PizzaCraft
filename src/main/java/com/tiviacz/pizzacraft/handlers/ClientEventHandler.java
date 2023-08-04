@@ -2,7 +2,9 @@ package com.tiviacz.pizzacraft.handlers;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.client.DynamicPizzaSliceModel;
+import com.tiviacz.pizzacraft.client.LayerSelector;
 import com.tiviacz.pizzacraft.client.PizzaBakedModel;
+import com.tiviacz.pizzacraft.client.gui.ScreenPizzaStation;
 import com.tiviacz.pizzacraft.client.renderer.BasinRenderer;
 import com.tiviacz.pizzacraft.client.renderer.ChefHatModel;
 import com.tiviacz.pizzacraft.client.renderer.PizzaDeliveryCapModel;
@@ -149,6 +151,53 @@ public class ClientEventHandler
             //Sauces
             event.addSprite(PizzaLayers.TOMATO_SAUCE_LAYER);
             event.addSprite(PizzaLayers.TOMATO_SAUCE_ITEM_LAYER);
+            event.addSprite(PizzaLayers.HOT_SAUCE_LAYER);
+            event.addSprite(PizzaLayers.HOT_SAUCE_ITEM_LAYER);
+
+            //Universal
+            event.addSprite(LayerSelector.RAW_BROCCOLI_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.RAW_CORN_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.RAW_CUCUMBER_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.RAW_ONION_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.RAW_PEPPER_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.RAW_TOMATO_UNIVERSAL_LAYER);
+
+            event.addSprite(LayerSelector.RAW_PINEAPPLE_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.RAW_OLIVE_UNIVERSAL_LAYER);
+
+            event.addSprite(LayerSelector.RAW_MUSHROOM_UNIVERSAL_LAYER);
+
+            event.addSprite(LayerSelector.RAW_HAM_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.RAW_BEEF_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.RAW_CHICKEN_UNIVERSAL_LAYER);
+
+            //Item Universal
+            event.addSprite(LayerSelector.BROCCOLI_ITEM_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.CORN_ITEM_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.CUCUMBER_ITEM_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.ONION_ITEM_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.PEPPER_ITEM_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.TOMATO_ITEM_UNIVERSAL_LAYER);
+
+            event.addSprite(LayerSelector.PINEAPPLE_ITEM_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.OLIVE_ITEM_UNIVERSAL_LAYER);
+
+            event.addSprite(LayerSelector.MUSHROOM_ITEM_UNIVERSAL_LAYER);
+
+            event.addSprite(LayerSelector.HAM_ITEM_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.BEEF_ITEM_UNIVERSAL_LAYER);
+            event.addSprite(LayerSelector.CHICKEN_ITEM_UNIVERSAL_LAYER);
+
+            //Icons
+            for(ResourceLocation res : ScreenPizzaStation.DOUGH)
+            {
+                event.addSprite(res);
+            }
+
+            for(ResourceLocation res : ScreenPizzaStation.SAUCES)
+            {
+                event.addSprite(res);
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.tiviacz.pizzacraft.blocks;
 
 import com.tiviacz.pizzacraft.blockentity.PizzaBagBlockEntity;
-import com.tiviacz.pizzacraft.util.Utils;
+import com.tiviacz.pizzacraft.util.NBTUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -51,20 +51,18 @@ public class PizzaBagBlock extends Block implements EntityBlock
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, Random rand)
     {
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        if(blockEntity instanceof PizzaBagBlockEntity)
+        if(level.getBlockEntity(pos) instanceof PizzaBagBlockEntity blockEntity)
         {
-            ((PizzaBagBlockEntity)blockEntity).recheckOpen();
+            blockEntity.recheckOpen();
         }
-
     }
 
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit)
     {
-        if(level.getBlockEntity(pos) instanceof PizzaBagBlockEntity)
+        if(level.getBlockEntity(pos) instanceof PizzaBagBlockEntity blockEntity)
         {
-            ((PizzaBagBlockEntity)level.getBlockEntity(pos)).openGUI(player, (PizzaBagBlockEntity)level.getBlockEntity(pos), pos);
+            blockEntity.openGUI(player, blockEntity, pos);
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.PASS;
@@ -73,11 +71,11 @@ public class PizzaBagBlock extends Block implements EntityBlock
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
     {
-        if(level.getBlockEntity(pos) instanceof PizzaBagBlockEntity)
+        if(level.getBlockEntity(pos) instanceof PizzaBagBlockEntity blockEntity)
         {
             if(stack.getTag() != null)
             {
-                ((PizzaBagBlockEntity)level.getBlockEntity(pos)).readFromStack(stack);
+                blockEntity.readFromStack(stack);
             }
         }
     }
@@ -85,10 +83,10 @@ public class PizzaBagBlock extends Block implements EntityBlock
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player)
     {
-        if(level.getBlockEntity(pos) instanceof PizzaBagBlockEntity)
+        if(level.getBlockEntity(pos) instanceof PizzaBagBlockEntity blockEntity)
         {
             ItemStack stack = this.getCloneItemStack(level, pos, state);
-            ((PizzaBagBlockEntity)level.getBlockEntity(pos)).writeToItemStack(stack);
+            blockEntity.writeToItemStack(stack);
             return stack;
         }
         return this.getCloneItemStack(state, target, level, pos, player);
@@ -100,7 +98,7 @@ public class PizzaBagBlock extends Block implements EntityBlock
     {
         if(stack.getTag() != null)
         {
-            ItemStackHandler handler = Utils.createHandlerFromStack(stack, 6);
+            ItemStackHandler handler = NBTUtils.createHandlerFromStack(stack, 6);
 
             for(int i = 0; i < handler.getSlots(); i++)
             {

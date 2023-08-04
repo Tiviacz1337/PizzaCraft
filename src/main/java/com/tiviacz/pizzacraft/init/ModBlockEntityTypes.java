@@ -23,15 +23,8 @@ public class ModBlockEntityTypes
                     ModBlocks.WARPED_CHOPPING_BOARD.get(),
                     ModBlocks.OLIVE_CHOPPING_BOARD.get()).build(null));
 
-    public static final RegistryObject<BlockEntityType<PizzaBoardBlockEntity>> PIZZA_BOARD = BLOCK_ENTITY_TYPES.register("pizza_board",
-            () -> BlockEntityType.Builder.of(PizzaBoardBlockEntity::new,
-                    ModBlocks.TOMATOES.get()).build(null));
-
     public static final RegistryObject<BlockEntityType<PizzaBlockEntity>> PIZZA = BLOCK_ENTITY_TYPES.register("pizza",
             () -> BlockEntityType.Builder.of(PizzaBlockEntity::new, ModBlocks.RAW_PIZZA.get(), ModBlocks.PIZZA.get()).build(null));
-
-    public static final RegistryObject<BlockEntityType<MortarAndPestleBlockEntity>> MORTAR_AND_PESTLE = BLOCK_ENTITY_TYPES.register("mortar_and_pestle",
-            () -> BlockEntityType.Builder.of(MortarAndPestleBlockEntity::new, ModBlocks.MORTAR_AND_PESTLE.get()).build(null));
 
     public static final RegistryObject<BlockEntityType<BasinBlockEntity>> BASIN = BLOCK_ENTITY_TYPES.register("basin",
             () -> BlockEntityType.Builder.of(BasinBlockEntity::new,
@@ -44,4 +37,8 @@ public class ModBlockEntityTypes
     public static final RegistryObject<BlockEntityType<PizzaBagBlockEntity>> PIZZA_BAG = BLOCK_ENTITY_TYPES.register("pizza_bag",
             () -> BlockEntityType.Builder.of(PizzaBagBlockEntity::new,
                     ModBlocks.RED_PIZZA_BAG.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<PizzaStationBlockEntity>> PIZZA_STATION = BLOCK_ENTITY_TYPES.register("pizza_station",
+            () -> BlockEntityType.Builder.of(PizzaStationBlockEntity::new,
+                    ModBlocks.PIZZA_STATION.get()).build(null));
 }

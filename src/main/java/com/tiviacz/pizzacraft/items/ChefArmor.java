@@ -4,7 +4,6 @@ import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.client.renderer.ChefHatModel;
 import com.tiviacz.pizzacraft.init.ModItems;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -23,9 +22,9 @@ import java.util.function.Consumer;
 
 public class ChefArmor extends ArmorItem
 {
-    public ChefArmor(ArmorMaterial materialIn, EquipmentSlot slot, Properties builderIn)
+    public ChefArmor(ArmorMaterial materialIn, EquipmentSlot equipmentSlot, Properties builderIn)
     {
-        super(materialIn, slot, builderIn);
+        super(materialIn, equipmentSlot, builderIn);
     }
 
     @Override
@@ -51,13 +50,9 @@ public class ChefArmor extends ArmorItem
                     ChefHatModel hat = new ChefHatModel(ChefHatModel.createModelData().bakeRoot());
                     humanoid.copyPropertiesTo(hat);
 
-
-                    //this.getParentModel().copyPropertiesTo(model);
-                    //model.setupAngles(this.getParentModel());
-
                     return hat;
                 }
-                return null;
+                return humanoid;
             }
         });
     }

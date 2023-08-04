@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "pizzacraft:cucumber_slice",
+    "pizzacraft:onion_slice",
+    "pizzacraft:pepper_slice",
+    "pizzacraft:pineapple_slice",
+    "pizzacraft:tomato_slice",
+    "pizzacraft:mushroom_slice",
+    "pizzacraft:ham",
+    "pizzacraft:wing",
+    "pizzacraft:cooked_wing",
+    "pizzacraft:cheese"
+  ]
+}

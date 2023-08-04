@@ -1,6 +1,6 @@
 package com.tiviacz.pizzacraft.worldgen.trees;
 
-import com.tiviacz.pizzacraft.init.ModFeatures;
+import com.tiviacz.pizzacraft.init.ModConfiguredFeatures;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
@@ -14,6 +14,6 @@ public class OliveTree extends AbstractTreeGrower
     @Override
     protected Holder<? extends ConfiguredFeature<?, ?>> getConfiguredFeature(Random randomIn, boolean p_225546_2_)
     {
-        return ModFeatures.OLIVE;
+        return ModConfiguredFeatures.OLIVE.getHolder().get();
     }
 }

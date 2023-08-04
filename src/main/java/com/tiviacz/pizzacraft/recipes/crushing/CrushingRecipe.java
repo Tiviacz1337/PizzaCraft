@@ -14,7 +14,7 @@ public class CrushingRecipe implements Recipe<RecipeWrapper>
     private final Ingredient input;
     private final int inputCount;
     private final String contentOutput;
-    private final ItemStack stackOutput;
+    public final ItemStack stackOutput;
     private final ResourceLocation id;
 
     public CrushingRecipe(Ingredient input, int inputCount, String contentOutput, ItemStack stackOutput, ResourceLocation id)
@@ -35,7 +35,7 @@ public class CrushingRecipe implements Recipe<RecipeWrapper>
     @Override
     public ItemStack assemble(RecipeWrapper inv)
     {
-        return getResultItem();
+        return this.stackOutput;
     }
 
     @Override

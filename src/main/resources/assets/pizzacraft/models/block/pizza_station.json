@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "minecraft:block/bricks",
+    "east": "pizzacraft:block/pizza_station_side",
+    "north": "pizzacraft:block/pizza_station_side",
+    "particle": "pizzacraft:block/pizza_station_side",
+    "south": "pizzacraft:block/pizza_station_side",
+    "up": "pizzacraft:block/pizza_station_top",
+    "west": "pizzacraft:block/pizza_station_side"
+  }
+}

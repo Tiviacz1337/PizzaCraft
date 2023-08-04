@@ -1,0 +1,23 @@
+{
+  "type": "farmersdelight:cutting",
+  "conditions": [
+    {
+      "modid": "farmersdelight",
+      "type": "forge:mod_loaded"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "pizzacraft:cheese_block"
+    }
+  ],
+  "result": [
+    {
+      "count": 3,
+      "item": "pizzacraft:cheese"
+    }
+  ],
+  "tool": {
+    "tag": "forge:tools/knives"
+  }
+}

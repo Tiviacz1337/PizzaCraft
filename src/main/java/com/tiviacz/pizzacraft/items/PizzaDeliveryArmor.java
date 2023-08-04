@@ -4,7 +4,6 @@ import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.client.renderer.PizzaDeliveryCapModel;
 import com.tiviacz.pizzacraft.init.ModItems;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -23,9 +22,9 @@ import java.util.function.Consumer;
 
 public class PizzaDeliveryArmor extends ArmorItem
 {
-    public PizzaDeliveryArmor(ArmorMaterial materialIn, EquipmentSlot slot, Properties builderIn)
+    public PizzaDeliveryArmor(ArmorMaterial materialIn, EquipmentSlot equipmentSlot, Properties builderIn)
     {
-        super(materialIn, slot, builderIn);
+        super(materialIn, equipmentSlot, builderIn);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class PizzaDeliveryArmor extends ArmorItem
 
                     return hat;
                 }
-                return null;
+                return humanoid;
             }
         });
     }

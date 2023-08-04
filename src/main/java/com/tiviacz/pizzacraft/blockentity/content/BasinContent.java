@@ -12,6 +12,7 @@ public enum BasinContent {
     FERMENTING_MILK("fermenting_milk", BasinContentType.FERMENTING_MILK, SauceType.NONE),
     CHEESE("cheese", BasinContentType.CHEESE, SauceType.NONE),
     TOMATO_SAUCE("tomato_sauce", BasinContentType.SAUCE, SauceType.TOMATO),
+    HOT_SAUCE("hot_sauce", BasinContentType.SAUCE, SauceType.HOT),
     OLIVE_OIL("olive_oil", BasinContentType.OIL, SauceType.NONE); //#TODO WHAT ABOUT SAUCE
 
     private final SauceType sauceType;

@@ -1,0 +1,13 @@
+{
+  "type": "pizzacraft:crushing_recipe",
+  "input":
+  {
+      "tag": "forge:crops/pepper"
+  },
+  "inputCount": 4,
+  "content": "hot_sauce",
+  "result": {
+    "item": "pizzacraft:hot_sauce",
+    "count": 1
+  }
+}

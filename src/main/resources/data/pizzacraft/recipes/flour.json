@@ -1,11 +1,14 @@
 {
-  "type": "pizzacraft:mortar_recipe",
-  "duration": 8,
-  "ingredients": [
-    {
-      "tag": "forge:flour_plants/wheat"
-    }
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XX",
+    "XX"
   ],
+  "key": {
+    "X": {
+      "item": "minecraft:wheat"
+    }
+  },
   "result": {
     "item": "pizzacraft:flour",
     "count": 2

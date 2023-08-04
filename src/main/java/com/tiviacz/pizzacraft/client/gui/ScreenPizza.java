@@ -2,11 +2,10 @@ package com.tiviacz.pizzacraft.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.datafixers.util.Pair;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.blockentity.PizzaBlockEntity;
+import com.tiviacz.pizzacraft.common.TasteHandler;
 import com.tiviacz.pizzacraft.container.PizzaMenu;
-import com.tiviacz.pizzacraft.util.FoodUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
@@ -14,11 +13,12 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,10 +26,10 @@ import java.util.List;
 public class ScreenPizza extends AbstractContainerScreen<PizzaMenu> implements MenuAccess<PizzaMenu>
 {
     public static final ResourceLocation SCREEN_PIZZA = new ResourceLocation(PizzaCraft.MODID, "textures/gui/pizza.png");
-    private final ScreenImage PIZZA_IMAGE = new ScreenImage(61, 9, 54, 54);
-    private final ScreenImage PIZZA_PATTERN = new ScreenImage(61, 9, 54, 54);
-    private final ScreenImage HUNGER_INFO = new ScreenImage(127, 30, 13, 13);
+    private final ScreenImage HUNGER_INFO = new ScreenImage(126, 40, 13, 13);
     private final PizzaBlockEntity blockEntity;
+
+    private final CyclingSlotBackground sauceIcon = new CyclingSlotBackground(10);
 
     public ScreenPizza(PizzaMenu menu, Inventory inv, Component titleIn)
     {
@@ -47,25 +47,31 @@ public class ScreenPizza extends AbstractContainerScreen<PizzaMenu> implements M
     }
 
     @Override
+    public void containerTick()
+    {
+        super.containerTick();
+        this.sauceIcon.m_266287_(ScreenPizzaStation.SAUCES);
+    }
+
+    @Override
     protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY)
     {
-        this.font.draw(poseStack, this.blockEntity.getDisplayName(), (float)this.inventoryLabelX, (float)this.inventoryLabelY, 4210752);
+        this.font.draw(poseStack, this.blockEntity.getDisplayName(), this.inventoryLabelX, this.inventoryLabelY, 4210752);
     }
+
+    private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
     public List<Component> getTooltip()
     {
         List<Component> components = new ArrayList<>();
-        components.add(new TranslatableComponent("information.pizzacraft.hunger", FoodUtils.getHungerForSlice(blockEntity.getRefillmentValues().getFirst(), false), ((blockEntity.getRefillmentValues().getFirst() % 7 != 0) ? " (+" + blockEntity.getRefillmentValues().getFirst() % 7 + ")" : ""), blockEntity.getRefillmentValues().getFirst()).withStyle(ChatFormatting.BLUE));
-        components.add(new TranslatableComponent("information.pizzacraft.saturation", (float)(Math.round(blockEntity.getRefillmentValues().getSecond() / 7 * 100.0) / 100.0), (float)(Math.round(blockEntity.getRefillmentValues().getSecond() * 100.0) / 100.0)).withStyle(ChatFormatting.BLUE));
 
-        if(!blockEntity.getEffects().isEmpty())
+        components.add(new TranslatableComponent("information.pizzacraft.taste", new TasteHandler(blockEntity.getUniqueness(), 9).getTaste().toString()));
+        components.add(new TranslatableComponent("information.pizzacraft.hunger", blockEntity.getHunger() / 7, blockEntity.getHunger()).withStyle(ChatFormatting.BLUE));
+        components.add(new TranslatableComponent("information.pizzacraft.saturation", decimalFormat.format(blockEntity.getSaturation())).withStyle(ChatFormatting.BLUE));
+
+        if(!blockEntity.getInventory().getStackInSlot(9).isEmpty())
         {
-            components.add(new TranslatableComponent("information.pizzacraft.effects").withStyle(ChatFormatting.GOLD));
-
-            for(Pair<MobEffectInstance, Float> pair : blockEntity.getEffects())
-            {
-                components.add(new TranslatableComponent(pair.getFirst().getDescriptionId()).withStyle(pair.getFirst().getEffect().getCategory().getTooltipFormatting()));
-            }
+            PotionUtils.addPotionTooltip(blockEntity.getInventory().getStackInSlot(9), components, 1.0F);
         }
 
         return components;
@@ -92,11 +98,9 @@ public class ScreenPizza extends AbstractContainerScreen<PizzaMenu> implements M
         RenderSystem.setShaderTexture(0, SCREEN_PIZZA);
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
-        this.blit(poseStack, x, y, 0, 0, this.imageWidth, this.imageHeight);
+        blit(poseStack, x, y, 0, 0, this.imageWidth, this.imageHeight);
 
-        PIZZA_IMAGE.draw(poseStack, this, blockEntity.isRaw() ? 1 : 112, 159);
-        PIZZA_PATTERN.draw(poseStack, this, blockEntity.isRaw() ? 56 : 167, 158);
-        HUNGER_INFO.draw(poseStack, this, 127, 30);
+        this.sauceIcon.m_266270_(this.menu, poseStack, partialTicks, this.leftPos, this.topPos);
     }
 
     public static class ScreenImage
@@ -112,11 +116,6 @@ public class ScreenPizza extends AbstractContainerScreen<PizzaMenu> implements M
             this.Y = V;
             this.W = W;
             this.H = H;
-        }
-
-        public void draw(PoseStack poseStack, ScreenPizza screen, int U, int V)
-        {
-            screen.blit(poseStack, screen.getGuiLeft() + X, screen.getGuiTop() + Y, U, V, W, H);
         }
 
         public boolean inButton(ScreenPizza screen, int mouseX, int mouseY)

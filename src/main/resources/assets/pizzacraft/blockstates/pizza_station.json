@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "pizzacraft:block/pizza_station" },
+    "facing=east": { "model": "pizzacraft:block/pizza_station", "y": 90 },
+    "facing=south": { "model": "pizzacraft:block/pizza_station", "y": 180 },
+    "facing=west": { "model": "pizzacraft:block/pizza_station", "y": 270 }
+  }
+}

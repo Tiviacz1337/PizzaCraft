@@ -82,7 +82,7 @@ public class CheeseBlock extends Block
             int i = state.getValue(BITES);
             if(i < 2)
             {
-                level.setBlock(pos, state.setValue(BITES, i + 1), 3);
+                level.setBlockAndUpdate(pos, state.setValue(BITES, i + 1));
             }
             else
             {

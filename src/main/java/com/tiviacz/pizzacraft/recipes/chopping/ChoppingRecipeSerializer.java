@@ -66,6 +66,6 @@ public class ChoppingRecipeSerializer extends ForgeRegistryEntry<RecipeSerialize
     public void toNetwork(FriendlyByteBuf buf, ChoppingRecipe recipe)
     {
         recipe.getInput().toNetwork(buf);
-        buf.writeItem(recipe.getResultItem());
+        buf.writeItem(recipe.output);
     }
 }

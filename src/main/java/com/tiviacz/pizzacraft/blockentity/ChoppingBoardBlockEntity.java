@@ -62,7 +62,6 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity
         compound.put(INVENTORY, this.inventory.serializeNBT());
         compound.putInt(FACING, this.facing.get2DDataValue());
         compound.putBoolean(IS_ITEM_CARVING_BOARD, this.isItemCarvingBoard);
-        //return compound;
     }
 
     public Direction getFacing()

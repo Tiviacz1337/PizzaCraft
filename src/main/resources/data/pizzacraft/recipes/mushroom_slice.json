@@ -1,0 +1,11 @@
+{
+  "type": "pizzacraft:chopping_recipe",
+  "input":
+    {
+      "tag": "forge:mushrooms"
+    },
+  "result": {
+    "item": "pizzacraft:mushroom_slice",
+    "count": 2
+  }
+}

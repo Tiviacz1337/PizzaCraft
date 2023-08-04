@@ -37,15 +37,15 @@ public class ArmorMaterials implements ArmorMaterial
     }
 
     @Override
-    public int getDurabilityForSlot(EquipmentSlot slotIn)
+    public int getDurabilityForSlot(EquipmentSlot equipmentSlot)
     {
-        return MAX_DAMAGE_ARRAY[slotIn.getIndex()] * this.durability;
+        return MAX_DAMAGE_ARRAY[equipmentSlot.getIndex()] * this.durability;
     }
 
     @Override
-    public int getDefenseForSlot(EquipmentSlot slotIn)
+    public int getDefenseForSlot(EquipmentSlot equipmentSlot)
     {
-        return this.defense[slotIn.getIndex()];
+        return this.defense[equipmentSlot.getIndex()];
     }
 
     @Override

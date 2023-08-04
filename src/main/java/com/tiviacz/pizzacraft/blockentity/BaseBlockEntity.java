@@ -69,7 +69,6 @@ public class BaseBlockEntity extends BlockEntity
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt)
     {
-        //this.load(pkt.getTag());
         super.onDataPacket(net, pkt);
         this.handleUpdateTag(pkt.getTag());
     }
