@@ -23,6 +23,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -35,6 +36,7 @@ public class PizzaCraft
 {
     public static final String MODID = "pizzacraft";
     public static final Logger LOGGER = LogManager.getLogger();
+    public static SimpleChannel NETWORK;
 
     public static boolean curiosLoaded;
 
@@ -72,6 +74,7 @@ public class PizzaCraft
     private void setup(final FMLCommonSetupEvent event)
     {
         event.enqueueWork(() -> {
+            ModNetwork.registerNetworkChannel();
             ModAdvancements.register();
             ModVanillaCompat.setup();
         });

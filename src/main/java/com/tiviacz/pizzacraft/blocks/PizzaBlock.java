@@ -162,7 +162,7 @@ public class PizzaBlock extends Block implements EntityBlock
 
     private InteractionResult eatPizza(LevelAccessor level, BlockPos pos, BlockState state, Player player)
     {
-        if(!player.canEat(false))
+        if(!player.canEat(true))
         {
             return InteractionResult.PASS;
         }

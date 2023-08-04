@@ -5,17 +5,21 @@ import com.tiviacz.pizzacraft.common.PizzaCalculator;
 import com.tiviacz.pizzacraft.container.slots.PizzaStationResultSlot;
 import com.tiviacz.pizzacraft.init.ModMenuTypes;
 import com.tiviacz.pizzacraft.items.SauceItem;
+import com.tiviacz.pizzacraft.tags.ModTags;
 import com.tiviacz.pizzacraft.util.Utils;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 
@@ -23,6 +27,7 @@ public class PizzaStationMenu extends AbstractContainerMenu
 {
     public Inventory inv;
     public PizzaStationBlockEntity blockEntity;
+    private String itemName;
 
     public PizzaStationMenu(int windowID, Inventory inv, FriendlyByteBuf data)
     {
@@ -47,23 +52,23 @@ public class PizzaStationMenu extends AbstractContainerMenu
     public void addPlayerInventoryAndHotbar(Inventory inv) {
         for (int y = 0; y < 3; ++y) {
             for (int x = 0; x < 9; ++x) {
-                this.addSlot(new Slot(inv, x + y * 9 + 9, 8 + x * 18, 84 + y * 18));
+                this.addSlot(new Slot(inv, x + y * 9 + 9, 8 + x * 18, 30 + 84 + y * 18));
             }
         }
 
         for (int x = 0; x < 9; x++) {
-            this.addSlot(new Slot(inv, x, 8 + x * 18, 142));
+            this.addSlot(new Slot(inv, x, 8 + x * 18, 30 + 142));
         }
     }
 
     public void addResultSlot()
     {
-        this.addSlot(new PizzaStationResultSlot(this, blockEntity.getInventory(), 0, 148, 35));
+        this.addSlot(new PizzaStationResultSlot(this, blockEntity.getInventory(), 0, 148, 30 + 35));
     }
 
     public void addBaseSlot()
     {
-        this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 1, 12, 47)
+        this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 1, 12, 30 + 47)
         {
             @Override
             public void setChanged() {
@@ -75,7 +80,7 @@ public class PizzaStationMenu extends AbstractContainerMenu
 
     public void addSauceSlot()
     {
-        this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 2, 12, 24)
+        this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 2, 12, 30 + 24)
         {
             @Override
             public void setChanged()
@@ -92,7 +97,7 @@ public class PizzaStationMenu extends AbstractContainerMenu
         {
             for(int j = 0; j < 3; ++j)
             {
-                this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 3 + (j + i * 3), 55 + j * 18, 17 + i * 18)
+                this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 3 + (j + i * 3), 55 + j * 18, 30 + 17 + i * 18)
                 {
                     @Override
                     public void setChanged()
@@ -119,7 +124,7 @@ public class PizzaStationMenu extends AbstractContainerMenu
 
         ItemStackHandler ingredientsHandler = new ItemStackHandler(10);
 
-        if(!sauceCopy.isEmpty() && !((sauceCopy.getItem() instanceof PotionItem) || (sauceCopy.getItem() instanceof SauceItem)))
+        if(!sauceCopy.isEmpty() && !((sauceCopy.getItem() instanceof PotionItem) || (sauceCopy.getItem() instanceof SauceItem || sauceCopy.is(ModTags.SAUCE))))
         {
             resetOutput();
             return;
@@ -152,12 +157,18 @@ public class PizzaStationMenu extends AbstractContainerMenu
             return;
         }
 
-      //  if (StringUtils.isBlank(this.outputItemName)) {
-     //       result.resetHoverName();
-     //   } else if (!this.outputItemName.equals(result.getHoverName().getString())) {
-     //       result.setHoverName(Component.literal(this.outputItemName));
-     //   }
+        if (StringUtils.isBlank(this.itemName)) {
+            result.resetHoverName();
+        } else if (!this.itemName.equals(result.getHoverName().getString())) {
+            result.setHoverName(Component.literal(this.itemName));
+        }
         setOutput(result);
+    }
+
+    public void setItemName(String name)
+    {
+        this.itemName = name;
+        updateOutput();
     }
 
     private void setOutput(ItemStack stack)

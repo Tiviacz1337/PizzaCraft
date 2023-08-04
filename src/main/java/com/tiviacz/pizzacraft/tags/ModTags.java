@@ -11,6 +11,8 @@ public class ModTags
     public static final TagKey<Item> FERMENTING_ITEMS_TAG = TagKey.create(Registry.ITEM.key(), createResourceLocation( "fermenting_items"));
     public static final TagKey<Item> INGREDIENTS = TagKey.create(Registry.ITEM.key(), createResourceLocation("ingredients"));
     public static final TagKey<Item> SLICED_INGREDIENTS = TagKey.create(Registry.ITEM.key(), createResourceLocation("sliced_ingredients"));
+    public static final TagKey<Item> DOUGH = TagKey.create(Registry.ITEM.key(), new ResourceLocation("forge", "dough"));
+    public static final TagKey<Item> SAUCE = TagKey.create(Registry.ITEM.key(), createResourceLocation("sauce"));
 
     public static final TagKey<Item> CHEESE_LAYER = TagKey.create(Registry.ITEM.key(), createResourceLocation("ingredients/cheese_layer"));
 

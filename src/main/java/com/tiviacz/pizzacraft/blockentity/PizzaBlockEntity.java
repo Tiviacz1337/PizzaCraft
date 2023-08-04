@@ -49,6 +49,7 @@ import java.util.Optional;
 public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
 {
     public final ItemStackHandler inventory = createHandler();
+    private Component customName = null;
     private int bakingTime = -1;
     private final int baseBakingTime = 600;
     private int selectedSlot = 0;
@@ -61,6 +62,7 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
     private final LazyOptional<ItemStackHandler> inventoryCapability = LazyOptional.of(() -> this.inventory);
 
     private final String BAKING_TIME = "BakingTime";
+    private final String CUSTOM_NAME = "CustomName";
 
     public PizzaBlockEntity(BlockPos pos, BlockState state)
     {
@@ -77,6 +79,11 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
         this.saturation = compound.getFloat(NBTUtils.TAG_SATURATION);
 
         this.bakingTime = compound.getInt(BAKING_TIME);
+
+        if(compound.contains(CUSTOM_NAME, 8))
+        {
+            this.customName = Component.Serializer.fromJson(compound.getString(CUSTOM_NAME));
+        }
     }
 
     @Override
@@ -89,6 +96,12 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
         compound.putFloat(NBTUtils.TAG_SATURATION, this.saturation);
 
         compound.putInt(BAKING_TIME, this.bakingTime);
+
+        if(this.customName != null)
+        {
+            compound.putString(CUSTOM_NAME, Component.Serializer.toJson(this.customName));
+        }
+
     }
 
     public InteractionResult onBlockActivated(Player player, InteractionHand hand)
@@ -192,6 +205,11 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
         NBTUtils.setUniqueness(stack, this.uniqueness);
         NBTUtils.setHunger(stack, this.hunger / 7);
         NBTUtils.setSaturation(stack, this.saturation);
+
+        if(this.customName != null)
+        {
+            stack.setHoverName(this.customName);
+        }
     }
 
     public ItemStack writeToItemStack(ItemStack stack)
@@ -200,6 +218,11 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
         NBTUtils.setUniqueness(stack, this.uniqueness);
         NBTUtils.setHunger(stack, this.hunger);
         NBTUtils.setSaturation(stack, this.saturation);
+
+        if(this.customName != null)
+        {
+            stack.setHoverName(this.customName);
+        }
 
         return stack;
     }
@@ -212,6 +235,11 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
             this.uniqueness = stack.getTag().getInt(NBTUtils.TAG_UNIQUENESS);
             this.hunger = stack.getTag().getInt(NBTUtils.TAG_HUNGER);
             this.saturation = stack.getTag().getFloat(NBTUtils.TAG_SATURATION);
+
+            if(stack.hasCustomHoverName())
+            {
+                this.customName = stack.getHoverName();
+            }
         }
     }
 
@@ -414,6 +442,10 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
     @Override
     public Component getDisplayName()
     {
+        if(this.customName != null)
+        {
+            return this.customName;
+        }
         return Component.translatable(getBlockState().getBlock().getDescriptionId());
     }
 

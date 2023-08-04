@@ -80,6 +80,6 @@ public class PizzaSliceItem extends Item
                 }
             }
         }
-        return builder.build();
+        return builder.alwaysEat().build();
     }
 }

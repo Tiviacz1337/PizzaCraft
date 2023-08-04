@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "pizzacraft:stone_knife",
+    "pizzacraft:golden_knife",
+    "pizzacraft:iron_knife",
+    "pizzacraft:diamond_knife",
+    "pizzacraft:netherite_knife"
+  ]
+}

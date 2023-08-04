@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -85,8 +86,8 @@ public class PizzaStationBlockEntity extends BaseBlockEntity implements MenuProv
             public boolean isItemValid(int slot, @NotNull ItemStack stack)
             {
                 if(slot == 0) return false;
-                if(slot == 1) return stack.getItem() == ModItems.DOUGH.get();
-                if(slot == 2) return stack.getItem() instanceof SauceItem || stack.getItem() instanceof PotionItem;
+                if(slot == 1) return stack.is(ModTags.DOUGH);
+                if(slot == 2) return (stack.getItem() instanceof SauceItem || stack.is(ModTags.SAUCE)) || stack.getItem() instanceof PotionItem;
                 else return stack.isEdible() || stack.is(ModTags.INGREDIENTS);
             }
 

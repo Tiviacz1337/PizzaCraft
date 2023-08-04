@@ -3,15 +3,13 @@ package com.tiviacz.pizzacraft.container;
 import com.tiviacz.pizzacraft.blockentity.PizzaBlockEntity;
 import com.tiviacz.pizzacraft.init.ModMenuTypes;
 import com.tiviacz.pizzacraft.items.SauceItem;
+import com.tiviacz.pizzacraft.tags.ModTags;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.BowlFoodItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -198,7 +196,7 @@ public class PizzaMenu extends AbstractContainerMenu
             @Override
             public boolean isItemValid(int slot, @NotNull ItemStack stack)
             {
-                return stack.getItem() instanceof PotionItem || stack.getItem() instanceof SauceItem;
+                return stack.getItem() instanceof PotionItem || (stack.getItem() instanceof SauceItem || stack.is(ModTags.SAUCE));
             }
         };
     }

@@ -69,7 +69,7 @@ public class PizzaCalculator
 
         if(stack.is(ModTags.SLICED_INGREDIENTS))
         {
-            nutrition += 2;
+            nutrition += 4;
             saturation += 0.25F;
         }
 
