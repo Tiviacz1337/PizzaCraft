@@ -2,7 +2,6 @@ package com.tiviacz.pizzacraft.blockentity;
 
 import com.tiviacz.pizzacraft.container.PizzaStationMenu;
 import com.tiviacz.pizzacraft.init.ModBlockEntityTypes;
-import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.items.SauceItem;
 import com.tiviacz.pizzacraft.tags.ModTags;
 import net.minecraft.core.BlockPos;
@@ -16,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -87,7 +85,7 @@ public class PizzaStationBlockEntity extends BaseBlockEntity implements MenuProv
             {
                 if(slot == 0) return false;
                 if(slot == 1) return stack.is(ModTags.DOUGH);
-                if(slot == 2) return (stack.getItem() instanceof SauceItem || stack.is(ModTags.SAUCE)) || stack.getItem() instanceof PotionItem;
+                if(slot == 2) return (stack.getItem() instanceof SauceItem || stack.is(ModTags.SAUCE)) || (stack.getItem() instanceof PotionItem);
                 else return stack.isEdible() || stack.is(ModTags.INGREDIENTS);
             }
 

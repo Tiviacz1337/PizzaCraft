@@ -2,10 +2,8 @@ package com.tiviacz.pizzacraft.init;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.blockentity.content.SauceType;
-import com.tiviacz.pizzacraft.common.PizzaCraftItemGroup;
 import com.tiviacz.pizzacraft.items.ArmorMaterials;
 import com.tiviacz.pizzacraft.items.*;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
@@ -41,15 +39,15 @@ public class ModItems
     public static final RegistryObject<Item> BLACKSTONE_BASIN = registerBlockItem("blackstone_basin", ModBlocks.BLACKSTONE_BASIN, pizzaProperties());
 
     //Outfits
-    public static final RegistryObject<Item> CHEF_HAT = ITEMS.register("chef_hat", () -> new ChefArmor(ArmorMaterials.CHEF, EquipmentSlot.HEAD, pizzaProperties()));
-    public static final RegistryObject<Item> CHEF_SHIRT = ITEMS.register("chef_shirt", () -> new ChefArmor(ArmorMaterials.CHEF, EquipmentSlot.CHEST, pizzaProperties()));
-    public static final RegistryObject<Item> CHEF_LEGGINGS = ITEMS.register("chef_leggings", () -> new ChefArmor(ArmorMaterials.CHEF, EquipmentSlot.LEGS, pizzaProperties()));
-    public static final RegistryObject<Item> CHEF_BOOTS = ITEMS.register("chef_boots", () -> new ChefArmor(ArmorMaterials.CHEF, EquipmentSlot.FEET, pizzaProperties()));
+    public static final RegistryObject<Item> CHEF_HAT = ITEMS.register("chef_hat", () -> new ChefArmor(ArmorMaterials.CHEF, ArmorItem.Type.HELMET, pizzaProperties()));
+    public static final RegistryObject<Item> CHEF_SHIRT = ITEMS.register("chef_shirt", () -> new ChefArmor(ArmorMaterials.CHEF, ArmorItem.Type.CHESTPLATE, pizzaProperties()));
+    public static final RegistryObject<Item> CHEF_LEGGINGS = ITEMS.register("chef_leggings", () -> new ChefArmor(ArmorMaterials.CHEF, ArmorItem.Type.LEGGINGS, pizzaProperties()));
+    public static final RegistryObject<Item> CHEF_BOOTS = ITEMS.register("chef_boots", () -> new ChefArmor(ArmorMaterials.CHEF, ArmorItem.Type.BOOTS, pizzaProperties()));
 
-    public static final RegistryObject<Item> PIZZA_DELIVERY_CAP = ITEMS.register("pizza_delivery_cap", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, EquipmentSlot.HEAD, pizzaProperties()));
-    public static final RegistryObject<Item> PIZZA_DELIVERY_SHIRT = ITEMS.register("pizza_delivery_shirt", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, EquipmentSlot.CHEST, pizzaProperties()));
-    public static final RegistryObject<Item> PIZZA_DELIVERY_LEGGINGS = ITEMS.register("pizza_delivery_leggings", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, EquipmentSlot.LEGS, pizzaProperties()));
-    public static final RegistryObject<Item> PIZZA_DELIVERY_BOOTS = ITEMS.register("pizza_delivery_boots", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, EquipmentSlot.FEET, pizzaProperties()));
+    public static final RegistryObject<Item> PIZZA_DELIVERY_CAP = ITEMS.register("pizza_delivery_cap", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, ArmorItem.Type.HELMET, pizzaProperties()));
+    public static final RegistryObject<Item> PIZZA_DELIVERY_SHIRT = ITEMS.register("pizza_delivery_shirt", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, ArmorItem.Type.CHESTPLATE, pizzaProperties()));
+    public static final RegistryObject<Item> PIZZA_DELIVERY_LEGGINGS = ITEMS.register("pizza_delivery_leggings", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, ArmorItem.Type.LEGGINGS, pizzaProperties()));
+    public static final RegistryObject<Item> PIZZA_DELIVERY_BOOTS = ITEMS.register("pizza_delivery_boots", () -> new PizzaDeliveryArmor(ArmorMaterials.PIZZA_DELIVERY, ArmorItem.Type.BOOTS, pizzaProperties()));
 
     //Gear
     public static final RegistryObject<Item> RED_PIZZA_BAG = ITEMS.register("red_pizza_bag", () -> new PizzaBagItem(ModBlocks.RED_PIZZA_BAG.get(), pizzaProperties().stacksTo(1)));
@@ -139,6 +137,6 @@ public class ModItems
 
     public static Item.Properties pizzaProperties()
     {
-        return new Item.Properties().tab(PizzaCraftItemGroup.PIZZACRAFT);
+        return new Item.Properties();
     }
 }

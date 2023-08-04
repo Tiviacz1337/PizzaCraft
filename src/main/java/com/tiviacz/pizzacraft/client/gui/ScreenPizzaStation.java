@@ -9,12 +9,11 @@ import com.tiviacz.pizzacraft.network.ServerboundRenamePizzaPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundRenameItemPacket;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
@@ -33,7 +32,7 @@ public class ScreenPizzaStation extends AbstractContainerScreen<PizzaStationMenu
     private static final ResourceLocation EMPTY_SLOT_POTION = new ResourceLocation(PizzaCraft.MODID, "item/empty_slot_potion");
     private static final ResourceLocation EMPTY_SLOT_DOUGH = new ResourceLocation(PizzaCraft.MODID, "item/empty_slot_dough");
     public static final List<ResourceLocation> SAUCES = List.of(EMPTY_SLOT_SAUCE, EMPTY_SLOT_POTION);
-    public static final List<ResourceLocation> DOUGH = List.of(EMPTY_SLOT_DOUGH);
+    private static final List<ResourceLocation> DOUGH = List.of(EMPTY_SLOT_DOUGH);
     private final PizzaStationBlockEntity blockEntity;
     private EditBox name;
 
@@ -53,10 +52,8 @@ public class ScreenPizzaStation extends AbstractContainerScreen<PizzaStationMenu
         this.titleLabelY = 6;
 
         this.imageWidth = 176;
-        //this.imageHeight = 166;
         this.imageHeight = 196;
 
-        //this.inventoryLabelY += 1;
         this.inventoryLabelY += 31;
     }
 
@@ -79,7 +76,6 @@ public class ScreenPizzaStation extends AbstractContainerScreen<PizzaStationMenu
 
     protected void subInit()
     {
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         this.name = new EditBox(this.font, i + 57, j + 24, 98, 12, blockEntity.getDisplayName());
@@ -91,7 +87,7 @@ public class ScreenPizzaStation extends AbstractContainerScreen<PizzaStationMenu
         this.name.setResponder(this::onNameChanged);
         this.name.setValue("");
         this.addWidget(this.name);
-        this.setInitialFocus(this.name);
+        this.m_264313_(this.name);
         this.name.setEditable(false);
     }
 
@@ -124,21 +120,34 @@ public class ScreenPizzaStation extends AbstractContainerScreen<PizzaStationMenu
     }
 
     @Override
-    public void resize(Minecraft p_97886_, int p_97887_, int p_97888_) {
+    public void resize(Minecraft pMinecraft, int pWidth, int pHeight)
+    {
         String s = this.name.getValue();
-        this.init(p_97886_, p_97887_, p_97888_);
+        this.init(pMinecraft, pWidth, pHeight);
         this.name.setValue(s);
     }
 
-    private void onNameChanged(String p_97899_)
+    @Override
+    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers)
     {
-        if (!p_97899_.isEmpty()) {
-            String s = p_97899_;
+        if(pKeyCode == 256)
+        {
+            this.minecraft.player.closeContainer();
+        }
+
+        return !this.name.keyPressed(pKeyCode, pScanCode, pModifiers) && !this.name.canConsumeInput() ? super.keyPressed(pKeyCode, pScanCode, pModifiers) : true;
+    }
+
+    private void onNameChanged(String name)
+    {
+        if(!name.isEmpty())
+        {
+            String s = name;
             Slot slot = this.menu.getSlot(0);
-            if (slot != null && slot.hasItem() && !slot.getItem().hasCustomHoverName() && p_97899_.equals(slot.getItem().getHoverName().getString())) {
+            if(slot != null && slot.hasItem() && !slot.getItem().hasCustomHoverName() && name.equals(slot.getItem().getHoverName().getString()))
+            {
                 s = "";
             }
-
             this.menu.setItemName(s);
             PizzaCraft.NETWORK.sendToServer(new ServerboundRenamePizzaPacket(s));
         }
@@ -149,32 +158,22 @@ public class ScreenPizzaStation extends AbstractContainerScreen<PizzaStationMenu
     {
         super.removed();
         this.menu.removeSlotListener(this);
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
     }
 
     @Override
-    public boolean keyPressed(int p_97878_, int p_97879_, int p_97880_)
+    public void slotChanged(AbstractContainerMenu pContainerToSend, int pSlotInd, ItemStack pStack)
     {
-        if (p_97878_ == 256) {
-            this.minecraft.player.closeContainer();
-        }
-
-        return !this.name.keyPressed(p_97878_, p_97879_, p_97880_) && !this.name.canConsumeInput() ? super.keyPressed(p_97878_, p_97879_, p_97880_) : true;
-    }
-
-    @Override
-    public void slotChanged(AbstractContainerMenu p_97882_, int p_97883_, ItemStack p_97884_)
-    {
-        if (p_97883_ == 0) {
-            this.name.setValue(p_97884_.isEmpty() ? "" : p_97884_.getHoverName().getString());
-            this.name.setEditable(!p_97884_.isEmpty());
+        if(pSlotInd == 0)
+        {
+            this.name.setValue(pStack.isEmpty() ? "" : pStack.getHoverName().getString());
+            this.name.setEditable(!pStack.isEmpty());
             this.setFocused(this.name);
         }
     }
 
     @Override
-    public void dataChanged(AbstractContainerMenu p_150524_, int p_150525_, int p_150526_)
+    public void dataChanged(AbstractContainerMenu pContainerMenu, int pDataSlotIndex, int pValue)
     {
-        this.slotChanged(p_150524_, 0, p_150524_.getSlot(0).getItem());
+        this.slotChanged(pContainerMenu, 0, pContainerMenu.getSlot(0).getItem());
     }
 }

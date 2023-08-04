@@ -24,7 +24,7 @@ public class PizzaBlockCalculator extends PizzaCalculator
 
         for(int i = 0; i < ingredients.getSlots(); i++)
         {
-            processFood(ingredients.getStackInSlot(i).copy());
+            processFood(ingredients.getStackInSlot(i).copyWithCount(1));
         }
     }
 

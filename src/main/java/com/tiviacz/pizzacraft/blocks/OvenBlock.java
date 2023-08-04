@@ -9,7 +9,6 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -95,7 +94,7 @@ public class OvenBlock extends Block
         boolean isLit = level.getBlockState(pos).getValue(LIT);
         if(isLit && !entityIn.fireImmune() && entityIn instanceof LivingEntity livingEntity && !EnchantmentHelper.hasFrostWalker(livingEntity))
         {
-            entityIn.hurt(DamageSource.HOT_FLOOR, 1.0F);
+            entityIn.hurt(entityIn.m_269291_().m_269047_(), 1.0F);
         }
 
         super.stepOn(level, pos, state, entityIn);

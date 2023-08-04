@@ -4,7 +4,6 @@ import com.tiviacz.pizzacraft.PizzaCraft;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.LazyLoadedValue;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -38,15 +37,15 @@ public class ArmorMaterials implements ArmorMaterial
     }
 
     @Override
-    public int getDurabilityForSlot(EquipmentSlot equipmentSlot)
+    public int getDurabilityForSlot(ArmorItem.Type pType)
     {
-        return MAX_DAMAGE_ARRAY[equipmentSlot.getIndex()] * this.durability;
+        return MAX_DAMAGE_ARRAY[pType.m_266308_().getIndex()] * this.durability;
     }
 
     @Override
-    public int getDefenseForSlot(EquipmentSlot equipmentSlot)
+    public int m_266425_(ArmorItem.Type pType)
     {
-        return this.defense[equipmentSlot.getIndex()];
+        return this.defense[pType.m_266308_().getIndex()];
     }
 
     @Override

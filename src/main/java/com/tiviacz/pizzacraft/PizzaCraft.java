@@ -59,8 +59,8 @@ public class PizzaCraft
         ModRecipes.RECIPE_TYPES.register(modEventBus);
         ModSounds.SOUND_EVENTS.register(modEventBus);
         ModLootModifiers.LOOT_MODIFIERS.register(modEventBus);
-        ModPlacedFeatures.PLACED_FEATURES.register(modEventBus);
-        ModConfiguredFeatures.CONFIGURED_FEATURES.register(modEventBus);
+
+        modEventBus.addListener(ModCreativeTabs::addCreative);
 
         curiosLoaded = ModList.get().isLoaded("curios");
     }

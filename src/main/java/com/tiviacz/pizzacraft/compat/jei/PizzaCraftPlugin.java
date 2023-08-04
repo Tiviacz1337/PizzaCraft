@@ -12,7 +12,7 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
-import mezz.jei.common.plugins.vanilla.crafting.CategoryRecipeValidator;
+import mezz.jei.library.plugins.vanilla.crafting.CategoryRecipeValidator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -71,12 +71,12 @@ public class PizzaCraftPlugin implements IModPlugin
     }
 
     public List<ChoppingRecipe> getChoppingRecipes(IRecipeCategory<ChoppingRecipe> chopping, IIngredientManager ingredientManager) {
-        CategoryRecipeValidator<ChoppingRecipe> validator = new CategoryRecipeValidator<>(chopping, 1);
+        CategoryRecipeValidator<ChoppingRecipe> validator = new CategoryRecipeValidator<>(chopping, ingredientManager, 1);
         return getValidHandledRecipes(Minecraft.getInstance().level.getRecipeManager(), ModRecipes.CHOPPING_RECIPE_TYPE.get(), validator);
     }
 
     public List<CrushingRecipe> getCrushing(IRecipeCategory<CrushingRecipe> crushing, IIngredientManager ingredientManager) {
-        CategoryRecipeValidator<CrushingRecipe> validator = new CategoryRecipeValidator<>(crushing, 1);
+        CategoryRecipeValidator<CrushingRecipe> validator = new CategoryRecipeValidator<>(crushing, ingredientManager, 1);
         return getValidHandledRecipes(Minecraft.getInstance().level.getRecipeManager(), ModRecipes.CRUSHING_RECIPE_TYPE.get(), validator);
     }
 

@@ -1,13 +1,9 @@
 package com.tiviacz.pizzacraft.client;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
-import com.mojang.math.Vector3f;
 import com.tiviacz.pizzacraft.init.PizzaLayers;
 import com.tiviacz.pizzacraft.util.NBTUtils;
 import com.tiviacz.pizzacraft.util.RenderUtils;
@@ -33,10 +29,14 @@ import net.minecraftforge.client.model.geometry.*;
 import net.minecraftforge.items.ItemStackHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class DynamicPizzaSliceModel implements IUnbakedGeometry<DynamicPizzaSliceModel>
@@ -49,8 +49,8 @@ public class DynamicPizzaSliceModel implements IUnbakedGeometry<DynamicPizzaSlic
     private static final float NORTH_Z_FLUID = 7.498f / 16f;
     private static final float SOUTH_Z_FLUID = 8.502f / 16f;
 
-    private static final Transformation FLUID_TRANSFORM = new Transformation(new Vector3f(), Quaternion.ONE, new Vector3f(1, 1, 1.002f), Quaternion.ONE);
-    private static final Transformation COVER_TRANSFORM = new Transformation(new Vector3f(), Quaternion.ONE, new Vector3f(1, 1, 1.004f), Quaternion.ONE);
+    private static final Transformation FLUID_TRANSFORM = new Transformation(new Vector3f(), new Quaternionf(), new Vector3f(1, 1, 1.002f), new Quaternionf());
+    private static final Transformation COVER_TRANSFORM = new Transformation(new Vector3f(), new Quaternionf(), new Vector3f(1, 1, 1.004f), new Quaternionf());
 
     @Nonnull
     private final ItemStack stack;
@@ -66,7 +66,7 @@ public class DynamicPizzaSliceModel implements IUnbakedGeometry<DynamicPizzaSlic
     }
 
     @Override
-    public BakedModel bake(IGeometryBakingContext context, ModelBakery baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides, ResourceLocation modelLocation)
+    public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState, ItemOverrides overrides, ResourceLocation modelLocation)
     {
         Material particleLocation = context.hasMaterial("particle") ? context.getMaterial("particle") : null;
         Material baseLocation = context.hasMaterial("base") ? context.getMaterial("base") : null;
@@ -152,7 +152,7 @@ public class DynamicPizzaSliceModel implements IUnbakedGeometry<DynamicPizzaSlic
             TextureAtlasSprite sprite = spriteGetter.apply(baseLocation);
 
             // Base texture
-            var unbaked = UnbakedGeometryHelper.createUnbakedItemElements(0, sprite);
+            var unbaked = UnbakedGeometryHelper.createUnbakedItemElements(0, sprite.contents());
             var quads = UnbakedGeometryHelper.bakeElements(unbaked, $ -> sprite, modelState, modelLocation);
             builder.addQuads(normalRenderTypes, quads);
         }
@@ -173,7 +173,7 @@ public class DynamicPizzaSliceModel implements IUnbakedGeometry<DynamicPizzaSlic
                 if(sprite != null)
                 {
                     var transformedState = new SimpleModelState(modelState.getRotation().compose(getLayerTransformation(i)), modelState.isUvLocked());
-                    var unbaked = UnbakedGeometryHelper.createUnbakedItemMaskElements(2, sprite); // Use cover as mask
+                    var unbaked = UnbakedGeometryHelper.createUnbakedItemMaskElements(2, sprite.contents()); // Use cover as mask
                     var quads = UnbakedGeometryHelper.bakeElements(unbaked, $ -> sprite, transformedState, modelLocation);
 
                     ColoredQuadTransformer colorizer = new ColoredQuadTransformer();
@@ -200,15 +200,6 @@ public class DynamicPizzaSliceModel implements IUnbakedGeometry<DynamicPizzaSlic
         return builder.build();
     }
 
-    @Override
-    public Collection<Material> getMaterials(IGeometryBakingContext context, Function<ResourceLocation, UnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors)
-    {
-        Set<Material> texs = Sets.newHashSet();
-        if(context.hasMaterial("particle")) texs.add(context.getMaterial("particle"));
-        if(context.hasMaterial("base")) texs.add(context.getMaterial("base"));
-        return texs;
-    }
-
     public List initializeNullList(int size)
     {
         List list = new ArrayList();
@@ -222,7 +213,7 @@ public class DynamicPizzaSliceModel implements IUnbakedGeometry<DynamicPizzaSlic
 
     public static Transformation getLayerTransformation(int i)
     {
-        return new Transformation(new Vector3f(0, 0, 0.0001F + i * 0.0001F), Quaternion.ONE, new Vector3f(1, 1, 1F + 0.0001F * i), Quaternion.ONE);
+        return new Transformation(new Vector3f(0, 0, 0.0001F + i * 0.0001F), new Quaternionf(), new Vector3f(1, 1, 1F + 0.0001F * i), new Quaternionf());
     }
 
     public static RenderTypeGroup getLayerRenderTypes()
@@ -245,11 +236,11 @@ public class DynamicPizzaSliceModel implements IUnbakedGeometry<DynamicPizzaSlic
     {
         private final Map<String, BakedModel> cache = Maps.newHashMap(); // contains all the baked models since they'll never change
         private final ItemOverrides nested;
-        private final ModelBakery baker;
+        private final ModelBaker baker;
         private final IGeometryBakingContext owner;
         private final DynamicPizzaSliceModel parent;
 
-        private PizzaSliceOverrideHandler(ItemOverrides nested, ModelBakery baker, IGeometryBakingContext owner, DynamicPizzaSliceModel parent)
+        private PizzaSliceOverrideHandler(ItemOverrides nested, ModelBaker baker, IGeometryBakingContext owner, DynamicPizzaSliceModel parent)
         {
             this.nested = nested;
             this.baker = baker;

@@ -29,7 +29,7 @@ public class ChoppingRecipe implements Recipe<RecipeWrapper>
     }
 
     @Override
-    public ItemStack getResultItem()
+    public ItemStack getResultItem(RegistryAccess access)
     {
         return this.output;
     }
@@ -41,7 +41,7 @@ public class ChoppingRecipe implements Recipe<RecipeWrapper>
     }
 
     @Override
-    public ItemStack assemble(RecipeWrapper recipeWrapper)
+    public ItemStack assemble(RecipeWrapper recipeWrapper, RegistryAccess access)
     {
         return this.output;
     }

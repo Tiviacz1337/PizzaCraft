@@ -6,8 +6,10 @@ import com.tiviacz.pizzacraft.blocks.crops.DoubleCropBlock;
 import com.tiviacz.pizzacraft.blocks.crops.SimpleCropBlock;
 import com.tiviacz.pizzacraft.worldgen.trees.OliveTree;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
@@ -60,13 +62,13 @@ public class ModBlocks
     public static final RegistryObject<Block> OLIVE_LEAVES = registerBlock("olive_leaves", () -> new LeavesBlock(Block.Properties.copy(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> FRUIT_OLIVE_LEAVES = registerBlock("fruit_olive_leaves", () -> new OliveLeavesBlock(Block.Properties.copy(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> OLIVE_SLAB = registerBlock("olive_slab", () -> new SlabBlock(Block.Properties.copy(Blocks.OAK_SLAB)));
-    public static final RegistryObject<Block> OLIVE_PRESSURE_PLATE = registerBlock("olive_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, Block.Properties.copy(Blocks.OAK_PRESSURE_PLATE)));
+    public static final RegistryObject<Block> OLIVE_PRESSURE_PLATE = registerBlock("olive_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, Block.Properties.copy(Blocks.OAK_PRESSURE_PLATE), BlockSetType.f_271512_));
     public static final RegistryObject<Block> OLIVE_FENCE = registerBlock("olive_fence", () -> new FenceBlock(Block.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> OLIVE_TRAPDOOR = registerBlock("olive_trapdoor", () -> new TrapDoorBlock(Block.Properties.copy(Blocks.OAK_TRAPDOOR)));
-    public static final RegistryObject<Block> OLIVE_FENCE_GATE = registerBlock("olive_fence_gate", () -> new FenceGateBlock(Block.Properties.copy(Blocks.OAK_FENCE_GATE)));
-    public static final RegistryObject<Block> OLIVE_BUTTON = registerBlock("olive_button", () -> new WoodButtonBlock(Block.Properties.copy(Blocks.OAK_BUTTON)));
+    public static final RegistryObject<Block> OLIVE_TRAPDOOR = registerBlock("olive_trapdoor", () -> new TrapDoorBlock(Block.Properties.copy(Blocks.OAK_TRAPDOOR), BlockSetType.f_271512_));
+    public static final RegistryObject<Block> OLIVE_FENCE_GATE = registerBlock("olive_fence_gate", () -> new FenceGateBlock(Block.Properties.copy(Blocks.OAK_FENCE_GATE), SoundEvents.FENCE_GATE_CLOSE, SoundEvents.FENCE_GATE_OPEN));
+    public static final RegistryObject<Block> OLIVE_BUTTON = registerBlock("olive_button", () -> new ButtonBlock(Block.Properties.copy(Blocks.OAK_BUTTON), BlockSetType.f_271512_, 30, true));
     public static final RegistryObject<Block> OLIVE_STAIRS = registerBlock("olive_stairs", () -> new StairBlock(() -> OLIVE_PLANKS.get().defaultBlockState(), Block.Properties.copy(Blocks.OAK_STAIRS)));
-    public static final RegistryObject<Block> OLIVE_DOOR = registerBlock("olive_door", () -> new DoorBlock(Block.Properties.copy(Blocks.OAK_DOOR)));
+    public static final RegistryObject<Block> OLIVE_DOOR = registerBlock("olive_door", () -> new DoorBlock(Block.Properties.copy(Blocks.OAK_DOOR), BlockSetType.f_271512_));
     public static final RegistryObject<Block> OLIVE_BOOKSHELF = registerBlock("olive_bookshelf", () -> new OliveBookshelfBlock(Block.Properties.copy(Blocks.BOOKSHELF)));
 
     //Crops

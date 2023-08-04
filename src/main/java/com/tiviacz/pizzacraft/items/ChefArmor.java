@@ -22,9 +22,9 @@ import java.util.function.Consumer;
 
 public class ChefArmor extends ArmorItem
 {
-    public ChefArmor(ArmorMaterial materialIn, EquipmentSlot equipmentSlot, Properties builderIn)
+    public ChefArmor(ArmorMaterial materialIn, ArmorItem.Type pType, Properties builderIn)
     {
-        super(materialIn, equipmentSlot, builderIn);
+        super(materialIn, pType, builderIn);
     }
 
     @Override

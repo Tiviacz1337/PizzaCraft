@@ -11,7 +11,8 @@ public class ModNetwork
     public static final ResourceLocation CHANNEL_NAME = new ResourceLocation(PizzaCraft.MODID, "network");
     public static final String NETWORK_VERSION = new ResourceLocation(PizzaCraft.MODID, "1").toString();
 
-    public static SimpleChannel registerNetworkChannel() {
+    public static SimpleChannel registerNetworkChannel()
+    {
         final SimpleChannel channel = NetworkRegistry.ChannelBuilder.named(CHANNEL_NAME)
                 .clientAcceptedVersions(version -> true)
                 .serverAcceptedVersions(version -> true)

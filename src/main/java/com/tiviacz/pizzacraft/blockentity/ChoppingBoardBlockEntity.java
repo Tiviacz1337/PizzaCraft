@@ -89,7 +89,7 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity
 
         if(match.isPresent())
         {
-            ItemStack result = match.get().getResultItem().copy();
+            ItemStack result = match.get().getResultItem(player.getLevel().m_9598_()).copy();
             level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, getStoredStack()), getBlockPos().getX() + 0.5D, getBlockPos().getY() + 0.3D, getBlockPos().getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
             level.playSound(player, getBlockPos(), SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 0.7F, 0.8F);
 

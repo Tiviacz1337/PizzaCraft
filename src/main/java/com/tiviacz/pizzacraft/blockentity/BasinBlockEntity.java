@@ -2,7 +2,6 @@ package com.tiviacz.pizzacraft.blockentity;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonSyntaxException;
-import com.mojang.math.Vector3f;
 import com.tiviacz.pizzacraft.blockentity.content.BasinContent;
 import com.tiviacz.pizzacraft.blockentity.content.BasinContentType;
 import com.tiviacz.pizzacraft.blockentity.content.SauceType;
@@ -34,6 +33,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
+import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

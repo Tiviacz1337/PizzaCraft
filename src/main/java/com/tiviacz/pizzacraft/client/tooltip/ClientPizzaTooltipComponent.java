@@ -5,8 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.tiviacz.pizzacraft.util.Utils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.NonNullList;
@@ -40,7 +38,7 @@ public class ClientPizzaTooltipComponent implements ClientTooltipComponent
     }
 
     @Override
-    public void renderImage(Font pFont, int pX, int pY, PoseStack poseStack, ItemRenderer itemRenderer, int z)
+    public void renderImage(Font pFont, int pX, int pY, PoseStack pPoseStack, ItemRenderer pItemRenderer)
     {
         if(!Utils.isShiftPressed()) return;
 
@@ -52,47 +50,50 @@ public class ClientPizzaTooltipComponent implements ClientTooltipComponent
             for(int i1 = 0; i1 < i; ++i1) {
                 int j1 = pX + i1 * 18 + 1;
                 int k1 = pY + l * 20 + 1;
-                this.renderSlot(j1, k1, k++, pFont, poseStack, itemRenderer, z);
+                this.renderSlot(j1, k1, k++, pFont, pPoseStack, pItemRenderer);
             }
         }
 
-        this.drawBorder(pX, pY, i, j, poseStack, z);
+        this.drawBorder(pX, pY, i, j, pPoseStack);
     }
 
-    private void renderSlot(int p_194027_, int p_194028_, int p_194029_, Font p_194031_, PoseStack p_194032_, ItemRenderer p_194033_, int p_194034_) {
-        if (p_194029_ >= this.items.size()) {
-            this.blit(p_194032_, p_194027_, p_194028_, p_194034_, true ? Texture.BLOCKED_SLOT : Texture.SLOT);
-        } else {
-            ItemStack itemstack = this.items.get(p_194029_);
-            this.blit(p_194032_, p_194027_, p_194028_, p_194034_, Texture.SLOT);
-            p_194033_.renderAndDecorateItem(itemstack, p_194027_ + 1, p_194028_ + 1, p_194029_);
-            p_194033_.renderGuiItemDecorations(p_194031_, itemstack, p_194027_ + 1, p_194028_ + 1);
-        }
-    }
-
-    private void drawBorder(int p_194020_, int p_194021_, int p_194022_, int p_194023_, PoseStack p_194024_, int p_194025_) {
-        this.blit(p_194024_, p_194020_, p_194021_, p_194025_, Texture.BORDER_CORNER_TOP);
-        this.blit(p_194024_, p_194020_ + p_194022_ * 18 + 1, p_194021_, p_194025_, Texture.BORDER_CORNER_TOP);
-
-        for(int i = 0; i < p_194022_; ++i) {
-            this.blit(p_194024_, p_194020_ + 1 + i * 18, p_194021_, p_194025_, Texture.BORDER_HORIZONTAL_TOP);
-            this.blit(p_194024_, p_194020_ + 1 + i * 18, p_194021_ + p_194023_ * 20, p_194025_, Texture.BORDER_HORIZONTAL_BOTTOM);
-        }
-
-        for(int j = 0; j < p_194023_; ++j) {
-            this.blit(p_194024_, p_194020_, p_194021_ + j * 20 + 1, p_194025_, Texture.BORDER_VERTICAL);
-            this.blit(p_194024_, p_194020_ + p_194022_ * 18 + 1, p_194021_ + j * 20 + 1, p_194025_, Texture.BORDER_VERTICAL);
-        }
-
-        this.blit(p_194024_, p_194020_, p_194021_ + p_194023_ * 20, p_194025_, Texture.BORDER_CORNER_BOTTOM);
-        this.blit(p_194024_, p_194020_ + p_194022_ * 18 + 1, p_194021_ + p_194023_ * 20, p_194025_, Texture.BORDER_CORNER_BOTTOM);
-    }
-
-    private void blit(PoseStack p_194036_, int p_194037_, int p_194038_, int p_194039_, Texture p_194040_)
+    private void renderSlot(int pX, int pY, int pItemIndex, Font pFont, PoseStack poseStack, ItemRenderer itemRenderer)
     {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        if(pItemIndex >= this.items.size())
+        {
+            this.blit(poseStack, pX, pY, true ? Texture.BLOCKED_SLOT : Texture.SLOT);
+        }
+        else
+        {
+            ItemStack itemstack = this.items.get(pItemIndex);
+            this.blit(poseStack, pX, pY, Texture.SLOT);
+            itemRenderer.m_274407_(poseStack, itemstack, pX + 1, pY + 1, pItemIndex);
+            itemRenderer.m_274412_(poseStack, pFont, itemstack, pX + 1, pY + 1);
+        }
+    }
+
+    private void drawBorder(int pX, int pY, int pSlotWidth, int pSlotHeight, PoseStack poseStack) {
+        this.blit(poseStack, pX, pY, ClientPizzaTooltipComponent.Texture.BORDER_CORNER_TOP);
+        this.blit(poseStack, pX + pSlotWidth * 18 + 1, pY, ClientPizzaTooltipComponent.Texture.BORDER_CORNER_TOP);
+
+        for(int i = 0; i < pSlotWidth; ++i) {
+            this.blit(poseStack, pX + 1 + i * 18, pY, ClientPizzaTooltipComponent.Texture.BORDER_HORIZONTAL_TOP);
+            this.blit(poseStack, pX + 1 + i * 18, pY + pSlotHeight * 20, ClientPizzaTooltipComponent.Texture.BORDER_HORIZONTAL_BOTTOM);
+        }
+
+        for(int j = 0; j < pSlotHeight; ++j) {
+            this.blit(poseStack, pX, pY + j * 20 + 1, ClientPizzaTooltipComponent.Texture.BORDER_VERTICAL);
+            this.blit(poseStack, pX + pSlotWidth * 18 + 1, pY + j * 20 + 1, ClientPizzaTooltipComponent.Texture.BORDER_VERTICAL);
+        }
+
+        this.blit(poseStack, pX, pY + pSlotHeight * 20, ClientPizzaTooltipComponent.Texture.BORDER_CORNER_BOTTOM);
+        this.blit(poseStack, pX + pSlotWidth * 18 + 1, pY + pSlotHeight * 20, ClientPizzaTooltipComponent.Texture.BORDER_CORNER_BOTTOM);
+    }
+
+    private void blit(PoseStack poseStack, int pX, int pY, Texture pTexture)
+    {
         RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
-        GuiComponent.blit(p_194036_, p_194037_, p_194038_, p_194039_, (float)p_194040_.x, (float)p_194040_.y, p_194040_.w, p_194040_.h, 128, 128);
+        GuiComponent.blit(poseStack, pX, pY, 0, (float)pTexture.x, (float)pTexture.y, pTexture.w, pTexture.h, 128, 128);
     }
 
     private int gridSizeX() {

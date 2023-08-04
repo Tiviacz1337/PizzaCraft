@@ -22,9 +22,9 @@ import java.util.function.Consumer;
 
 public class PizzaDeliveryArmor extends ArmorItem
 {
-    public PizzaDeliveryArmor(ArmorMaterial materialIn, EquipmentSlot equipmentSlot, Properties builderIn)
+    public PizzaDeliveryArmor(ArmorMaterial materialIn, ArmorItem.Type type, Properties builderIn)
     {
-        super(materialIn, equipmentSlot, builderIn);
+        super(materialIn, type, builderIn);
     }
 
     @Override

@@ -15,7 +15,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
-import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -157,11 +156,15 @@ public class PizzaStationMenu extends AbstractContainerMenu
             return;
         }
 
-        if (StringUtils.isBlank(this.itemName)) {
+        if(StringUtils.isBlank(this.itemName))
+        {
             result.resetHoverName();
-        } else if (!this.itemName.equals(result.getHoverName().getString())) {
+        }
+        else if(!this.itemName.equals(result.getHoverName().getString()))
+        {
             result.setHoverName(Component.literal(this.itemName));
         }
+
         setOutput(result);
     }
 

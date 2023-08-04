@@ -101,7 +101,6 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
         {
             compound.putString(CUSTOM_NAME, Component.Serializer.toJson(this.customName));
         }
-
     }
 
     public InteractionResult onBlockActivated(Player player, InteractionHand hand)
@@ -195,6 +194,19 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
                     }
                 }
             }
+
+        /*    if(!isRaw())
+            {
+                if(stack.isEmpty())
+                {
+                    if(player.isCrouching())
+                    {
+                        //Open Gui
+                        openGUI(player, this, getBlockPos());
+                        return InteractionResult.SUCCESS;
+                    }
+                }
+            } */
         }
         return InteractionResult.FAIL;
     }
@@ -446,6 +458,7 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
         {
             return this.customName;
         }
+
         return Component.translatable(getBlockState().getBlock().getDescriptionId());
     }
 
@@ -466,6 +479,7 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
 
     // ======== MODELDATA ========
 
+    @Nonnull
     @Override
     public ModelData getModelData()
     {

@@ -2,7 +2,6 @@ package com.tiviacz.pizzacraft.client;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.math.Transformation;
-import com.mojang.math.Vector3f;
 import com.tiviacz.pizzacraft.init.PizzaLayers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -22,6 +21,7 @@ import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.items.IItemHandler;
+import org.joml.Vector3f;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -99,8 +99,7 @@ public class PizzaBakedModel implements BakedModel
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand)
     {
-        return getQuads(state, side, rand, ModelData.EMPTY, RenderType.cutoutMipped());
-        //throw new AssertionError("IBakedModel::getQuads should never be called, only IForgeBakedModel::getQuads");
+        throw new AssertionError("IBakedModel::getQuads should never be called, only IForgeBakedModel::getQuads");
     }
 
     protected static final float[][] VECTORS = new float[][]

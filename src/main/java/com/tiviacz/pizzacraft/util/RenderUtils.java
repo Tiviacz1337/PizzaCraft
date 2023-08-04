@@ -23,10 +23,10 @@ public class RenderUtils
 
     public static int getDominantColor(TextureAtlasSprite sprite, boolean isRaw)
     {
-        int iconWidth = sprite.getWidth();
-        int iconHeight = sprite.getHeight();
+        int iconWidth = sprite.contents().width();
+        int iconHeight = sprite.contents().height();
 
-        int frameCount = (int) sprite.getUniqueFrames().count();
+        int frameCount = (int) sprite.contents().getUniqueFrames().count();
 
         if (iconWidth <= 0 || iconHeight <= 0 || frameCount <= 0) {
             return 0xFFFFFF;

@@ -34,7 +34,7 @@ public class CrushingRecipe implements Recipe<RecipeWrapper>
     }
 
     @Override
-    public ItemStack assemble(RecipeWrapper inv)
+    public ItemStack assemble(RecipeWrapper inv, RegistryAccess access)
     {
         return this.stackOutput;
     }
@@ -61,7 +61,7 @@ public class CrushingRecipe implements Recipe<RecipeWrapper>
     }
 
     @Override
-    public ItemStack getResultItem()
+    public ItemStack getResultItem(RegistryAccess access)
     {
         return this.stackOutput;
     }
