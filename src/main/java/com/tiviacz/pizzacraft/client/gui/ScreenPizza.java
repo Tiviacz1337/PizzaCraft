@@ -1,16 +1,14 @@
 package com.tiviacz.pizzacraft.client.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.blockentity.PizzaBlockEntity;
 import com.tiviacz.pizzacraft.common.TasteHandler;
 import com.tiviacz.pizzacraft.container.PizzaMenu;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -50,13 +48,13 @@ public class ScreenPizza extends AbstractContainerScreen<PizzaMenu> implements M
     public void containerTick()
     {
         super.containerTick();
-        this.sauceIcon.m_266287_(ScreenPizzaStation.SAUCES);
+        this.sauceIcon.tick(ScreenPizzaStation.SAUCES);
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY)
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY)
     {
-        this.font.draw(poseStack, this.blockEntity.getDisplayName(), this.inventoryLabelX, this.inventoryLabelY, 4210752);
+        guiGraphics.drawString(this.font, this.blockEntity.getDisplayName(), this.inventoryLabelX, this.inventoryLabelY, 4210752, false);
     }
 
     private static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
@@ -78,29 +76,28 @@ public class ScreenPizza extends AbstractContainerScreen<PizzaMenu> implements M
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks)
     {
-        this.renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(poseStack, mouseX, mouseY);
+        this.renderBackground(guiGraphics);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
 
         if(this.HUNGER_INFO.inButton(this, mouseX, mouseY))
         {
-            this.renderComponentTooltip(poseStack, getTooltip(), mouseX, mouseY);
+            guiGraphics.renderComponentTooltip(this.font, getTooltip(), mouseX, mouseY);
         }
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY)
+    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY)
     {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, SCREEN_PIZZA);
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
-        blit(poseStack, x, y, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(SCREEN_PIZZA, x, y, 0, 0, this.imageWidth, this.imageHeight);
 
-        this.sauceIcon.m_266270_(this.menu, poseStack, partialTicks, this.leftPos, this.topPos);
+        this.sauceIcon.render(this.menu, guiGraphics, partialTicks, this.leftPos, this.topPos);
+
+       // HUNGER_INFO.draw(guiGraphics, SCREEN_PIZZA, this, 127, 30);
     }
 
     public static class ScreenImage
@@ -117,6 +114,11 @@ public class ScreenPizza extends AbstractContainerScreen<PizzaMenu> implements M
             this.W = W;
             this.H = H;
         }
+
+        //public void draw(GuiGraphics guiGraphics, ResourceLocation texture, ScreenPizza screen, int U, int V)
+        //{
+            //guiGraphics.blit(texture, screen.getGuiLeft() + X, screen.getGuiTop() + Y, U, V, W, H);
+        //}
 
         public boolean inButton(ScreenPizza screen, int mouseX, int mouseY)
         {

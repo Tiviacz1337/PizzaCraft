@@ -194,19 +194,6 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
                     }
                 }
             }
-
-        /*    if(!isRaw())
-            {
-                if(stack.isEmpty())
-                {
-                    if(player.isCrouching())
-                    {
-                        //Open Gui
-                        openGUI(player, this, getBlockPos());
-                        return InteractionResult.SUCCESS;
-                    }
-                }
-            } */
         }
         return InteractionResult.FAIL;
     }
@@ -458,7 +445,6 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
         {
             return this.customName;
         }
-
         return Component.translatable(getBlockState().getBlock().getDescriptionId());
     }
 
@@ -471,7 +457,7 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
 
     public void openGUI(Player player, MenuProvider menuSupplier, BlockPos pos)
     {
-        if(!player.getLevel().isClientSide)
+        if(!player.level().isClientSide)
         {
             NetworkHooks.openScreen((ServerPlayer)player, menuSupplier, pos);
         }

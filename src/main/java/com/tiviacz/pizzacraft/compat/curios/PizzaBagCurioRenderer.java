@@ -38,7 +38,7 @@ public class PizzaBagCurioRenderer implements ICurioRenderer
         BlockRenderDispatcher blockDispatcher = Minecraft.getInstance().getBlockRenderer();
         ModelBlockRenderer renderer = blockDispatcher.getModelRenderer();
         renderer.tesselateBlock(
-                livingEntity.getLevel(),
+                livingEntity.level(),
                 blockDispatcher.getBlockModel(pizzaBag.defaultBlockState()),
                 pizzaBag.defaultBlockState(),
                 livingEntity.blockPosition().offset(0, 1, 0),

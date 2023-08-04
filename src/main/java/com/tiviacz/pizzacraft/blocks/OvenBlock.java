@@ -94,7 +94,7 @@ public class OvenBlock extends Block
         boolean isLit = level.getBlockState(pos).getValue(LIT);
         if(isLit && !entityIn.fireImmune() && entityIn instanceof LivingEntity livingEntity && !EnchantmentHelper.hasFrostWalker(livingEntity))
         {
-            entityIn.hurt(entityIn.m_269291_().m_269047_(), 1.0F);
+            entityIn.hurt(entityIn.damageSources().hotFloor(), 1.0F);
         }
 
         super.stepOn(level, pos, state, entityIn);

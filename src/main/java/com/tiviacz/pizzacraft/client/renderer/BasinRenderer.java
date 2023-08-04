@@ -140,14 +140,14 @@ public class BasinRenderer implements BlockEntityRenderer<BasinBlockEntity>
             {
                 for(int i = 0; i < squashedStack.getCount(); i++)
                 {
-                    itemRenderer.m_269128_(squashedStack, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, blockEntity.getLevel(), 0);
+                    itemRenderer.renderStatic(squashedStack, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, blockEntity.getLevel(), 0);
                     poseStack.translate(0.0D, 0.0D, -0.065D);
                     poseStack.mulPose(Axis.ZP.rotationDegrees(360.0F * rand.nextFloat()));
                 }
             }
             else //If not normal item, just render block, to avoid any glitches and complications, just don't use blockItems here :-)
             {
-                itemRenderer.m_269128_(squashedStack, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, blockEntity.getLevel(), 0);
+                itemRenderer.renderStatic(squashedStack, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, blockEntity.getLevel(), 0);
             }
             poseStack.popPose();
         }

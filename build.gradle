@@ -1,8 +1,10 @@
 plugins {
     id 'eclipse'
+    id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 version = "${minecraft_version}-${mod_version}"
@@ -32,6 +34,8 @@ minecraft {
     mappings channel: 'parchment', version: parachment_mappings_version
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
+
+    copyIdeResources = true
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.

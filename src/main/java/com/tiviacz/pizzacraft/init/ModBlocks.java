@@ -8,11 +8,12 @@ import com.tiviacz.pizzacraft.worldgen.trees.OliveTree;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -27,19 +28,19 @@ public class ModBlocks
     public static final RegistryObject<Block> PIZZA = registerBlock("pizza", () -> new PizzaBlock(Block.Properties.copy(Blocks.CAKE)));
     public static final RegistryObject<Block> RAW_PIZZA = registerBlock("raw_pizza", () -> new RawPizzaBlock(Block.Properties.copy(Blocks.CAKE)));
     public static final RegistryObject<Block> DOUGH = registerBlock("dough", () -> new DoughBlock(Block.Properties.copy(Blocks.CAKE)));
-    public static final RegistryObject<Block> CHEESE_BLOCK = registerBlock("cheese_block", () -> new CheeseBlock(Block.Properties.of(Material.CAKE, MaterialColor.COLOR_YELLOW).strength(0.5F).sound(SoundType.FUNGUS)));
-    public static final RegistryObject<Block> PIZZA_STATION = registerBlock("pizza_station", () -> new PizzaStationBlock(Block.Properties.of(Material.STONE, MaterialColor.STONE).strength(1.5F, 6.0F)));
-    public static final RegistryObject<Block> OVEN = registerBlock("oven", () -> new OvenBlock(Block.Properties.of(Material.STONE, MaterialColor.STONE).strength(1.5F, 6.0F).noOcclusion().lightLevel(getLightValueLit(9))));
+    public static final RegistryObject<Block> CHEESE_BLOCK = registerBlock("cheese_block", () -> new CheeseBlock(Block.Properties.copy(Blocks.CAKE).mapColor(MapColor.COLOR_YELLOW).strength(0.5F).sound(SoundType.FUNGUS)));
+    public static final RegistryObject<Block> PIZZA_STATION = registerBlock("pizza_station", () -> new PizzaStationBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.STONE).strength(1.5F, 6.0F)));
+    public static final RegistryObject<Block> OVEN = registerBlock("oven", () -> new OvenBlock(Block.Properties.copy(Blocks.STONE).mapColor(MapColor.STONE).strength(1.5F, 6.0F).noOcclusion().lightLevel(getLightValueLit(9))));
 
     //Gear
     public static final RegistryObject<Block> RED_PIZZA_BAG = registerBlock("red_pizza_bag", () -> new PizzaBagBlock(Block.Properties.copy(Blocks.RED_WOOL)));
 
     //Basins
-    public static final RegistryObject<Block> GRANITE_BASIN = registerBlock("granite_basin", () -> new BasinBlock(Block.Properties.of(Material.STONE, MaterialColor.DIRT).strength(1.5F, 6.0F)));
-    public static final RegistryObject<Block> DIORITE_BASIN = registerBlock("diorite_basin", () -> new BasinBlock(Block.Properties.of(Material.STONE, MaterialColor.QUARTZ).strength(1.5F, 6.0F)));
-    public static final RegistryObject<Block> ANDESITE_BASIN = registerBlock("andesite_basin", () -> new BasinBlock(Block.Properties.of(Material.STONE, MaterialColor.STONE).strength(1.5F, 6.0F)));
-    public static final RegistryObject<Block> BASALT_BASIN = registerBlock("basalt_basin", () -> new BasinBlock(Block.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).strength(1.25F, 4.2F).sound(SoundType.BASALT)));
-    public static final RegistryObject<Block> BLACKSTONE_BASIN = registerBlock("blackstone_basin", () -> new BasinBlock(Block.Properties.of(Material.STONE, MaterialColor.COLOR_BLACK).strength(1.5F, 6.0F)));
+    public static final RegistryObject<Block> GRANITE_BASIN = registerBlock("granite_basin", () -> new BasinBlock(Block.Properties.copy(Blocks.STONE).mapColor(MapColor.DIRT).strength(1.5F, 6.0F)));
+    public static final RegistryObject<Block> DIORITE_BASIN = registerBlock("diorite_basin", () -> new BasinBlock(Block.Properties.copy(Blocks.STONE).mapColor(MapColor.QUARTZ).strength(1.5F, 6.0F)));
+    public static final RegistryObject<Block> ANDESITE_BASIN = registerBlock("andesite_basin", () -> new BasinBlock(Block.Properties.copy(Blocks.STONE).mapColor(MapColor.STONE).strength(1.5F, 6.0F)));
+    public static final RegistryObject<Block> BASALT_BASIN = registerBlock("basalt_basin", () -> new BasinBlock(Block.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_BLACK).strength(1.25F, 4.2F).sound(SoundType.BASALT)));
+    public static final RegistryObject<Block> BLACKSTONE_BASIN = registerBlock("blackstone_basin", () -> new BasinBlock(Block.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_BLACK).strength(1.5F, 6.0F)));
 
     //Chopping Boards
     public static final RegistryObject<Block> OAK_CHOPPING_BOARD = registerBlock("oak_chopping_board", () -> new ChoppingBoardBlock(Block.Properties.copy(Blocks.OAK_PLANKS)));           ///.of(Material.WOOD, MaterialColor.WOOD).hardnessAndResistance(0.5F).sound(SoundType.WOOD))); //new ChoppingBoardBlock(Block.Properties.copy(Blocks.OAK_SLAB)));
@@ -55,20 +56,20 @@ public class ModBlocks
     //Trees
     public static final RegistryObject<Block> OLIVE_PLANKS = registerBlock("olive_planks", () -> new Block(Block.Properties.copy(Blocks.OAK_PLANKS)));
     public static final RegistryObject<Block> OLIVE_SAPLING = registerBlock("olive_sapling", () -> new SaplingBlock(new OliveTree(), Block.Properties.copy(Blocks.OAK_SAPLING)));
-    public static final RegistryObject<Block> OLIVE_LOG = registerOliveLogBlock("olive_log", MaterialColor.WOOD, MaterialColor.TERRACOTTA_LIGHT_GRAY);
-    public static final RegistryObject<Block> STRIPPED_OLIVE_LOG = registerOliveLogBlock("stripped_olive_log", MaterialColor.WOOD, MaterialColor.WOOD);
+    public static final RegistryObject<Block> OLIVE_LOG = registerOliveLogBlock("olive_log", MapColor.WOOD, MapColor.TERRACOTTA_LIGHT_GRAY);
+    public static final RegistryObject<Block> STRIPPED_OLIVE_LOG = registerOliveLogBlock("stripped_olive_log", MapColor.WOOD, MapColor.WOOD);
     public static final RegistryObject<Block> STRIPPED_OLIVE_WOOD = registerBlock("stripped_olive_wood", () -> new RotatedPillarBlock(Block.Properties.copy(Blocks.STRIPPED_OAK_WOOD)));
     public static final RegistryObject<Block> OLIVE_WOOD = registerBlock("olive_wood", () -> new RotatedPillarBlock(Block.Properties.copy(Blocks.OAK_WOOD)));
     public static final RegistryObject<Block> OLIVE_LEAVES = registerBlock("olive_leaves", () -> new LeavesBlock(Block.Properties.copy(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> FRUIT_OLIVE_LEAVES = registerBlock("fruit_olive_leaves", () -> new OliveLeavesBlock(Block.Properties.copy(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> OLIVE_SLAB = registerBlock("olive_slab", () -> new SlabBlock(Block.Properties.copy(Blocks.OAK_SLAB)));
-    public static final RegistryObject<Block> OLIVE_PRESSURE_PLATE = registerBlock("olive_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, Block.Properties.copy(Blocks.OAK_PRESSURE_PLATE), BlockSetType.f_271512_));
-    public static final RegistryObject<Block> OLIVE_FENCE = registerBlock("olive_fence", () -> new FenceBlock(Block.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> OLIVE_TRAPDOOR = registerBlock("olive_trapdoor", () -> new TrapDoorBlock(Block.Properties.copy(Blocks.OAK_TRAPDOOR), BlockSetType.f_271512_));
+    public static final RegistryObject<Block> OLIVE_PRESSURE_PLATE = registerBlock("olive_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, Block.Properties.copy(Blocks.OAK_PRESSURE_PLATE), BlockSetType.ACACIA));
+    public static final RegistryObject<Block> OLIVE_FENCE = registerBlock("olive_fence", () -> new FenceBlock(Block.Properties.copy(Blocks.OAK_FENCE).mapColor(MapColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> OLIVE_TRAPDOOR = registerBlock("olive_trapdoor", () -> new TrapDoorBlock(Block.Properties.copy(Blocks.OAK_TRAPDOOR), BlockSetType.ACACIA));
     public static final RegistryObject<Block> OLIVE_FENCE_GATE = registerBlock("olive_fence_gate", () -> new FenceGateBlock(Block.Properties.copy(Blocks.OAK_FENCE_GATE), SoundEvents.FENCE_GATE_CLOSE, SoundEvents.FENCE_GATE_OPEN));
-    public static final RegistryObject<Block> OLIVE_BUTTON = registerBlock("olive_button", () -> new ButtonBlock(Block.Properties.copy(Blocks.OAK_BUTTON), BlockSetType.f_271512_, 30, true));
+    public static final RegistryObject<Block> OLIVE_BUTTON = registerBlock("olive_button", () -> new ButtonBlock(Block.Properties.copy(Blocks.OAK_BUTTON), BlockSetType.ACACIA, 30, true));
     public static final RegistryObject<Block> OLIVE_STAIRS = registerBlock("olive_stairs", () -> new StairBlock(() -> OLIVE_PLANKS.get().defaultBlockState(), Block.Properties.copy(Blocks.OAK_STAIRS)));
-    public static final RegistryObject<Block> OLIVE_DOOR = registerBlock("olive_door", () -> new DoorBlock(Block.Properties.copy(Blocks.OAK_DOOR), BlockSetType.f_271512_));
+    public static final RegistryObject<Block> OLIVE_DOOR = registerBlock("olive_door", () -> new DoorBlock(Block.Properties.copy(Blocks.OAK_DOOR), BlockSetType.ACACIA));
     public static final RegistryObject<Block> OLIVE_BOOKSHELF = registerBlock("olive_bookshelf", () -> new OliveBookshelfBlock(Block.Properties.copy(Blocks.BOOKSHELF)));
 
     //Crops
@@ -114,9 +115,8 @@ public class ModBlocks
         return BLOCKS.register(name, block);
     }
 
-    private static RegistryObject<Block> registerOliveLogBlock(final String name, MaterialColor topColor, MaterialColor barkColor)
-    {
-        return BLOCKS.register(name, () -> new RotatedPillarBlock(Block.Properties.of(Material.WOOD, (state) ->
-                state.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? topColor : barkColor).strength(2.0F).sound(SoundType.WOOD)));
+    private static RegistryObject<Block> registerOliveLogBlock(final String name, MapColor pTopMapColor, MapColor pSideMapColor) {
+        return BLOCKS.register(name, () -> new RotatedPillarBlock(BlockBehaviour.Properties.of().mapColor((p_152624_)
+                -> p_152624_.getValue(RotatedPillarBlock.AXIS) == Direction.Axis.Y ? pTopMapColor : pSideMapColor).instrument(NoteBlockInstrument.BASS).strength(2.0F).sound(SoundType.WOOD).ignitedByLava()));
     }
 }

@@ -78,7 +78,7 @@ public class ChoppingBoardRenderer implements BlockEntityRenderer<ChoppingBoardB
                 poseStack.scale(0.6F, 0.6F, 0.6F);
             }
 
-            itemRenderer.m_269128_(stack, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, tileEntityIn.getLevel(), 0);
+            itemRenderer.renderStatic(stack, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, tileEntityIn.getLevel(), 0);
             poseStack.popPose();
         }
     }

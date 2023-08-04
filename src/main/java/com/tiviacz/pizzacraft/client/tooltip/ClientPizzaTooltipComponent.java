@@ -1,12 +1,9 @@
 package com.tiviacz.pizzacraft.client.tooltip;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.tiviacz.pizzacraft.util.Utils;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +35,7 @@ public class ClientPizzaTooltipComponent implements ClientTooltipComponent
     }
 
     @Override
-    public void renderImage(Font pFont, int pX, int pY, PoseStack pPoseStack, ItemRenderer pItemRenderer)
+    public void renderImage(Font pFont, int pX, int pY, GuiGraphics pGuiGraphics)
     {
         if(!Utils.isShiftPressed()) return;
 
@@ -50,50 +47,44 @@ public class ClientPizzaTooltipComponent implements ClientTooltipComponent
             for(int i1 = 0; i1 < i; ++i1) {
                 int j1 = pX + i1 * 18 + 1;
                 int k1 = pY + l * 20 + 1;
-                this.renderSlot(j1, k1, k++, pFont, pPoseStack, pItemRenderer);
+                this.renderSlot(j1, k1, k++, pGuiGraphics, pFont);
             }
         }
 
-        this.drawBorder(pX, pY, i, j, pPoseStack);
+        this.drawBorder(pX, pY, i, j, pGuiGraphics);
     }
 
-    private void renderSlot(int pX, int pY, int pItemIndex, Font pFont, PoseStack poseStack, ItemRenderer itemRenderer)
-    {
-        if(pItemIndex >= this.items.size())
-        {
-            this.blit(poseStack, pX, pY, true ? Texture.BLOCKED_SLOT : Texture.SLOT);
-        }
-        else
-        {
+    private void renderSlot(int pX, int pY, int pItemIndex, GuiGraphics pGuiGraphics, Font pFont) {
+        if (pItemIndex >= this.items.size()) {
+            this.blit(pGuiGraphics, pX, pY, true ? ClientPizzaTooltipComponent.Texture.BLOCKED_SLOT : ClientPizzaTooltipComponent.Texture.SLOT);
+        } else {
             ItemStack itemstack = this.items.get(pItemIndex);
-            this.blit(poseStack, pX, pY, Texture.SLOT);
-            itemRenderer.m_274407_(poseStack, itemstack, pX + 1, pY + 1, pItemIndex);
-            itemRenderer.m_274412_(poseStack, pFont, itemstack, pX + 1, pY + 1);
+            this.blit(pGuiGraphics, pX, pY, ClientPizzaTooltipComponent.Texture.SLOT);
+            pGuiGraphics.renderItem(itemstack, pX + 1, pY + 1, pItemIndex);
+            pGuiGraphics.renderItemDecorations(pFont, itemstack, pX + 1, pY + 1);
         }
     }
 
-    private void drawBorder(int pX, int pY, int pSlotWidth, int pSlotHeight, PoseStack poseStack) {
-        this.blit(poseStack, pX, pY, ClientPizzaTooltipComponent.Texture.BORDER_CORNER_TOP);
-        this.blit(poseStack, pX + pSlotWidth * 18 + 1, pY, ClientPizzaTooltipComponent.Texture.BORDER_CORNER_TOP);
+    private void drawBorder(int pX, int pY, int pSlotWidth, int pSlotHeight, GuiGraphics pGuiGraphics) {
+        this.blit(pGuiGraphics, pX, pY, ClientPizzaTooltipComponent.Texture.BORDER_CORNER_TOP);
+        this.blit(pGuiGraphics, pX + pSlotWidth * 18 + 1, pY, ClientPizzaTooltipComponent.Texture.BORDER_CORNER_TOP);
 
         for(int i = 0; i < pSlotWidth; ++i) {
-            this.blit(poseStack, pX + 1 + i * 18, pY, ClientPizzaTooltipComponent.Texture.BORDER_HORIZONTAL_TOP);
-            this.blit(poseStack, pX + 1 + i * 18, pY + pSlotHeight * 20, ClientPizzaTooltipComponent.Texture.BORDER_HORIZONTAL_BOTTOM);
+            this.blit(pGuiGraphics, pX + 1 + i * 18, pY, ClientPizzaTooltipComponent.Texture.BORDER_HORIZONTAL_TOP);
+            this.blit(pGuiGraphics, pX + 1 + i * 18, pY + pSlotHeight * 20, ClientPizzaTooltipComponent.Texture.BORDER_HORIZONTAL_BOTTOM);
         }
 
         for(int j = 0; j < pSlotHeight; ++j) {
-            this.blit(poseStack, pX, pY + j * 20 + 1, ClientPizzaTooltipComponent.Texture.BORDER_VERTICAL);
-            this.blit(poseStack, pX + pSlotWidth * 18 + 1, pY + j * 20 + 1, ClientPizzaTooltipComponent.Texture.BORDER_VERTICAL);
+            this.blit(pGuiGraphics, pX, pY + j * 20 + 1, ClientPizzaTooltipComponent.Texture.BORDER_VERTICAL);
+            this.blit(pGuiGraphics, pX + pSlotWidth * 18 + 1, pY + j * 20 + 1, ClientPizzaTooltipComponent.Texture.BORDER_VERTICAL);
         }
 
-        this.blit(poseStack, pX, pY + pSlotHeight * 20, ClientPizzaTooltipComponent.Texture.BORDER_CORNER_BOTTOM);
-        this.blit(poseStack, pX + pSlotWidth * 18 + 1, pY + pSlotHeight * 20, ClientPizzaTooltipComponent.Texture.BORDER_CORNER_BOTTOM);
+        this.blit(pGuiGraphics, pX, pY + pSlotHeight * 20, ClientPizzaTooltipComponent.Texture.BORDER_CORNER_BOTTOM);
+        this.blit(pGuiGraphics, pX + pSlotWidth * 18 + 1, pY + pSlotHeight * 20, ClientPizzaTooltipComponent.Texture.BORDER_CORNER_BOTTOM);
     }
 
-    private void blit(PoseStack poseStack, int pX, int pY, Texture pTexture)
-    {
-        RenderSystem.setShaderTexture(0, TEXTURE_LOCATION);
-        GuiComponent.blit(poseStack, pX, pY, 0, (float)pTexture.x, (float)pTexture.y, pTexture.w, pTexture.h, 128, 128);
+    private void blit(GuiGraphics pGuiGraphics, int pX, int pY, ClientPizzaTooltipComponent.Texture pTexture) {
+        pGuiGraphics.blit(TEXTURE_LOCATION, pX, pY, 0, (float)pTexture.x, (float)pTexture.y, pTexture.w, pTexture.h, 128, 128);
     }
 
     private int gridSizeX() {

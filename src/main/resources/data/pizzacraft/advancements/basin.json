@@ -19,31 +19,56 @@
     "granite": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "block": "pizzacraft:granite_basin"
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "pizzacraft:granite_basin"
+          }
+        ]
       }
     },
     "diorite": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "block": "pizzacraft:diorite_basin"
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "pizzacraft:diorite_basin"
+          }
+        ]
       }
     },
     "andesite": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "block": "pizzacraft:andesite_basin"
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "pizzacraft:andesite_basin"
+          }
+        ]
       }
     },
     "basalt": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "block": "pizzacraft:basalt_basin"
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "pizzacraft:basalt_basin"
+          }
+        ]
       }
     },
     "blackstone": {
       "trigger": "minecraft:placed_block",
       "conditions": {
-        "block": "pizzacraft:blackstone_basin"
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "pizzacraft:blackstone_basin"
+          }
+        ]
       }
     }
   },

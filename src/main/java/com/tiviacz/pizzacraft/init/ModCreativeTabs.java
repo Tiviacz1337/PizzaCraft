@@ -1,130 +1,121 @@
 package com.tiviacz.pizzacraft.init;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.CreativeModeTabEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
-@Mod.EventBusSubscriber(modid = PizzaCraft.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModCreativeTabs
 {
-    public static CreativeModeTab PIZZACRAFT;
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, PizzaCraft.MODID);
 
-    @SubscribeEvent
-    public static void registerCreativeTab(CreativeModeTabEvent.Register event)
+    public static RegistryObject<CreativeModeTab> TRAVELERS_BACKPACK = CREATIVE_MODE_TABS.register("travelersbackpack", () -> CreativeModeTab.builder()
+            .icon(() -> new ItemStack(ModBlocks.PIZZA.get()))
+            .title(Component.translatable("itemGroup.pizzacraft")).displayItems(ModCreativeTabs::displayItems).build());
+
+    public static void displayItems(CreativeModeTab.ItemDisplayParameters displayParameters, CreativeModeTab.Output output)
     {
-        PIZZACRAFT = event.registerCreativeModeTab(new ResourceLocation(PizzaCraft.MODID, ""), builder -> builder
-                .icon(() -> new ItemStack(ModBlocks.PIZZA.get()))
-                        .title(Component.translatable("itemGroup.pizzacraft")).build());
-    }
+        output.accept(ModBlocks.PIZZA.get());
+        output.accept(ModBlocks.RAW_PIZZA.get());
 
-    public static void addCreative(CreativeModeTabEvent.BuildContents event)
-    {
-        if(event.getTab() == PIZZACRAFT)
-        {
-            event.accept(ModBlocks.PIZZA);
-            event.accept(ModBlocks.RAW_PIZZA);
+        output.accept(ModBlocks.DOUGH.get());
+        output.accept(ModBlocks.PIZZA_STATION.get());
+        output.accept(ModBlocks.OVEN.get());
 
-            event.accept(ModBlocks.DOUGH);
-            event.accept(ModBlocks.PIZZA_STATION);
-            event.accept(ModBlocks.OVEN);
+        output.accept(ModBlocks.OAK_CHOPPING_BOARD.get());
+        output.accept(ModBlocks.BIRCH_CHOPPING_BOARD.get());
+        output.accept(ModBlocks.SPRUCE_CHOPPING_BOARD.get());
+        output.accept(ModBlocks.JUNGLE_CHOPPING_BOARD.get());
+        output.accept(ModBlocks.ACACIA_CHOPPING_BOARD.get());
+        output.accept(ModBlocks.DARK_OAK_CHOPPING_BOARD.get());
+        output.accept(ModBlocks.CRIMSON_CHOPPING_BOARD.get());
+        output.accept(ModBlocks.WARPED_CHOPPING_BOARD.get());
+        output.accept(ModBlocks.OLIVE_CHOPPING_BOARD.get());
 
-            event.accept(ModBlocks.OAK_CHOPPING_BOARD);
-            event.accept(ModBlocks.BIRCH_CHOPPING_BOARD);
-            event.accept(ModBlocks.SPRUCE_CHOPPING_BOARD);
-            event.accept(ModBlocks.JUNGLE_CHOPPING_BOARD);
-            event.accept(ModBlocks.ACACIA_CHOPPING_BOARD);
-            event.accept(ModBlocks.DARK_OAK_CHOPPING_BOARD);
-            event.accept(ModBlocks.CRIMSON_CHOPPING_BOARD);
-            event.accept(ModBlocks.WARPED_CHOPPING_BOARD);
-            event.accept(ModBlocks.OLIVE_CHOPPING_BOARD);
+        output.accept(ModBlocks.GRANITE_BASIN.get());
+        output.accept(ModBlocks.DIORITE_BASIN.get());
+        output.accept(ModBlocks.ANDESITE_BASIN.get());
+        output.accept(ModBlocks.BASALT_BASIN.get());
+        output.accept(ModBlocks.BLACKSTONE_BASIN.get());
 
-            event.accept(ModBlocks.GRANITE_BASIN);
-            event.accept(ModBlocks.DIORITE_BASIN);
-            event.accept(ModBlocks.ANDESITE_BASIN);
-            event.accept(ModBlocks.BASALT_BASIN);
-            event.accept(ModBlocks.BLACKSTONE_BASIN);
+        output.accept(ModItems.CHEF_HAT.get());
+        output.accept(ModItems.CHEF_SHIRT.get());
+        output.accept(ModItems.CHEF_LEGGINGS.get());
+        output.accept(ModItems.CHEF_BOOTS.get());
 
-            event.accept(ModItems.CHEF_HAT);
-            event.accept(ModItems.CHEF_SHIRT);
-            event.accept(ModItems.CHEF_LEGGINGS);
-            event.accept(ModItems.CHEF_BOOTS);
+        output.accept(ModItems.PIZZA_DELIVERY_CAP.get());
+        output.accept(ModItems.PIZZA_DELIVERY_SHIRT.get());
+        output.accept(ModItems.PIZZA_DELIVERY_LEGGINGS.get());
+        output.accept(ModItems.PIZZA_DELIVERY_BOOTS.get());
+        output.accept(ModBlocks.RED_PIZZA_BAG.get());
 
-            event.accept(ModItems.PIZZA_DELIVERY_CAP);
-            event.accept(ModItems.PIZZA_DELIVERY_SHIRT);
-            event.accept(ModItems.PIZZA_DELIVERY_LEGGINGS);
-            event.accept(ModItems.PIZZA_DELIVERY_BOOTS);
-            event.accept(ModBlocks.RED_PIZZA_BAG);
+        output.accept(ModItems.ROLLING_PIN.get());
 
-            event.accept(ModItems.ROLLING_PIN);
+        output.accept(ModItems.STONE_KNIFE.get());
+        output.accept(ModItems.GOLDEN_KNIFE.get());
+        output.accept(ModItems.IRON_KNIFE.get());
+        output.accept(ModItems.DIAMOND_KNIFE.get());
+        output.accept(ModItems.NETHERITE_KNIFE.get());
 
-            event.accept(ModItems.STONE_KNIFE);
-            event.accept(ModItems.GOLDEN_KNIFE);
-            event.accept(ModItems.IRON_KNIFE);
-            event.accept(ModItems.DIAMOND_KNIFE);
-            event.accept(ModItems.NETHERITE_KNIFE);
+        output.accept(ModItems.STONE_PIZZA_PEEL.get());
+        output.accept(ModItems.GOLDEN_PIZZA_PEEL.get());
+        output.accept(ModItems.IRON_PIZZA_PEEL.get());
+        output.accept(ModItems.DIAMOND_PIZZA_PEEL.get());
+        output.accept(ModItems.NETHERITE_PIZZA_PEEL.get());
 
-            event.accept(ModItems.STONE_PIZZA_PEEL);
-            event.accept(ModItems.GOLDEN_PIZZA_PEEL);
-            event.accept(ModItems.IRON_PIZZA_PEEL);
-            event.accept(ModItems.DIAMOND_PIZZA_PEEL);
-            event.accept(ModItems.NETHERITE_PIZZA_PEEL);
+        output.accept(ModItems.PIZZA_SLICE.get());
+        output.accept(ModItems.OLIVE_OIL.get());
+        output.accept(ModItems.TOMATO_SAUCE.get());
+        output.accept(ModItems.HOT_SAUCE.get());
 
-            event.accept(ModItems.PIZZA_SLICE);
-            event.accept(ModItems.OLIVE_OIL);
-            event.accept(ModItems.TOMATO_SAUCE);
-            event.accept(ModItems.HOT_SAUCE);
+        output.accept(ModBlocks.OLIVE_PLANKS.get());
+        output.accept(ModBlocks.OLIVE_SAPLING.get());
+        output.accept(ModBlocks.OLIVE_LOG.get());
+        output.accept(ModBlocks.STRIPPED_OLIVE_LOG.get());
+        output.accept(ModBlocks.STRIPPED_OLIVE_WOOD.get());
+        output.accept(ModBlocks.OLIVE_WOOD.get());
+        output.accept(ModBlocks.OLIVE_LEAVES.get());
+        output.accept(ModBlocks.FRUIT_OLIVE_LEAVES.get());
+        output.accept(ModBlocks.OLIVE_SLAB.get());
+        output.accept(ModBlocks.OLIVE_PRESSURE_PLATE.get());
+        output.accept(ModBlocks.OLIVE_FENCE.get());
+        output.accept(ModBlocks.OLIVE_TRAPDOOR.get());
+        output.accept(ModBlocks.OLIVE_FENCE_GATE.get());
+        output.accept(ModBlocks.OLIVE_BUTTON.get());
+        output.accept(ModBlocks.OLIVE_STAIRS.get());
+        output.accept(ModBlocks.OLIVE_DOOR.get());
+        output.accept(ModBlocks.OLIVE_BOOKSHELF.get());
 
-            event.accept(ModBlocks.OLIVE_PLANKS);
-            event.accept(ModBlocks.OLIVE_SAPLING);
-            event.accept(ModBlocks.OLIVE_LOG);
-            event.accept(ModBlocks.STRIPPED_OLIVE_LOG);
-            event.accept(ModBlocks.STRIPPED_OLIVE_WOOD);
-            event.accept(ModBlocks.OLIVE_WOOD);
-            event.accept(ModBlocks.OLIVE_LEAVES);
-            event.accept(ModBlocks.FRUIT_OLIVE_LEAVES);
-            event.accept(ModBlocks.OLIVE_SLAB);
-            event.accept(ModBlocks.OLIVE_PRESSURE_PLATE);
-            event.accept(ModBlocks.OLIVE_FENCE);
-            event.accept(ModBlocks.OLIVE_TRAPDOOR);
-            event.accept(ModBlocks.OLIVE_FENCE_GATE);
-            event.accept(ModBlocks.OLIVE_BUTTON);
-            event.accept(ModBlocks.OLIVE_STAIRS);
-            event.accept(ModBlocks.OLIVE_DOOR);
-            event.accept(ModBlocks.OLIVE_BOOKSHELF);
+        output.accept(ModItems.BROCCOLI.get());
+        output.accept(ModItems.CORN.get());
+        output.accept(ModItems.CUCUMBER.get());
+        output.accept(ModItems.ONION.get());
+        output.accept(ModItems.PEPPER.get());
+        output.accept(ModItems.TOMATO.get());
+        output.accept(ModItems.PINEAPPLE.get());
+        output.accept(ModItems.OLIVE.get());
 
-            event.accept(ModItems.BROCCOLI);
-            event.accept(ModItems.CORN);
-            event.accept(ModItems.CUCUMBER);
-            event.accept(ModItems.ONION);
-            event.accept(ModItems.PEPPER);
-            event.accept(ModItems.TOMATO);
-            event.accept(ModItems.PINEAPPLE);
-            event.accept(ModItems.OLIVE);
+        output.accept(ModItems.CUCUMBER_SLICE.get());
+        output.accept(ModItems.ONION_SLICE.get());
+        output.accept(ModItems.PEPPER_SLICE.get());
+        output.accept(ModItems.PINEAPPLE_SLICE.get());
+        output.accept(ModItems.TOMATO_SLICE.get());
+        output.accept(ModItems.MUSHROOM_SLICE.get());
+        output.accept(ModItems.HAM.get());
+        output.accept(ModItems.WING.get());
+        output.accept(ModItems.COOKED_WING.get());
+        output.accept(ModItems.FLOUR.get());
+        output.accept(ModItems.CORN_FLOUR.get());
 
-            event.accept(ModItems.CUCUMBER_SLICE);
-            event.accept(ModItems.ONION_SLICE);
-            event.accept(ModItems.PEPPER_SLICE);
-            event.accept(ModItems.PINEAPPLE_SLICE);
-            event.accept(ModItems.TOMATO_SLICE);
-            event.accept(ModItems.MUSHROOM_SLICE);
-            event.accept(ModItems.HAM);
-            event.accept(ModItems.WING);
-            event.accept(ModItems.COOKED_WING);
-            event.accept(ModItems.FLOUR);
-            event.accept(ModItems.CORN_FLOUR);
-
-            event.accept(ModBlocks.CHEESE_BLOCK);
-            event.accept(ModItems.CHEESE);
-            event.accept(ModItems.BROCCOLI_SEEDS);
-            event.accept(ModItems.CUCUMBER_SEEDS);
-            event.accept(ModItems.PEPPER_SEEDS);
-            event.accept(ModItems.PINEAPPLE_SEEDS);
-            event.accept(ModItems.TOMATO_SEEDS);
-        }
+        output.accept(ModBlocks.CHEESE_BLOCK.get());
+        output.accept(ModItems.CHEESE.get());
+        output.accept(ModItems.BROCCOLI_SEEDS.get());
+        output.accept(ModItems.CUCUMBER_SEEDS.get());
+        output.accept(ModItems.PEPPER_SEEDS.get());
+        output.accept(ModItems.PINEAPPLE_SEEDS.get());
+        output.accept(ModItems.TOMATO_SEEDS.get());
     }
 }

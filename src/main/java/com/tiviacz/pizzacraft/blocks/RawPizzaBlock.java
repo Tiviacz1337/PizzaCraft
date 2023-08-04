@@ -165,7 +165,7 @@ public class RawPizzaBlock extends Block implements EntityBlock
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos)
     {
-        return level.getBlockState(pos.below()).getMaterial().isSolid();
+        return level.getBlockState(pos.below()).isSolid();
     }
 
     @Override

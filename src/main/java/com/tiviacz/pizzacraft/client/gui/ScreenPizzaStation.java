@@ -1,17 +1,16 @@
 package com.tiviacz.pizzacraft.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.blockentity.PizzaStationBlockEntity;
 import com.tiviacz.pizzacraft.container.PizzaStationMenu;
 import com.tiviacz.pizzacraft.network.ServerboundRenamePizzaPacket;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -62,8 +61,8 @@ public class ScreenPizzaStation extends AbstractContainerScreen<PizzaStationMenu
     {
         super.containerTick();
         this.name.tick();
-        this.sauceIcon.m_266287_(SAUCES);
-        this.doughIcon.m_266287_(DOUGH);
+        this.sauceIcon.tick(SAUCES);
+        this.doughIcon.tick(DOUGH);
     }
 
     @Override
@@ -87,36 +86,33 @@ public class ScreenPizzaStation extends AbstractContainerScreen<PizzaStationMenu
         this.name.setResponder(this::onNameChanged);
         this.name.setValue("");
         this.addWidget(this.name);
-        this.m_264313_(this.name);
+        this.setInitialFocus(this.name);
         this.name.setEditable(false);
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks)
     {
-        this.renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+        this.renderBackground(guiGraphics);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
         RenderSystem.disableBlend();
-        this.renderFg(poseStack, mouseX, mouseY, partialTicks);
-        this.renderTooltip(poseStack, mouseX, mouseY);
+        this.renderFg(guiGraphics, mouseX, mouseY, partialTicks);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
+    }
+
+    public void renderFg(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks)
+    {
+        this.name.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY)
+    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY)
     {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, SCREEN_PIZZA_STATION);
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
-        blit(poseStack, x, y, 0, 0, this.imageWidth, this.imageHeight);
-        this.sauceIcon.m_266270_(this.menu, poseStack, partialTicks, this.leftPos, this.topPos);
-        this.doughIcon.m_266270_(this.menu, poseStack, partialTicks, this.leftPos, this.topPos);
-    }
-
-    public void renderFg(PoseStack poseStack, int mouseX, int mouseY, float partialTicks)
-    {
-        this.name.render(poseStack, mouseX, mouseY, partialTicks);
+        guiGraphics.blit(SCREEN_PIZZA_STATION, x, y, 0, 0, this.imageWidth, this.imageHeight);
+        this.sauceIcon.render(this.menu, guiGraphics, partialTicks, this.leftPos, this.topPos);
+        this.doughIcon.render(this.menu, guiGraphics, partialTicks, this.leftPos, this.topPos);
     }
 
     @Override

@@ -70,7 +70,7 @@ public class PizzaStationBlockEntity extends BaseBlockEntity implements MenuProv
 
     public void openGUI(Player player, MenuProvider containerSupplier, BlockPos pos)
     {
-        if(!player.getLevel().isClientSide)
+        if(!player.level().isClientSide)
         {
             NetworkHooks.openScreen((ServerPlayer)player, containerSupplier, pos);
         }
@@ -85,7 +85,7 @@ public class PizzaStationBlockEntity extends BaseBlockEntity implements MenuProv
             {
                 if(slot == 0) return false;
                 if(slot == 1) return stack.is(ModTags.DOUGH);
-                if(slot == 2) return (stack.getItem() instanceof SauceItem || stack.is(ModTags.SAUCE)) || (stack.getItem() instanceof PotionItem);
+                if(slot == 2) return (stack.getItem() instanceof SauceItem || stack.is(ModTags.SAUCE)) || stack.getItem() instanceof PotionItem;
                 else return stack.isEdible() || stack.is(ModTags.INGREDIENTS);
             }
 

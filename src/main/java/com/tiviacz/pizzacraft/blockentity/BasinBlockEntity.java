@@ -172,7 +172,7 @@ public class BasinBlockEntity extends BaseBlockEntity
 
                     if(!player.addItem(new ItemStack(Items.MILK_BUCKET)))
                     {
-                        level.addFreshEntity(new ItemEntity(player.getLevel(), getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), new ItemStack(Items.MILK_BUCKET)));
+                        level.addFreshEntity(new ItemEntity(player.level(), getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), new ItemStack(Items.MILK_BUCKET)));
                     }
 
                     level.playSound(player, getBlockPos(), SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.8F, 1.0F);
@@ -234,7 +234,7 @@ public class BasinBlockEntity extends BaseBlockEntity
 
                         if(!player.getInventory().add(result))
                         {
-                            level.addFreshEntity(new ItemEntity(player.getLevel(), getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), result));
+                            level.addFreshEntity(new ItemEntity(player.level(), getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), result));
                         }
                         level.playSound(player, getBlockPos(), SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 0.7F, 0.9F + level.random.nextFloat());
                         setSquashedStackCount(getSquashedStackCount() - basinContentExtractSize().get(getBasinContent()));

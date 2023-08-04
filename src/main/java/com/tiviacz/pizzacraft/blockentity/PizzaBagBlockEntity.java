@@ -174,7 +174,7 @@ public class PizzaBagBlockEntity extends BaseBlockEntity implements MenuProvider
 
     public void openGUI(Player player, MenuProvider containerSupplier, BlockPos pos)
     {
-        if(!player.getLevel().isClientSide)
+        if(!player.level().isClientSide)
         {
             NetworkHooks.openScreen((ServerPlayer)player, containerSupplier, pos);
         }
