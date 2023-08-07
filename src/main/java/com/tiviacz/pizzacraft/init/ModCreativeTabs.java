@@ -1,10 +1,12 @@
 package com.tiviacz.pizzacraft.init;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
+import com.tiviacz.pizzacraft.util.NBTUtils;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -13,8 +15,22 @@ public class ModCreativeTabs
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, PizzaCraft.MODID);
 
     public static RegistryObject<CreativeModeTab> TRAVELERS_BACKPACK = CREATIVE_MODE_TABS.register("travelersbackpack", () -> CreativeModeTab.builder()
-            .icon(() -> new ItemStack(ModBlocks.PIZZA.get()))
+            .icon(ModCreativeTabs::createIcon)
             .title(Component.translatable("itemGroup.pizzacraft")).displayItems(ModCreativeTabs::displayItems).build());
+
+    public static ItemStack createIcon()
+    {
+        ItemStack stack = ModItems.PIZZA_SLICE.get().getDefaultInstance();
+        ItemStackHandler handler = new ItemStackHandler(6);
+        handler.setStackInSlot(0, ModItems.CHEESE.get().getDefaultInstance());
+        handler.setStackInSlot(1, ModItems.PEPPER_SLICE.get().getDefaultInstance());
+        handler.setStackInSlot(2, ModItems.WING.get().getDefaultInstance());
+        handler.setStackInSlot(3, ModItems.BROCCOLI.get().getDefaultInstance());
+        handler.setStackInSlot(4, ModItems.ONION_SLICE.get().getDefaultInstance());
+        handler.setStackInSlot(5, ModItems.TOMATO_SLICE.get().getDefaultInstance());
+        NBTUtils.saveInventoryToStack(stack, handler);
+        return stack;
+    }
 
     public static void displayItems(CreativeModeTab.ItemDisplayParameters displayParameters, CreativeModeTab.Output output)
     {
