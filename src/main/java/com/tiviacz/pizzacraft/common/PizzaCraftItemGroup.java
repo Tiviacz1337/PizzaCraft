@@ -3,9 +3,11 @@ package com.tiviacz.pizzacraft.common;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import com.tiviacz.pizzacraft.init.ModItems;
+import com.tiviacz.pizzacraft.util.NBTUtils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.ItemStackHandler;
 
 public class PizzaCraftItemGroup extends CreativeModeTab
 {
@@ -19,7 +21,16 @@ public class PizzaCraftItemGroup extends CreativeModeTab
     @Override
     public ItemStack makeIcon()
     {
-        return new ItemStack(ModBlocks.PIZZA.get());
+        ItemStack stack = ModItems.PIZZA_SLICE.get().getDefaultInstance();
+        ItemStackHandler handler = new ItemStackHandler(6);
+        handler.setStackInSlot(0, ModItems.CHEESE.get().getDefaultInstance());
+        handler.setStackInSlot(1, ModItems.PEPPER_SLICE.get().getDefaultInstance());
+        handler.setStackInSlot(2, ModItems.WING.get().getDefaultInstance());
+        handler.setStackInSlot(3, ModItems.BROCCOLI.get().getDefaultInstance());
+        handler.setStackInSlot(4, ModItems.ONION_SLICE.get().getDefaultInstance());
+        handler.setStackInSlot(5, ModItems.TOMATO_SLICE.get().getDefaultInstance());
+        NBTUtils.saveInventoryToStack(stack, handler);
+        return stack;
     }
 
     @Override
