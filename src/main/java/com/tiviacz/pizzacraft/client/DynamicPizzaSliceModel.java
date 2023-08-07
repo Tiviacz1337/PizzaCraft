@@ -222,7 +222,7 @@ public class DynamicPizzaSliceModel implements IUnbakedGeometry<DynamicPizzaSlic
 
     public static Transformation getLayerTransformation(int i)
     {
-        return new Transformation(new Vector3f(0, 0, 0.0001F + i * 0.0001F), Quaternion.ONE, new Vector3f(1, 1, 1F + 0.0001F * i), Quaternion.ONE);
+        return new Transformation(new Vector3f(0, 0, 0.00001F + i * 0.00001F), Quaternion.ONE, new Vector3f(1, 1, 1F + 0.00001F * i), Quaternion.ONE);
     }
 
     public static RenderTypeGroup getLayerRenderTypes()
