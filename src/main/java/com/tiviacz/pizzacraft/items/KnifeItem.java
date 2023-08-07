@@ -8,7 +8,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -79,6 +81,8 @@ public class KnifeItem extends SwordItem
 
             if(victim != null && attacker != null)
             {
+                Level level = attacker.level();
+
                 if(attacker instanceof LivingEntity)
                 {
                     if(compareRotations(attacker.yRotO, victim.yRotO, 50.0D))
@@ -93,11 +97,18 @@ public class KnifeItem extends SwordItem
                             {
                                 float newDamage = event.getAmount() * 1.25F;
                                 event.setAmount(newDamage);
-                                attacker.level().playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(), SoundEvents.PLAYER_ATTACK_CRIT, attacker.getSoundSource(), 1.0F, 1.2F);
+                                level.playSound(null, attacker.getX(), attacker.getY(), attacker.getZ(), SoundEvents.PLAYER_ATTACK_CRIT, attacker.getSoundSource(), 1.0F, 1.2F);
 
-                                if(attacker.level().isClientSide())
+                                if(level instanceof ServerLevel serverLevel)
                                 {
-                                    Minecraft.getInstance().particleEngine.createTrackingEmitter(victim, ParticleTypes.CRIT, 10);
+                                    float f = level.random.nextFloat() * (float) Math.PI * 2.0F;
+                                    float f1 = level.random.nextFloat() * 0.5F + 0.5F;
+                                    float f2 = Mth.sin(f) * 0.5F * f1;
+                                    float f3 = Mth.cos(f) * 0.5F * f1;
+                                    serverLevel.sendParticles(ParticleTypes.CRIT,
+                                            victim.position().x + f2,
+                                            victim.getBoundingBox().minY + level.random.nextFloat() + 0.5F,
+                                            victim.position().z + f3, 8, (double)(float)Math.pow(2.0D, (level.random.nextInt(169) - 12) / 12.0D) / 24.0D, -1.0D, 0.0D, 0.1);
                                 }
                             }
                         }
