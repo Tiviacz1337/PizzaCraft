@@ -1,6 +1,5 @@
 package com.tiviacz.pizzacraft.recipes.crushing;
 
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;

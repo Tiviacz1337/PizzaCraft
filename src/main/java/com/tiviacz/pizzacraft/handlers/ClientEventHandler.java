@@ -1,7 +1,6 @@
 package com.tiviacz.pizzacraft.handlers;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
-import com.tiviacz.pizzacraft.blocks.PizzaStationBlock;
 import com.tiviacz.pizzacraft.client.DynamicPizzaSliceModel;
 import com.tiviacz.pizzacraft.client.LayerSelector;
 import com.tiviacz.pizzacraft.client.PizzaBakedModel;
