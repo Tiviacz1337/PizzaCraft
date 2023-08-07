@@ -10,6 +10,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
+import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.init.PizzaLayers;
 import com.tiviacz.pizzacraft.util.NBTUtils;
 import com.tiviacz.pizzacraft.util.RenderUtils;
@@ -177,6 +178,8 @@ public class DynamicPizzaSliceModel implements IModelGeometry<DynamicPizzaSliceM
 
                     if(tintIndexes.get(j) != -1)
                     {
+                        if(handler.getStackInSlot(tintIndexes.get(j)).getItem() == ModItems.CHEESE.get()) continue;
+
                         int color = RenderUtils.getDominantColor(Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(handler.getStackInSlot(tintIndexes.get(j))).getParticleIcon(), false);
 
                         if(handler.getStackInSlot(tintIndexes.get(j)).getItem() instanceof PotionItem)
