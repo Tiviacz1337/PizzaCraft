@@ -27,7 +27,7 @@ public class ModPlacedFeatures
         register(context, OLIVE_TREE_CHECKED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.OLIVE_TREE_KEY),
                 List.of(PlacementUtils.filteredByBlockSurvival(ModBlocks.OLIVE_SAPLING.get())));
         register(context, OLIVE_TREE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.OLIVE_TREE_KEY),
-                VegetationPlacements.treePlacement(PlacementUtils.countExtra(3, 0.1f, 2)));
+                VegetationPlacements.treePlacement(PlacementUtils.countExtra(1, 0.05f, 1), ModBlocks.OLIVE_SAPLING.get()));
     }
 
     private static ResourceKey<PlacedFeature> createKey(String name) {
