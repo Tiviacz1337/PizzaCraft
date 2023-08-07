@@ -7,11 +7,11 @@
         "type": "minecraft:weighted_list",
         "distribution": [
           {
-            "data": 3,
-            "weight": 9
+            "data": 1,
+            "weight": 19
           },
           {
-            "data": 5,
+            "data": 2,
             "weight": 1
           }
         ]
@@ -30,6 +30,18 @@
     },
     {
       "type": "minecraft:biome"
+    },
+    {
+      "type": "minecraft:block_predicate_filter",
+      "predicate": {
+        "type": "minecraft:would_survive",
+        "state": {
+          "Name": "pizzacraft:olive_sapling",
+          "Properties": {
+            "stage": "0"
+          }
+        }
+      }
     }
   ]
 }
