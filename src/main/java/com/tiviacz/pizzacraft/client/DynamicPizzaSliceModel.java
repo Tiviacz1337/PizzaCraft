@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.mojang.math.Transformation;
+import com.tiviacz.pizzacraft.init.ModItems;
 import com.tiviacz.pizzacraft.init.PizzaLayers;
 import com.tiviacz.pizzacraft.util.NBTUtils;
 import com.tiviacz.pizzacraft.util.RenderUtils;
@@ -180,6 +181,8 @@ public class DynamicPizzaSliceModel implements IUnbakedGeometry<DynamicPizzaSlic
 
                     if(tintIndexes.get(j) != -1)
                     {
+                        if(handler.getStackInSlot(tintIndexes.get(j)).getItem() == ModItems.CHEESE.get()) continue;
+
                         int color = RenderUtils.getDominantColor(Minecraft.getInstance().getItemRenderer().getItemModelShaper().getItemModel(handler.getStackInSlot(tintIndexes.get(j))).getParticleIcon(), false);
 
                         if(handler.getStackInSlot(tintIndexes.get(j)).getItem() instanceof PotionItem)
@@ -213,7 +216,7 @@ public class DynamicPizzaSliceModel implements IUnbakedGeometry<DynamicPizzaSlic
 
     public static Transformation getLayerTransformation(int i)
     {
-        return new Transformation(new Vector3f(0, 0, 0.0001F + i * 0.0001F), new Quaternionf(), new Vector3f(1, 1, 1F + 0.0001F * i), new Quaternionf());
+        return new Transformation(new Vector3f(0, 0, 0.00001F + i * 0.00001F), new Quaternionf(), new Vector3f(1, 1, 1F + 0.00001F * i), new Quaternionf());
     }
 
     public static RenderTypeGroup getLayerRenderTypes()
