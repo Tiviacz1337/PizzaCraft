@@ -1,6 +1,7 @@
 package com.tiviacz.pizzacraft.init;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
+import com.tiviacz.pizzacraft.util.NBTUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
@@ -8,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.ItemStackHandler;
 
 @Mod.EventBusSubscriber(modid = PizzaCraft.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModCreativeTabs
@@ -18,8 +20,22 @@ public class ModCreativeTabs
     public static void registerCreativeTab(CreativeModeTabEvent.Register event)
     {
         PIZZACRAFT = event.registerCreativeModeTab(new ResourceLocation(PizzaCraft.MODID, ""), builder -> builder
-                .icon(() -> new ItemStack(ModBlocks.PIZZA.get()))
+                .icon(ModCreativeTabs::createIcon)
                         .title(Component.translatable("itemGroup.pizzacraft")).build());
+    }
+
+    public static ItemStack createIcon()
+    {
+        ItemStack stack = ModItems.PIZZA_SLICE.get().getDefaultInstance();
+        ItemStackHandler handler = new ItemStackHandler(6);
+        handler.setStackInSlot(0, ModItems.CHEESE.get().getDefaultInstance());
+        handler.setStackInSlot(1, ModItems.PEPPER_SLICE.get().getDefaultInstance());
+        handler.setStackInSlot(2, ModItems.WING.get().getDefaultInstance());
+        handler.setStackInSlot(3, ModItems.BROCCOLI.get().getDefaultInstance());
+        handler.setStackInSlot(4, ModItems.ONION_SLICE.get().getDefaultInstance());
+        handler.setStackInSlot(5, ModItems.TOMATO_SLICE.get().getDefaultInstance());
+        NBTUtils.saveInventoryToStack(stack, handler);
+        return stack;
     }
 
     public static void addCreative(CreativeModeTabEvent.BuildContents event)
