@@ -20,5 +20,5 @@ public class ModPlacedFeatures
 
     public static final RegistryObject<PlacedFeature> OLIVE_PLACED = PLACED_FEATURES.register("olive_placed",
             () -> new PlacedFeature(ModConfiguredFeatures.OLIVE_SPAWN.getHolder().get(), VegetationPlacements.treePlacement(
-                    PlacementUtils.countExtra(1, 0.01f, 2))));
+                    PlacementUtils.countExtra(1, 0.02f, 1))));
 }

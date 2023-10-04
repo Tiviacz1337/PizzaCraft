@@ -2,7 +2,7 @@ package com.tiviacz.pizzacraft.blocks;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.blockentity.ChoppingBoardBlockEntity;
-import com.tiviacz.pizzacraft.items.KnifeItem;
+import com.tiviacz.pizzacraft.tags.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -168,7 +168,7 @@ public class ChoppingBoardBlock extends Block implements EntityBlock
 
             if(player.isSecondaryUseActive() && !heldItem.isEmpty() && level.getBlockEntity(event.getPos()) instanceof ChoppingBoardBlockEntity blockEntity)
             {
-                if(heldItem.getItem() instanceof KnifeItem || heldItem.getItem() instanceof TieredItem || heldItem.getItem() instanceof TridentItem || heldItem.getItem() instanceof ShearsItem)
+                if(heldItem.is(ModTags.KNIVES) || heldItem.getItem() instanceof TieredItem || heldItem.getItem() instanceof TridentItem || heldItem.getItem() instanceof ShearsItem)
                 {
                     boolean success = blockEntity.carveToolOnBoard(player.getAbilities().instabuild ? heldItem.copy() : heldItem);
 

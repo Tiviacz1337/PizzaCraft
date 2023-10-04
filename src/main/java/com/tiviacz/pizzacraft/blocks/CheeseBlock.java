@@ -1,7 +1,7 @@
 package com.tiviacz.pizzacraft.blocks;
 
 import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.items.KnifeItem;
+import com.tiviacz.pizzacraft.tags.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -69,7 +69,7 @@ public class CheeseBlock extends Block
             }
         }
 
-        if(itemstack.getItem() instanceof KnifeItem || itemstack.getItem() instanceof TieredItem || itemstack.getItem() instanceof TridentItem || itemstack.getItem() instanceof ShearsItem)
+        if(itemstack.is(ModTags.KNIVES) || itemstack.getItem() instanceof TieredItem || itemstack.getItem() instanceof TridentItem || itemstack.getItem() instanceof ShearsItem)
         {
             level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, ModItems.CHEESE.get().getDefaultInstance()));
             level.playSound(null, pos, SoundEvents.FUNGUS_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);

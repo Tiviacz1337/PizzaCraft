@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:vegetables/broccoli",
+    "#forge:vegetables/corn",
+    "#forge:vegetables/cucumber",
+    "#forge:vegetables/onion",
+    "#forge:vegetables/pepper",
+    "#forge:vegetables/tomato"
+  ]
+}
