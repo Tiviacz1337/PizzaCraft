@@ -157,6 +157,13 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }
+
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
@@ -171,6 +178,8 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:${jei_version}")
 
+    runtimeOnly fg.deobf("curse.maven:fd-398521:4679319")
+    runtimeOnly fg.deobf("curse.maven:appleskin-248787:4605078")
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
     // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
