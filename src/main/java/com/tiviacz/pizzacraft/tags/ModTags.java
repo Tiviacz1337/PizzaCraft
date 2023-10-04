@@ -5,9 +5,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
 public class ModTags
 {
+    public static final TagKey<Block> OVENS = TagKey.create(Registries.BLOCK, createResourceLocation("ovens"));
     public static final TagKey<Item> FERMENTING_ITEMS_TAG = TagKey.create(Registries.ITEM, createResourceLocation( "fermenting_items"));
     public static final TagKey<Item> INGREDIENTS = TagKey.create(Registries.ITEM, createResourceLocation("ingredients"));
     public static final TagKey<Item> SLICED_INGREDIENTS = TagKey.create(Registries.ITEM, createResourceLocation("sliced_ingredients"));
@@ -33,6 +35,9 @@ public class ModTags
 
     public static final TagKey<Item> TOMATO_SAUCE = TagKey.create(Registries.ITEM, createResourceLocation("ingredients/sauces/tomato_sauce_layer"));
     public static final TagKey<Item> HOT_SAUCE = TagKey.create(Registries.ITEM, createResourceLocation("ingredients/sauces/hot_sauce_layer"));
+
+    //Forge
+    public static final TagKey<Item> KNIVES = TagKey.create(Registries.ITEM, new ResourceLocation("forge", "tools/knives"));
 
     public static ResourceLocation createResourceLocation(String tagName)
     {
