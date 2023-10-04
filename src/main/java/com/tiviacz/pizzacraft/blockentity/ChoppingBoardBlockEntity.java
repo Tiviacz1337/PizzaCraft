@@ -2,8 +2,8 @@ package com.tiviacz.pizzacraft.blockentity;
 
 import com.tiviacz.pizzacraft.init.ModAdvancements;
 import com.tiviacz.pizzacraft.init.ModBlockEntityTypes;
-import com.tiviacz.pizzacraft.items.KnifeItem;
 import com.tiviacz.pizzacraft.recipes.chopping.ChoppingRecipe;
+import com.tiviacz.pizzacraft.tags.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -79,7 +79,7 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity
     public boolean canChop(ItemStack stack)
     {
         Optional<ChoppingRecipe> match = level.getRecipeManager().getRecipeFor(ChoppingRecipe.Type.CHOPPING_BOARD_RECIPE_TYPE, new RecipeWrapper(getInventory()), level);
-        boolean matchTool = stack.getItem() instanceof KnifeItem || stack.getItem() instanceof TieredItem || stack.getItem() instanceof TridentItem || stack.getItem() instanceof ShearsItem;
+        boolean matchTool = stack.is(ModTags.KNIVES) || stack.getItem() instanceof TieredItem || stack.getItem() instanceof TridentItem || stack.getItem() instanceof ShearsItem;
         return matchTool && match.isPresent();
     }
 

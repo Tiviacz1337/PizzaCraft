@@ -221,6 +221,7 @@ public class PizzaStationMenu extends AbstractContainerMenu
             {
                 slot.setChanged();
             }
+            slot.onTake(player, itemstack1);
         }
         return itemstack;
     }

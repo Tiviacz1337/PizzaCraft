@@ -1,7 +1,6 @@
 package com.tiviacz.pizzacraft.blockentity;
 
 import com.mojang.datafixers.util.Pair;
-import com.tiviacz.pizzacraft.blocks.OvenBlock;
 import com.tiviacz.pizzacraft.blocks.PizzaBlock;
 import com.tiviacz.pizzacraft.blocks.RawPizzaBlock;
 import com.tiviacz.pizzacraft.client.PizzaBakedModel;
@@ -330,7 +329,7 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
 
                 blockEntity.bakingTime--;
 
-                if(blockEntity.bakingTime == 0 || !(level.getBlockState(blockEntity.getBlockPos().below()).getBlock() instanceof OvenBlock))
+                if(blockEntity.bakingTime == 0 || !(level.getBlockState(blockEntity.getBlockPos().below()).is(ModTags.OVENS)))
                 {
                     if(blockEntity.bakingTime == 0)
                     {
@@ -344,7 +343,7 @@ public class PizzaBlockEntity extends BaseBlockEntity implements MenuProvider
                 }
             }
 
-            else if(!blockEntity.isBaking() && level.getBlockState(blockEntity.getBlockPos().below()).getBlock() instanceof OvenBlock)
+            else if(!blockEntity.isBaking() && level.getBlockState(blockEntity.getBlockPos().below()).is(ModTags.OVENS))
             {
                 blockEntity.bakingTime = blockEntity.getCalculatedBakingTime();
             }
