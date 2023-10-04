@@ -4,8 +4,8 @@ import com.mojang.datafixers.util.Pair;
 import com.tiviacz.pizzacraft.blockentity.PizzaBlockEntity;
 import com.tiviacz.pizzacraft.common.TasteHandler;
 import com.tiviacz.pizzacraft.init.ModItems;
-import com.tiviacz.pizzacraft.items.KnifeItem;
 import com.tiviacz.pizzacraft.items.PizzaPeelItem;
+import com.tiviacz.pizzacraft.tags.ModTags;
 import com.tiviacz.pizzacraft.util.NBTUtils;
 import com.tiviacz.pizzacraft.util.Utils;
 import net.minecraft.ChatFormatting;
@@ -120,7 +120,7 @@ public class PizzaBlock extends Block implements EntityBlock
                 return InteractionResult.SUCCESS;
             }
 
-            if(itemstack.getItem() instanceof KnifeItem)
+            if(itemstack.is(ModTags.KNIVES))
             {
                 int i = state.getValue(BITES);
 
