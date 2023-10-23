@@ -2,7 +2,6 @@
   "itemGroup.pizzacraft": "PizzaCraft",
 
   "recipecategory.pizzacraft.chopping": "Chopping",
-  "recipecategory.pizzacraft.mortar": "Smashing",
   "recipecategory.pizzacraft.crushing": "Crushing",
 
   "pizzacraft.milk": "Milk",
@@ -15,6 +14,7 @@
   "block.pizzacraft.raw_pizza": "Raw Pizza",
   "block.pizzacraft.dough": "Dough",
   "block.pizzacraft.cheese_block": "Cheese Block",
+  "block.pizzacraft.pizza_station": "Pizza Station",
   "block.pizzacraft.oven": "Oven",
 
   "block.pizzacraft.red_pizza_bag": "Red Pizza Bag",
@@ -30,8 +30,6 @@
   "block.pizzacraft.crimson_chopping_board": "Crimson Chopping Board",
   "block.pizzacraft.warped_chopping_board": "Warped Chopping Board",
   "block.pizzacraft.olive_chopping_board": "Olive Chopping Board",
-
-  "block.pizzacraft.mortar_and_pestle": "Mortar And Pestle",
 
   "block.pizzacraft.granite_basin": "Granite Basin",
   "block.pizzacraft.diorite_basin": "Diorite Basin",
@@ -74,6 +72,7 @@
   "item.pizzacraft.glass_jug": "Glass Jug",
   "item.pizzacraft.olive_oil": "Olive Oil",
   "item.pizzacraft.tomato_sauce": "Tomato Sauce",
+  "item.pizzacraft.hot_sauce": "Hot Sauce",
 
   "item.pizzacraft.broccoli": "Broccoli",
   "item.pizzacraft.corn": "Corn",
@@ -96,6 +95,7 @@
   "item.pizzacraft.pepper_slice": "Pepper Slice",
   "item.pizzacraft.pineapple_slice": "Pineapple Slice",
   "item.pizzacraft.tomato_slice": "Tomato Slice",
+  "item.pizzacraft.mushroom_slice": "Mushroom Slice",
 
   "item.pizzacraft.ham": "Ham",
   "item.pizzacraft.wing": "Raw Chicken Wing",
@@ -115,8 +115,10 @@
   "item.pizzacraft.pizza_delivery_leggings": "Pizza Delivery Leggings",
   "item.pizzacraft.pizza_delivery_boots": "Pizza Delivery Boots",
 
-  "information.pizzacraft.hunger": "%s%s Hunger per Slice (%s Total)",
-  "information.pizzacraft.saturation": "%f Saturation per Slice (%f Total)",
+  "information.pizzacraft.view_ingredients": "§6Hold <Shift> to View Ingredients",
+  "information.pizzacraft.taste": "§6The Taste of This Pizza is %s",
+  "information.pizzacraft.hunger": "%s Hunger per Slice (%s Total)",
+  "information.pizzacraft.saturation": "%f Saturation per Slice",
   "information.pizzacraft.hunger_slice": "%s Hunger",
   "information.pizzacraft.saturation_slice": "%f Saturation",
   "information.pizzacraft.effects": "Possible Effects:",
@@ -127,12 +129,8 @@
 
   "advancements.pizzacraft.root.title": "PizzaCraft",
   "advancements.pizzacraft.root.description": "Have you ever tried Pizza in Minecraft?",
-  "advancements.pizzacraft.mortar_and_pestle.title": "Tedious work",
-  "advancements.pizzacraft.mortar_and_pestle.description": "Craft mortar and pestle",
   "advancements.pizzacraft.chopping_board.title": "Chop Chop!",
   "advancements.pizzacraft.chopping_board.description": "Make some ingredients for your pizza",
-  "advancements.pizzacraft.flour.title": "Getting closer",
-  "advancements.pizzacraft.flour.description": "Use mortar and pestle to make flour",
   "advancements.pizzacraft.dough.title": "Dough-ty",
   "advancements.pizzacraft.dough.description": "Make a dough",
   "advancements.pizzacraft.pizza_peel.title": "DO NOT",

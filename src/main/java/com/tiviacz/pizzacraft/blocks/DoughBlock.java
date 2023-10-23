@@ -68,11 +68,11 @@ public class DoughBlock extends Block
 
         if(i < 5)
         {
-            level.setBlock(pos, state.setValue(KNEEDING, i + 1), 3);
+            level.setBlockAndUpdate(pos, state.setValue(KNEEDING, i + 1));
         }
         else
         {
-            level.setBlock(pos, ModBlocks.RAW_PIZZA.get().defaultBlockState(), 3);
+            level.setBlockAndUpdate(pos, ModBlocks.RAW_PIZZA.get().defaultBlockState());
         }
         level.playSound(player, pos, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.BLOCKS, 0.7F, 0.8F + level.random.nextFloat());
     }
@@ -86,7 +86,7 @@ public class DoughBlock extends Block
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos)
     {
-        return level.getBlockState(pos.below()).getMaterial().isSolid();
+        return level.getBlockState(pos.below()).isSolid();
     }
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

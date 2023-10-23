@@ -1,17 +1,23 @@
 package com.tiviacz.pizzacraft.container;
 
 import com.tiviacz.pizzacraft.blockentity.PizzaBlockEntity;
-import com.tiviacz.pizzacraft.container.slots.UnaccessibleSlot;
 import com.tiviacz.pizzacraft.init.ModMenuTypes;
-import com.tiviacz.pizzacraft.init.PizzaLayers;
+import com.tiviacz.pizzacraft.items.SauceItem;
+import com.tiviacz.pizzacraft.tags.ModTags;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -20,6 +26,7 @@ public class PizzaMenu extends AbstractContainerMenu
 {
     public Inventory inv;
     public PizzaBlockEntity blockEntity;
+    public ItemStackHandler transistentHandler = createTransistentHandler();
 
     public PizzaMenu(int windowID, Inventory inv, FriendlyByteBuf data)
     {
@@ -33,14 +40,9 @@ public class PizzaMenu extends AbstractContainerMenu
         this.inv = inv;
         this.blockEntity = (PizzaBlockEntity)tile;
 
-        if(blockEntity.isRaw())
-        {
-            this.addIngredientsSlotsRaw();
-        }
-        else
-        {
-            this.addIngredientsSlots();
-        }
+        this.addIngredientsSlots(); //0-8
+        this.addSauceSlot(); //9
+        this.addTransistentSlots(); //10, 11
 
         this.addPlayerInventoryAndHotbar(inv);
     }
@@ -61,7 +63,28 @@ public class PizzaMenu extends AbstractContainerMenu
         }
     }
 
-    public void addIngredientsSlotsRaw()
+    public void addTransistentSlots()
+    {
+        this.addSlot(new SlotItemHandler(transistentHandler, 0, 35, 10)
+        {
+            @Override
+            public int getMaxStackSize(@Nonnull ItemStack stack)
+            {
+                return 1;
+            }
+        });
+
+        this.addSlot(new SlotItemHandler(transistentHandler, 1, 35, 46)
+        {
+            @Override
+            public int getMaxStackSize(@Nonnull ItemStack stack)
+            {
+                return 1;
+            }
+        });
+    }
+
+    public void addIngredientsSlots()
     {
         for(int i = 0; i < 3; ++i)
         {
@@ -72,66 +95,36 @@ public class PizzaMenu extends AbstractContainerMenu
                     @Override
                     public int getMaxStackSize(@Nonnull ItemStack stack)
                     {
-                        return PizzaLayers.getMaxStackSizeForStack(stack);
+                        return 1;
                     }
                 });
             }
         }
     }
-  /*  public void addIngredientsSlotsRaw()
+
+    public void addSauceSlot()
     {
-        //Center
-        this.addSlot(new SlotItemHandler(tileEntity.getInventory(), 0, 80, 28));
-
-        //Upper Row
-        for(int i = 1; i < 4; i++)
+        this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 9, 125, 20)
         {
-            this.addSlot(new SlotItemHandler(tileEntity.getInventory(), i, (62 + ((i - 1) * 18)), 10));
-        }
-
-        //Middle Row
-        this.addSlot(new SlotItemHandler(tileEntity.getInventory(), 4, 62, 28));
-        this.addSlot(new SlotItemHandler(tileEntity.getInventory(), 5, 98, 28));
-
-        //Lower Row
-        for(int i = 1; i < 4; i++)
-        {
-            this.addSlot(new SlotItemHandler(tileEntity.getInventory(), i + 5, (62 + ((i - 1) * 18)), 46));
-        }
-    } */
-
-    public void addIngredientsSlots()
-    {
-        for(int i = 0; i < 3; ++i)
-        {
-            for(int j = 0; j < 3; ++j)
+            @Override
+            public int getMaxStackSize(@Nonnull ItemStack stack)
             {
-                this.addSlot(new UnaccessibleSlot(blockEntity.getInventory(), j + i * 3, 62 + j * 18, 10 + i * 18));
+                return 1;
             }
-        }
+
+            @Override
+            public boolean mayPickup(Player playerIn)
+            {
+                return false;
+            }
+
+            @Override
+            public boolean mayPlace(@NotNull ItemStack stack)
+            {
+                return false;
+            }
+        });
     }
-
- /*   public void addIngredientsSlots()
-    {
-        //Center
-        this.addSlot(new UnaccessibleSlot(tileEntity.getInventory(), 0, 80, 28));
-
-        //Upper Row
-        for(int i = 1; i < 4; i++)
-        {
-            this.addSlot(new UnaccessibleSlot(tileEntity.getInventory(), i, (62 + ((i - 1) * 18)), 10));
-        }
-
-        //Middle Row
-        this.addSlot(new UnaccessibleSlot(tileEntity.getInventory(), 4, 62, 28));
-        this.addSlot(new UnaccessibleSlot(tileEntity.getInventory(), 5, 98, 28));
-
-        //Lower Row
-        for(int i = 1; i < 4; i++)
-        {
-            this.addSlot(new UnaccessibleSlot(tileEntity.getInventory(), i + 5, (62 + ((i - 1) * 18)), 46));
-        }
-    } */
 
     @Override
     public ItemStack quickMoveStack(Player player, int index)
@@ -143,14 +136,14 @@ public class PizzaMenu extends AbstractContainerMenu
         {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            if(index < 9)
+            if(index < 12)
             {
-                if(!this.moveItemStackTo(itemstack1, 9, this.slots.size(), true))
+                if(!this.moveItemStackTo(itemstack1, 12, this.slots.size(), true))
                 {
                     return ItemStack.EMPTY;
                 }
             }
-            else if(!this.moveItemStackTo(itemstack1, 0, 9, false))
+            else if(!this.moveItemStackTo(itemstack1, 0, 12, false))
             {
                 return ItemStack.EMPTY;
             }
@@ -170,6 +163,7 @@ public class PizzaMenu extends AbstractContainerMenu
     public void removed(Player player)
     {
         super.removed(player);
+        this.clearContainer(player, new RecipeWrapper(transistentHandler));
     }
 
     @Override
@@ -183,12 +177,65 @@ public class PizzaMenu extends AbstractContainerMenu
         Objects.requireNonNull(inv, "inv cannot be null");
         Objects.requireNonNull(data, "data cannot be null");
 
-        final BlockEntity blockEntity = inv.player.level.getBlockEntity(data.readBlockPos());
+        final BlockEntity blockEntity = inv.player.level().getBlockEntity(data.readBlockPos());
 
         if(blockEntity instanceof PizzaBlockEntity)
         {
             return (PizzaBlockEntity)blockEntity;
         }
         throw new IllegalStateException("Block entity is not correct! " + blockEntity);
+    }
+
+    private ItemStackHandler createTransistentHandler()
+    {
+        return new ItemStackHandler(2)
+        {
+            @Override
+            protected void onContentsChanged(int slot)
+            {
+                PizzaMenu.this.transferStack();
+            }
+
+            @Override
+            public boolean isItemValid(int slot, @NotNull ItemStack stack)
+            {
+                return stack.getItem() instanceof PotionItem || (stack.getItem() instanceof SauceItem || stack.is(ModTags.SAUCE));
+            }
+        };
+    }
+
+    private void transferStack()
+    {
+        if(!transistentHandler.getStackInSlot(0).isEmpty())
+        {
+            ItemStack sauceStack = transistentHandler.getStackInSlot(0);
+            ItemStack container = getItemStack(sauceStack);
+
+            blockEntity.getInventory().setStackInSlot(9, sauceStack);
+            transistentHandler.setStackInSlot(0, ItemStack.EMPTY);
+            blockEntity.setChanged();
+            transistentHandler.setStackInSlot(1, container);
+        }
+    }
+
+    public static ItemStack getItemStack(ItemStack sauceStack)
+    {
+        ItemStack container = sauceStack.getCraftingRemainingItem();
+
+        boolean isPotion = sauceStack.getItem() instanceof PotionItem;
+        boolean isSoup = sauceStack.getItem() instanceof BowlFoodItem;
+
+        if(container.isEmpty())
+        {
+            if(isPotion)
+            {
+                container = new ItemStack(Items.GLASS_BOTTLE);
+            }
+            else if(isSoup)
+            {
+                container = new ItemStack(Items.BOWL);
+            }
+        }
+        return container;
     }
 }

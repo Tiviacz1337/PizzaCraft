@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "pizzacraft:oven",
+    {
+      "id": "farmersdelight:stove",
+      "required": false
+    }
+  ]
+}

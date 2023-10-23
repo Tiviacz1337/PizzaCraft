@@ -1,5 +1,6 @@
 package com.tiviacz.pizzacraft.recipes.chopping;
 
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -12,7 +13,7 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 public class ChoppingRecipe implements Recipe<RecipeWrapper>
 {
     private final Ingredient input;
-    private final ItemStack output;
+    public final ItemStack output;
     private final ResourceLocation id;
 
     public ChoppingRecipe(Ingredient input, ItemStack output, ResourceLocation id)
@@ -28,7 +29,7 @@ public class ChoppingRecipe implements Recipe<RecipeWrapper>
     }
 
     @Override
-    public ItemStack getResultItem()
+    public ItemStack getResultItem(RegistryAccess access)
     {
         return this.output;
     }
@@ -40,9 +41,9 @@ public class ChoppingRecipe implements Recipe<RecipeWrapper>
     }
 
     @Override
-    public ItemStack assemble(RecipeWrapper recipeWrapper)
+    public ItemStack assemble(RecipeWrapper recipeWrapper, RegistryAccess access)
     {
-        return getResultItem();
+        return this.output;
     }
 
     @Override

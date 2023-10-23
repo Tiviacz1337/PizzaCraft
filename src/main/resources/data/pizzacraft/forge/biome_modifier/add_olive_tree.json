@@ -1,5 +1,0 @@
-{
-  "type": "pizzacraft:tree_modifier",
-  "biomes": "#forge:is_savanna",
-  "feature": "pizzacraft:olive_placed"
-}

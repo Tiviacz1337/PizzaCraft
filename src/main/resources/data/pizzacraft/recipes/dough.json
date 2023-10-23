@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "AAA",
+    " A ",
     "CEC"
   ],
   "key": {
@@ -16,6 +16,7 @@
     }
   },
   "result": {
-    "item": "pizzacraft:dough"
+    "item": "pizzacraft:dough",
+    "count": 2
   }
 }

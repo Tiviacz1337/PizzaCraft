@@ -19,13 +19,12 @@
     "pizza": {
       "trigger": "minecraft:item_used_on_block",
       "conditions": {
-        "location": {
-          "block": {
-            "blocks": [
-              "pizzacraft:pizza"
-            ]
+        "location": [
+          {
+            "condition": "minecraft:block_state_property",
+            "block": "pizzacraft:pizza"
           }
-        }
+        ]
       }
     }
   },

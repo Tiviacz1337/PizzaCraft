@@ -20,8 +20,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.network.NetworkHooks;
@@ -152,7 +152,7 @@ public class PizzaBagBlockEntity extends BaseBlockEntity implements MenuProvider
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> cap, @Nullable final Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
             return inventoryCapability.cast();
         return super.getCapability(cap, side);
     }
@@ -174,7 +174,7 @@ public class PizzaBagBlockEntity extends BaseBlockEntity implements MenuProvider
 
     public void openGUI(Player player, MenuProvider containerSupplier, BlockPos pos)
     {
-        if(!player.level.isClientSide)
+        if(!player.level().isClientSide)
         {
             NetworkHooks.openScreen((ServerPlayer)player, containerSupplier, pos);
         }

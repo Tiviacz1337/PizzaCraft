@@ -28,9 +28,7 @@ import javax.annotation.Nullable;
 
 public class BasinBlock extends Block implements EntityBlock
 {
-    //private static final VoxelShape INSIDE = makeCuboidShape(2.0D, 1.0D, 2.0D, 14.0D, 7.0D, 14.0D);
     private static final VoxelShape SHAPE = box(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D);
-    //protected static final VoxelShape SHAPE = VoxelShapes.combineAndSimplify(makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D), INSIDE, IBooleanFunction.ONLY_FIRST);
 
     public BasinBlock(BlockBehaviour.Properties properties)
     {
@@ -46,9 +44,9 @@ public class BasinBlock extends Block implements EntityBlock
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit)
     {
-        if(worldIn.getBlockEntity(pos) instanceof BasinBlockEntity)
+        if(worldIn.getBlockEntity(pos) instanceof BasinBlockEntity blockEntity)
         {
-            return ((BasinBlockEntity)worldIn.getBlockEntity(pos)).onBlockActivated(player, handIn);
+            return blockEntity.onBlockActivated(player, handIn);
         }
         return InteractionResult.FAIL;
     }
@@ -56,9 +54,9 @@ public class BasinBlock extends Block implements EntityBlock
     @Override
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity entityIn, float fallDistance)
     {
-        if(level.getBlockEntity(pos) instanceof BasinBlockEntity && entityIn instanceof Player)
+        if(level.getBlockEntity(pos) instanceof BasinBlockEntity blockEntity && entityIn instanceof Player player)
         {
-            ((BasinBlockEntity)level.getBlockEntity(pos)).crush((Player)entityIn);
+            blockEntity.crush(player);
         }
         super.fallOn(level, state, pos, entityIn, fallDistance);
     }
@@ -68,15 +66,15 @@ public class BasinBlock extends Block implements EntityBlock
     {
         if(state.getBlock() != newState.getBlock())
         {
-            if(world.getBlockEntity(pos) instanceof BasinBlockEntity)
+            if(world.getBlockEntity(pos) instanceof BasinBlockEntity blockEntity)
             {
-                IItemHandler inventory = ((BasinBlockEntity)world.getBlockEntity(pos)).getInventory();
+                IItemHandler inventory = blockEntity.getInventory();
 
                 for(int i = 0; i < inventory.getSlots(); i++)
                 {
                     Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), inventory.getStackInSlot(i));
                 }
-                ((BasinBlockEntity)world.getBlockEntity(pos)).setSquashedStackCount(0);
+                blockEntity.setSquashedStackCount(0);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
             super.onRemove(state, world, pos, newState, isMoving);
@@ -86,9 +84,9 @@ public class BasinBlock extends Block implements EntityBlock
     @Override
     public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction)
     {
-        if(level.getBlockEntity(pos) instanceof BasinBlockEntity)
+        if(level.getBlockEntity(pos) instanceof BasinBlockEntity blockEntity)
         {
-            return ((BasinBlockEntity)level.getBlockEntity(pos)).getComparatorOutput();
+            return blockEntity.getComparatorOutput();
         }
         return 0;
     }
@@ -110,15 +108,4 @@ public class BasinBlock extends Block implements EntityBlock
     {
         return Utils.getTicker(blockEntityType, ModBlockEntityTypes.BASIN.get(), BasinBlockEntity::tick);
     }
-
-  /*  @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> createBasinTicker(Level level, BlockEntityType<T> blockEntityType, BlockEntityType<? extends BasinBlockEntity> blockEntity)
-    {
-        return level.isClientSide ? null : createTickerHelper(blockEntityType, blockEntity, BasinBlockEntity::serverTick);
-    }
-
-    @Nullable
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
-        return p_152134_ == p_152133_ ? (BlockEntityTicker<A>)p_152135_ : null;
-    } */
 }

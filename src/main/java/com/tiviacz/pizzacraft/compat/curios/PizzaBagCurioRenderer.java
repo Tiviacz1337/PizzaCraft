@@ -1,7 +1,7 @@
 package com.tiviacz.pizzacraft.compat.curios;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.tiviacz.pizzacraft.init.ModBlocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
@@ -26,10 +26,10 @@ public class PizzaBagCurioRenderer implements ICurioRenderer
         Block pizzaBag = ModBlocks.RED_PIZZA_BAG.get();
         LivingEntity livingEntity = slotContext.entity();
         matrixStack.pushPose();
-        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180F));
+        matrixStack.mulPose(Axis.ZP.rotationDegrees(180F));
         matrixStack.scale(0.75F, 0.75F, 0.75F);
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(-90F));
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(180F));
+        matrixStack.mulPose(Axis.XP.rotationDegrees(-90F));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(180F));
         matrixStack.translate(-0.5D, -0.55D, 0.0D);
 
         ICurioRenderer.translateIfSneaking(matrixStack, livingEntity);
@@ -38,7 +38,7 @@ public class PizzaBagCurioRenderer implements ICurioRenderer
         BlockRenderDispatcher blockDispatcher = Minecraft.getInstance().getBlockRenderer();
         ModelBlockRenderer renderer = blockDispatcher.getModelRenderer();
         renderer.tesselateBlock(
-                livingEntity.level,
+                livingEntity.level(),
                 blockDispatcher.getBlockModel(pizzaBag.defaultBlockState()),
                 pizzaBag.defaultBlockState(),
                 livingEntity.blockPosition().offset(0, 1, 0),

@@ -4,7 +4,6 @@ import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.client.renderer.ChefHatModel;
 import com.tiviacz.pizzacraft.init.ModItems;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -23,9 +22,9 @@ import java.util.function.Consumer;
 
 public class ChefArmor extends ArmorItem
 {
-    public ChefArmor(ArmorMaterial materialIn, EquipmentSlot slot, Properties builderIn)
+    public ChefArmor(ArmorMaterial materialIn, ArmorItem.Type pType, Properties builderIn)
     {
-        super(materialIn, slot, builderIn);
+        super(materialIn, pType, builderIn);
     }
 
     @Override
@@ -44,7 +43,7 @@ public class ChefArmor extends ArmorItem
         consumer.accept(new IClientItemExtensions()
         {
             @Override
-            public HumanoidModel<?> getGenericArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> humanoid)
+            public HumanoidModel<?> getHumanoidArmorModel(LivingEntity entityLiving, ItemStack itemStack, EquipmentSlot armorSlot, HumanoidModel<?> humanoid)
             {
                 if(armorSlot == EquipmentSlot.HEAD)
                 {
@@ -53,7 +52,7 @@ public class ChefArmor extends ArmorItem
 
                     return hat;
                 }
-                return null;
+                return humanoid;
             }
         });
     }

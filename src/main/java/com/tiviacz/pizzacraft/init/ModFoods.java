@@ -24,7 +24,7 @@ public class ModFoods
     public static final FoodProperties PEPPER_SLICE = new FoodProperties.Builder().nutrition(1).saturationMod(0.3F).fast().build();
     public static final FoodProperties PINEAPPLE_SLICE = new FoodProperties.Builder().nutrition(1).saturationMod(0.3F).fast().build();
     public static final FoodProperties TOMATO_SLICE = new FoodProperties.Builder().nutrition(1).saturationMod(0.3F).fast().build();
-    //public static final Food CHEESE_SLICE = new Food.Builder().nutrition(1).saturationMod(1.0F).fastToEat().build();
+    public static final FoodProperties MUSHROOM_SLICE = new FoodProperties.Builder().nutrition(1).saturationMod(0.3F).fast().build();
 
     //Meats
     public static final FoodProperties HAM = new FoodProperties.Builder().nutrition(1).saturationMod(0.15F).fast().meat().build();
@@ -33,7 +33,8 @@ public class ModFoods
 
     //Sauce
     public static final FoodProperties OLIVE_OIL = new FoodProperties.Builder().nutrition(2).saturationMod(1.2F).effect(() -> new MobEffectInstance(MobEffects.ABSORPTION, 240, 1), 0.75F).build();
-    public static final FoodProperties TOMATO_SAUCE = new FoodProperties.Builder().nutrition(6).saturationMod(1.2F).build();
+    public static final FoodProperties TOMATO_SAUCE = new FoodProperties.Builder().nutrition(10).saturationMod(1.2F).build();
+    public static final FoodProperties HOT_SAUCE = new FoodProperties.Builder().nutrition(10).saturationMod(1.2F).build();
 
     //Cheese
     public static final FoodProperties CHEESE = new FoodProperties.Builder().nutrition(4).saturationMod(1.6F).build();

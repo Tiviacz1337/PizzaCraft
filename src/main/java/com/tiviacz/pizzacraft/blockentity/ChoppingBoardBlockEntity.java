@@ -2,8 +2,8 @@ package com.tiviacz.pizzacraft.blockentity;
 
 import com.tiviacz.pizzacraft.init.ModAdvancements;
 import com.tiviacz.pizzacraft.init.ModBlockEntityTypes;
-import com.tiviacz.pizzacraft.items.KnifeItem;
 import com.tiviacz.pizzacraft.recipes.chopping.ChoppingRecipe;
+import com.tiviacz.pizzacraft.tags.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -21,8 +21,8 @@ import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -62,7 +62,6 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity
         compound.put(INVENTORY, this.inventory.serializeNBT());
         compound.putInt(FACING, this.facing.get2DDataValue());
         compound.putBoolean(IS_ITEM_CARVING_BOARD, this.isItemCarvingBoard);
-        //return compound;
     }
 
     public Direction getFacing()
@@ -80,7 +79,7 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity
     public boolean canChop(ItemStack stack)
     {
         Optional<ChoppingRecipe> match = level.getRecipeManager().getRecipeFor(ChoppingRecipe.Type.CHOPPING_BOARD_RECIPE_TYPE, new RecipeWrapper(getInventory()), level);
-        boolean matchTool = stack.getItem() instanceof KnifeItem || stack.getItem() instanceof TieredItem || stack.getItem() instanceof TridentItem || stack.getItem() instanceof ShearsItem;
+        boolean matchTool = stack.is(ModTags.KNIVES) || stack.getItem() instanceof TieredItem || stack.getItem() instanceof TridentItem || stack.getItem() instanceof ShearsItem;
         return matchTool && match.isPresent();
     }
 
@@ -90,7 +89,7 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity
 
         if(match.isPresent())
         {
-            ItemStack result = match.get().getResultItem().copy();
+            ItemStack result = match.get().getResultItem(player.level().registryAccess()).copy();
             level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, getStoredStack()), getBlockPos().getX() + 0.5D, getBlockPos().getY() + 0.3D, getBlockPos().getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
             level.playSound(player, getBlockPos(), SoundEvents.PUMPKIN_CARVE, SoundSource.BLOCKS, 0.7F, 0.8F);
 
@@ -199,7 +198,7 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull final Capability<T> cap, @Nullable final Direction side)
     {
-        if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+        if(cap == ForgeCapabilities.ITEM_HANDLER)
             return inventoryCapability.cast();
         return super.getCapability(cap, side);
     }

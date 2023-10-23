@@ -24,7 +24,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 public class DoubleCropBlock extends CropBlock
@@ -139,7 +138,7 @@ public class DoubleCropBlock extends CropBlock
     }
 
     @Override
-    public boolean isValidBonemealTarget(BlockGetter level, BlockPos pos, BlockState state, boolean isClient)
+    public boolean isValidBonemealTarget(LevelReader level, BlockPos pos, BlockState state, boolean isClient)
     {
         return ((!isMaxAge(state) || level.getBlockState(pos.above()).getBlock() == Blocks.AIR) && level.getBlockState(pos.below()).getBlock() instanceof FarmBlock) || (!isMaxAge(state) && level.getBlockState(pos.below()).getBlock() instanceof DoubleCropBlock);
     }

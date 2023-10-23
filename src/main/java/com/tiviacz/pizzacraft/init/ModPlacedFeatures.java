@@ -2,24 +2,40 @@ package com.tiviacz.pizzacraft.init;
 
 import com.tiviacz.pizzacraft.PizzaCraft;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import net.minecraft.world.level.levelgen.placement.RarityFilter;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
+
+import java.util.List;
 
 public class ModPlacedFeatures
 {
-    public static final DeferredRegister<PlacedFeature> PLACED_FEATURES = DeferredRegister.create(Registry.PLACED_FEATURE_REGISTRY, PizzaCraft.MODID);
+    public static final ResourceKey<PlacedFeature> OLIVE_TREE_CHECKED_KEY = createKey("olive_checked");
+    public static final ResourceKey<PlacedFeature> OLIVE_TREE_PLACED_KEY = createKey("olive_placed");
 
-    public static final RegistryObject<PlacedFeature> OLIVE_PLACED = PLACED_FEATURES.register("olive_placed", () -> new PlacedFeature(
-            (Holder<ConfiguredFeature<?,?>>)(Holder<? extends ConfiguredFeature<?, ?>>)ModFeatures.OLIVE_SPAWN, VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(5))));
-    //public static final Holder<PlacedFeature> OLIVE_CHECKED = PlacementUtils.register("olive_checked", ModFeatures.OLIVE,
-    //        PlacementUtils.filteredByBlockSurvival(ModBlocks.OLIVE_SAPLING.get()));
+    public static void bootstrap(BootstapContext<PlacedFeature> context)
+    {
+        HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
 
-  //  public static final Holder<PlacedFeature> OLIVE_PLACED = PlacementUtils.register("olive_placed", ModFeatures.OLIVE_SPAWN,
-   //         VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(5))); //PlacementUtils.countExtra(1, 0.1F, 2)));
+        register(context, OLIVE_TREE_CHECKED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.OLIVE_TREE_KEY),
+                List.of(PlacementUtils.filteredByBlockSurvival(ModBlocks.OLIVE_SAPLING.get())));
+        register(context, OLIVE_TREE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.OLIVE_TREE_KEY),
+                VegetationPlacements.treePlacement(PlacementUtils.countExtra(1, 0.02f, 1), ModBlocks.OLIVE_SAPLING.get()));
+    }
+
+    private static ResourceKey<PlacedFeature> createKey(String name) {
+        return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(PizzaCraft.MODID, name));
+    }
+
+    private static void register(BootstapContext<PlacedFeature> context, ResourceKey<PlacedFeature> key, Holder<ConfiguredFeature<?, ?>> configuration,
+                                 List<PlacementModifier> modifiers) {
+        context.register(key, new PlacedFeature(configuration, List.copyOf(modifiers)));
+    }
 }

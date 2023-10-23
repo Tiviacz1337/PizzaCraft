@@ -1,7 +1,12 @@
 package com.tiviacz.pizzacraft.util;
 
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+
+import java.awt.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class RenderUtils
 {
@@ -16,20 +21,41 @@ public class RenderUtils
         return new double[] {d6, d8};
     }
 
-   /* public static BlockHitResult getBlockHitResult(Player player, Level level)
+    public static int getDominantColor(TextureAtlasSprite sprite, boolean isRaw)
     {
-        float f = player.xRot;
-        float f1 = player.yRot;
-        Vec3 vec3 = player.getEyePosition(1.0F);
-        float f2 = Mth.cos(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
-        float f3 = Mth.sin(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
-        float f4 = -Mth.cos(-f * ((float)Math.PI / 180F));
-        float f5 = Mth.sin(-f * ((float)Math.PI / 180F));
-        float f6 = f3 * f4;
-        float f7 = f2 * f4;
-        double d0 = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();
-        Vec3 vec31 = vec3.add((double)f6 * d0, (double)f5 * d0, (double)f7 * d0);
+        int iconWidth = sprite.contents().width();
+        int iconHeight = sprite.contents().height();
 
-        return level.clip(new ClipContext(vec3, vec31, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
-    } */
+        int frameCount = (int) sprite.contents().getUniqueFrames().count();
+
+        if (iconWidth <= 0 || iconHeight <= 0 || frameCount <= 0) {
+            return 0xFFFFFF;
+        }
+        TreeMap<Integer, Integer> counts = new TreeMap<>();
+
+        for (int f = 0; f < frameCount; f++) {
+            for (int v = 0; v < iconWidth; v++) {
+                for (int u = 0; u < iconHeight; u++) {
+                    int rgba = sprite.getPixelRGBA(f, v, u);
+                    int alpha = rgba >> 24 & 0xFF;
+
+                    if (alpha > 0) {
+                        counts.merge(rgba, 1, (color, count) -> count + 1);
+                    }
+                }
+            }
+        }
+        int dominantColor = 0;
+        int dominantSum = 0;
+
+        for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
+            if (entry.getValue() > dominantSum) {
+                dominantSum = entry.getValue();
+                dominantColor = entry.getKey();
+            }
+        }
+        Color color = new Color(dominantColor, true);
+        // No idea why the r and b values are reversed, but they are
+        return isRaw ? new Color(color.getBlue(), color.getGreen(), color.getRed()).brighter().brighter().brighter().brighter().brighter().getRGB() : new Color(color.getBlue(), color.getGreen(), color.getRed()).brighter().getRGB();
+    }
 }

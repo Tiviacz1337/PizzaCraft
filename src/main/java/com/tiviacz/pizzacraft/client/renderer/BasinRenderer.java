@@ -2,11 +2,11 @@ package com.tiviacz.pizzacraft.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.tiviacz.pizzacraft.PizzaCraft;
 import com.tiviacz.pizzacraft.blockentity.BasinBlockEntity;
-import com.tiviacz.pizzacraft.blockentity.BasinContent;
-import com.tiviacz.pizzacraft.blockentity.BasinContentType;
+import com.tiviacz.pizzacraft.blockentity.content.BasinContent;
+import com.tiviacz.pizzacraft.blockentity.content.BasinContentType;
 import com.tiviacz.pizzacraft.util.Reference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.Model;
@@ -18,12 +18,12 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Random;
@@ -130,7 +130,7 @@ public class BasinRenderer implements BlockEntityRenderer<BasinBlockEntity>
                 poseStack.translate(0.5D, 0.1D, 0.5D);
 
                 // Rotate item flat in the basin. Use X and Y from now on
-                poseStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
+                poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
 
                 // Resize the item
                 poseStack.scale(0.6F, 0.6F, 0.6F);
@@ -140,14 +140,14 @@ public class BasinRenderer implements BlockEntityRenderer<BasinBlockEntity>
             {
                 for(int i = 0; i < squashedStack.getCount(); i++)
                 {
-                    itemRenderer.renderStatic(squashedStack, ItemTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, 0);
+                    itemRenderer.renderStatic(squashedStack, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, blockEntity.getLevel(), 0);
                     poseStack.translate(0.0D, 0.0D, -0.065D);
-                    poseStack.mulPose(Vector3f.ZP.rotationDegrees(360.0F * rand.nextFloat()));
+                    poseStack.mulPose(Axis.ZP.rotationDegrees(360.0F * rand.nextFloat()));
                 }
             }
             else //If not normal item, just render block, to avoid any glitches and complications, just don't use blockItems here :-)
             {
-                itemRenderer.renderStatic(squashedStack, ItemTransforms.TransformType.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, 0);
+                itemRenderer.renderStatic(squashedStack, ItemDisplayContext.FIXED, combinedLightIn, combinedOverlayIn, poseStack, bufferIn, blockEntity.getLevel(), 0);
             }
             poseStack.popPose();
         }

@@ -1,12 +1,17 @@
 plugins {
     id 'eclipse'
+    id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 version = "${minecraft_version}-${mod_version}"
 group = 'com.tiviacz.pizzacraft' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'PizzaCraft'
+base {
+    archivesName = 'PizzaCraft'
+}
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -26,9 +31,11 @@ minecraft {
     //
     // Use non-default mappings at your own risk. They may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'official', version: forge_mappings_version
+    mappings channel: 'parchment', version: parachment_mappings_version
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
+
+    copyIdeResources = true
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -51,6 +58,9 @@ minecraft {
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', 'pizzacraft'
 
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             mods {
                 pizzacraft {
                     source sourceSets.main
@@ -66,6 +76,9 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             property 'forge.enabledGameTestNamespaces', 'pizzacraft'
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             mods {
                 pizzacraft {
@@ -86,6 +99,9 @@ minecraft {
 
             property 'forge.enabledGameTestNamespaces', 'pizzacraft'
 
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             mods {
                 pizzacraft {
                     source sourceSets.main
@@ -99,6 +115,9 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
 
             property 'forge.logging.console.level', 'debug'
+
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
             args '--mod', 'pizzacraft', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
@@ -138,6 +157,13 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.k-4u.nl"
     }
+
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
@@ -152,6 +178,8 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:${jei_version}")
 
+    runtimeOnly fg.deobf("curse.maven:fd-398521:4679319")
+    runtimeOnly fg.deobf("curse.maven:appleskin-248787:4605078")
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
     // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency

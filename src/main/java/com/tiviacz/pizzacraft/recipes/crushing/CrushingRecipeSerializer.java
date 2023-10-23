@@ -5,8 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import com.tiviacz.pizzacraft.PizzaCraft;
-import com.tiviacz.pizzacraft.blockentity.BasinContent;
-import com.tiviacz.pizzacraft.init.SauceRegistry;
+import com.tiviacz.pizzacraft.blockentity.content.BasinContent;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -27,8 +26,6 @@ public class CrushingRecipeSerializer implements RecipeSerializer<CrushingRecipe
     @Override
     public CrushingRecipe fromJson(ResourceLocation id, JsonObject json)
     {
-        //ChoppingRecipeJSON recipeJson = new Gson().fromJson(json, ChoppingRecipeJSON.class);
-
         Ingredient input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));
 
         if(input.isEmpty())
@@ -37,29 +34,11 @@ public class CrushingRecipeSerializer implements RecipeSerializer<CrushingRecipe
         }
         else
         {
-            //BasinContent basinContent = deserializeContent(JSONUtils.getString(json, "content"));
             int inputCount = GsonHelper.getAsInt(json, "inputCount");
             String basinContent = GsonHelper.getAsString(json, "content");
             ItemStack outputStack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
             return new CrushingRecipe(input, inputCount, basinContent, outputStack, id);
-            //ItemStack outputStack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
         }
-        //if(recipeJson.input == null || recipeJson.outputItem == null)
-        //{
-        //    throw new JsonSyntaxException("Missing Attributes in Cutting Recipe!");
-        //}
-
-        //Ingredient input = Ingredient.deserialize(recipeJson.getInput());
-/*        Item outputItem = Registry.ITEM.getOrDefault(new ResourceLocation(recipeJson.getOutputItemId()));
-
-        if(outputItem == Items.AIR)
-        {
-            throw new JsonSyntaxException("The Item " + recipeJson.outputItem + " does not exist!");
-        }
-
-        ItemStack outputStack = new ItemStack(outputItem, recipeJson.getOutputCount());
-
-        return new ChoppingRecipe(input, outputStack, id); */
     }
 
     @Override
@@ -69,7 +48,6 @@ public class CrushingRecipeSerializer implements RecipeSerializer<CrushingRecipe
         int inputCount = buf.readInt();
         String basinContent = buf.readUtf();
         ItemStack outputStack = buf.readItem();
-        //ItemStack output = buf.readItemStack();
 
         return new CrushingRecipe(input, inputCount, basinContent, outputStack, id);
     }
@@ -80,17 +58,16 @@ public class CrushingRecipeSerializer implements RecipeSerializer<CrushingRecipe
         recipe.getInput().toNetwork(buf);
         buf.writeInt(recipe.getInputCount());
         buf.writeUtf(recipe.getContentOutput().toString());
-        buf.writeItem(recipe.getResultItem());
-        //buf.writeItemStack(recipe.getRecipeOutput());
+        buf.writeItem(recipe.stackOutput);
     }
 
     public static BasinContent deserializeContent(@Nullable String content)
     {
         if(content != null)
         {
-            if(SauceRegistry.INSTANCE.basinContentFromString(content) != null)
+            if(BasinContent.BasinContentRegistry.REGISTRY.fromString(content) != null)
             {
-                return SauceRegistry.INSTANCE.basinContentFromString(content);
+                return BasinContent.BasinContentRegistry.REGISTRY.fromString(content);
             }
             else
             {
@@ -108,9 +85,9 @@ public class CrushingRecipeSerializer implements RecipeSerializer<CrushingRecipe
         {
             String content = json.getAsString();
 
-            if(SauceRegistry.INSTANCE.basinContentFromString(content) != null)
+            if(BasinContent.BasinContentRegistry.REGISTRY.fromString(content) != null)
             {
-                return SauceRegistry.INSTANCE.basinContentFromString(content);
+                return BasinContent.BasinContentRegistry.REGISTRY.fromString(content);
             }
             else
             {

@@ -6,24 +6,29 @@ import com.tiviacz.pizzacraft.client.PizzaBakedModel;
 import com.tiviacz.pizzacraft.client.renderer.BasinRenderer;
 import com.tiviacz.pizzacraft.client.renderer.ChefHatModel;
 import com.tiviacz.pizzacraft.client.renderer.PizzaDeliveryCapModel;
+import com.tiviacz.pizzacraft.client.tooltip.ClientPizzaTooltipComponent;
+import com.tiviacz.pizzacraft.client.tooltip.PizzaTooltipComponent;
 import com.tiviacz.pizzacraft.init.ModBlocks;
-import com.tiviacz.pizzacraft.init.PizzaLayers;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = PizzaCraft.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientEventHandler
 {
+    @SubscribeEvent
+    public static void registerTooltipComponent(RegisterClientTooltipComponentFactoriesEvent event)
+    {
+        event.register(PizzaTooltipComponent.class, ClientPizzaTooltipComponent::new);
+    }
+
     @SubscribeEvent
     public static void registerModels(ModelEvent.RegisterGeometryLoaders event)
     {
@@ -40,7 +45,7 @@ public class ClientEventHandler
     }
 
     @SubscribeEvent
-    public static void onModelBakeEvent(ModelEvent.BakingCompleted event)
+    public static void onModelBakeEvent(ModelEvent.ModifyBakingResult event)
     {
         for(BlockState blockState : ModBlocks.PIZZA.get().getStateDefinition().getPossibleStates())
         {
@@ -81,12 +86,12 @@ public class ClientEventHandler
         }
     }
 
-    @SubscribeEvent
-    public static void stitcherEventPre(TextureStitchEvent.Pre event)
+   /* @SubscribeEvent
+    public static void stitcherEventPre(TextureStitchEvent event)
     {
         if(event.getAtlas().location() == InventoryMenu.BLOCK_ATLAS)
         {
-            event.addSprite(PizzaLayers.PIZZA_SLICE);
+            event..addSprite(PizzaLayers.PIZZA_SLICE);
 
             //Base
             event.addSprite(PizzaLayers.CHEESE_LAYER);
@@ -148,5 +153,5 @@ public class ClientEventHandler
             event.addSprite(PizzaLayers.TOMATO_SAUCE_LAYER);
             event.addSprite(PizzaLayers.TOMATO_SAUCE_ITEM_LAYER);
         }
-    }
+    } */
 }
